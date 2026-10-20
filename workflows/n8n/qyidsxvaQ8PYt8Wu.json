@@ -1,0 +1,70 @@
+{
+  "updatedAt": "2026-10-16T00:55:11.193Z",
+  "createdAt": "2026-10-16T00:54:58.132Z",
+  "id": "qyidsxvaQ8PYt8Wu",
+  "name": "AI Creator Studio - ComfyUI 큐 확인 (임시 읽기 전용)",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Queue check webhook",
+      "webhookId": "9e74e985-e299-4cdf-af6b-23c0cae879f1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "comfy-queue-status-20261015-2054",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "q",
+      "name": "Read queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 10000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Queue check webhook": {
+      "main": [
+        [
+          {
+            "node": "Read queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "a7c85138-6153-4c36-a70a-4df0a387c31b",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

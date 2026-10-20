@@ -1,0 +1,88 @@
+{
+  "updatedAt": "2026-10-15T20:40:04.278Z",
+  "createdAt": "2026-10-15T20:38:18.236Z",
+  "id": "1Cj26Juyp7vIFo8V",
+  "name": "AI Creator Studio - LTX history read-only probe",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "t",
+      "name": "Read-only probe",
+      "webhookId": "832beb4d-3018-4176-8c80-e61415b90a82",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        260
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ltx-history-probe-8e2c4d9b",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "h",
+      "name": "Recent ComfyUI History",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        450,
+        260
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/history?max_items=5",
+        "options": {}
+      }
+    },
+    {
+      "id": "c",
+      "name": "Summarize prompt graphs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        260
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const result=[]; for (const item of $input.all()) { for (const [id,h] of Object.entries(item.json||{})) { const p=h.prompt?.[2] || {}; const classes=Object.values(p).map(n=>n.class_type).filter(Boolean); result.push({json:{id,completed:h.status?.completed,success:h.status?.status_str,classes:[...new Set(classes)].slice(0,35),nodeCount:classes.length,hasOutputs:!!h.outputs && Object.keys(h.outputs).length>0}}); } } return result.length?result:[{json:{message:'No recent history'}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Read-only probe": {
+      "main": [
+        [
+          {
+            "node": "Recent ComfyUI History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recent ComfyUI History": {
+      "main": [
+        [
+          {
+            "node": "Summarize prompt graphs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "207882a5-24b9-4996-9664-991c88d99799",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

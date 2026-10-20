@@ -1,0 +1,1576 @@
+{
+  "name": "AI Creator - Recover completed job 344 DRAFT",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ 'http://host.docker.internal:8188/view?filename=' + encodeURIComponent($json.video.filename) + '&subfolder=' + encodeURIComponent($json.video.subfolder || '') + '&type=output' }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "Download_verified_video",
+      "name": "Download verified video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        3968,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=await this.helpers.getBinaryDataBuffer(0,'data');if(b.length<1024||b.subarray(4,8).toString()!=='ftyp')throw new Error('Invalid MP4 response');const items=$input.all();items[0].json={...items[0].json,verifiedVideoBytes:b.length};return items;"
+      },
+      "id": "Verify_video_bytes",
+      "name": "Verify video bytes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4192,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Record prompt ID').first().json.id + '.mp4' }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PRIVATE_RESOURCE_4f5dd7e4c7ae"
+        },
+        "options": {}
+      },
+      "id": "Upload_Output",
+      "name": "Upload Output",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": false,
+      "position": [
+        4400,
+        0
+      ],
+      "notes": "Credential reference bound. Google account OAuth sign-in is pending; keep validation lock and workflow inactive."
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent($('Upload Output').first().json.id) }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,size,mimeType,parents,trashed,md5Checksum"
+            },
+            {
+              "name": "supportsAllDrives",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "Read_persisted_Drive_output",
+      "name": "Read persisted Drive output",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        6768,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const f=$input.first().json,u=$('Upload Output').first().json,j=$('Record prompt ID').first().json;const bytes=$('Verify video bytes').first().json.verifiedVideoBytes;if(!u.id||f.id!==u.id||f.trashed!==false||!f.parents?.includes('PRIVATE_RESOURCE_4f5dd7e4c7ae')||f.name!==j.id+'.mp4'||!Number.isSafeInteger(bytes)||Number(f.size)!==bytes||bytes<1024)throw new Error('Persisted Drive output verification failed; retain lock and reconcile, never reupload blindly');return [{json:{...j,status:'output_uploaded',outputFileId:f.id,verifiedVideoBytes:bytes,driveSize:Number(f.size),driveMd5:f.md5Checksum||null,finishedAt:new Date().toISOString()}}];"
+      },
+      "id": "Confirm_Drive_output",
+      "name": "Confirm Drive output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4624,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dsEKf75WMtcuHO2i"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "fileId",
+              "keyValue": "={{ $('Record prompt ID').first().json.id }}"
+            },
+            {
+              "keyName": "executionId",
+              "keyValue": "344"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "output_uploaded",
+            "outputFileId": "={{ $('Confirm Drive output').first().json.outputFileId }}",
+            "updatedOn": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "fileId",
+              "displayName": "fileId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "executionId",
+              "displayName": "executionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "promptId",
+              "displayName": "promptId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "outputFileId",
+              "displayName": "outputFileId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updatedOn",
+              "displayName": "updatedOn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "Persist_ledger_success",
+      "name": "Persist ledger success",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4656,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Record prompt ID').first().json.id }}"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PRIVATE_RESOURCE_fcb38ea47e01"
+        }
+      },
+      "id": "Move_original_Done",
+      "name": "Move original Done",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": false,
+      "position": [
+        4848,
+        0
+      ],
+      "notes": "Credential reference bound. Google account OAuth sign-in is pending; keep validation lock and workflow inactive."
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ JSON.stringify($('Confirm Drive output').first().json) }}",
+        "name": "={{ $('Record prompt ID').first().json.id + '-' + $execution.id + '-recovered-success.json' }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PRIVATE_RESOURCE_316c8f065256"
+        },
+        "options": {}
+      },
+      "id": "Log_success",
+      "name": "Log success",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": false,
+      "position": [
+        5072,
+        0
+      ],
+      "notes": "Credential reference bound. Google account OAuth sign-in is pending; keep validation lock and workflow inactive."
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$('Confirm Drive output').first().json,cleanupStartedAt:Date.now(),lockOwner:String($execution.id)}}];"
+      },
+      "id": "Start_cleanup",
+      "name": "Start cleanup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6800,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": 1
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "Read_cleanup_lock",
+      "name": "Read cleanup lock",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "alwaysOutputData": true,
+      "position": [
+        912,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const a=$input.all();if(a.length!==1||a[0].json.busy!==true||String(a[0].json.owner)!==String($execution.id))throw new Error('Cleanup lock ownership missing; do not unload');return $('Start cleanup').all();"
+      },
+      "id": "Verify_cleanup_ownership",
+      "name": "Verify cleanup ownership",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6864,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://host.docker.internal:8188/history/' + $('Record prompt ID').first().json.promptId }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Recheck_completed_prompt",
+      "name": "Recheck completed prompt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        6880,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j=$('Record prompt ID').first().json,h=$input.first().json[j.promptId],v=$('Capture terminal result').first().json.video;const outputs=Object.values(h?.outputs||{}).flatMap(o=>Object.values(o||{})).flat();if(h?.status?.completed!==true||h.status.status_str!=='success'||!v||!outputs.some(o=>o&&o.filename===v.filename&&o.subfolder===v.subfolder&&o.type==='output'))throw new Error('Exact prompt and saved video not verified; no unload');return $('Start cleanup').all();"
+      },
+      "id": "Verify_completed_saved_output",
+      "name": "Verify completed saved output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6912,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "VRAM_before_cleanup",
+      "name": "VRAM before cleanup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        6944,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Queue_before_cleanup",
+      "name": "Queue before cleanup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        6976,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const q=$input.first().json,s=$('Start cleanup').first().json;if(Date.now()-s.cleanupStartedAt>180000)throw new Error('Cleanup queue wait timed out; retain lock');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending))throw new Error('Unknown queue; no unload');return [{json:{cleanupIdle:q.queue_running.length===0&&q.queue_pending.length===0}}];"
+      },
+      "id": "Check_cleanup_queue",
+      "name": "Check cleanup queue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7008,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "check",
+              "leftValue": "={{ $json.cleanupIdle === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "Cleanup_queue_idle",
+      "name": "Cleanup queue idle",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2112,
+        912
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "Wait_for_idle_cleanup",
+      "name": "Wait for idle cleanup",
+      "webhookId": "e3f2403a-9c4a-4fd3-b947-27b53cd354d9",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        7072,
+        912
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "Settle_before_unload",
+      "name": "Settle before unload",
+      "webhookId": "a2aa89f6-4498-4619-8a2f-46bad852edc7",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        7104,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Queue_immediately_before_unload",
+      "name": "Queue immediately before unload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        7120,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const q=$input.first().json;if(Date.now()-$('Start cleanup').first().json.cleanupStartedAt>180000||!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Queue changed before unload; retain lock without unloading');return $input.all();"
+      },
+      "id": "Final_idle_guard",
+      "name": "Final idle guard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7152,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/free",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"unload_models\":true,\"free_memory\":true}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Unload_after_persisted_output",
+      "name": "Unload after persisted output",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        7184,
+        912
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "Wait_for_unload_processing",
+      "name": "Wait for unload processing",
+      "webhookId": "6531d39f-5b29-4096-ae7f-bbe4787cfdfb",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        7216,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Read_cleanup_VRAM",
+      "name": "Read cleanup VRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        7248,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Read_cleanup_queue",
+      "name": "Read cleanup queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        7280,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const q=$input.first().json,s=$('Start cleanup').first().json,stats=$('Read cleanup VRAM').all(0,$runIndex)[0]?.json;if(Date.now()-s.cleanupStartedAt>180000)throw new Error('VRAM release not confirmed within 180 seconds; retain lock');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Queue no longer idle during cleanup; retain lock');const d=stats?.devices?.filter(x=>x.type==='cuda');if(!d?.length)throw new Error('Missing CUDA memory telemetry; retain lock');const released=d.every(x=>Number.isFinite(x.torch_vram_total)&&Number.isFinite(x.torch_vram_free)&&x.torch_vram_total>=0&&x.torch_vram_free>=0&&x.torch_vram_free<=x.torch_vram_total&&x.torch_vram_total<=134217728&&x.torch_vram_total-x.torch_vram_free<=16777216);;return [{json:{...s,cleanupReady:released,cleanupReadAt:Date.now(),before:$('VRAM before cleanup').first().json.devices,after:stats.devices}}];"
+      },
+      "id": "Evaluate_VRAM_release",
+      "name": "Evaluate VRAM release",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7312,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "check",
+              "leftValue": "={{ $json.cleanupReady === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "VRAM_release_observed",
+      "name": "VRAM release observed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2112,
+        912
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "Wait_for_VRAM_release",
+      "name": "Wait for VRAM release",
+      "webhookId": "9e61fe87-58ae-422d-8cc9-5ddc213bbe99",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        7360,
+        912
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "Confirm_stable_release",
+      "name": "Confirm stable release",
+      "webhookId": "33646a17-d835-472c-acf9-fb5ffd6d957e",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        7392,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Read_stable_VRAM",
+      "name": "Read stable VRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        7424,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Read_stable_queue",
+      "name": "Read stable queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        7456,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const q=$input.first().json,s=$('Start cleanup').first().json,stats=$('Read stable VRAM').first().json;if(Date.now()-s.cleanupStartedAt>180000)throw new Error('VRAM release not confirmed within 180 seconds; retain lock');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Queue no longer idle during cleanup; retain lock');const d=stats?.devices?.filter(x=>x.type==='cuda');if(!d?.length)throw new Error('Missing CUDA memory telemetry; retain lock');const released=d.every(x=>Number.isFinite(x.torch_vram_total)&&Number.isFinite(x.torch_vram_free)&&x.torch_vram_total>=0&&x.torch_vram_free>=0&&x.torch_vram_free<=x.torch_vram_total&&x.torch_vram_total<=134217728&&x.torch_vram_total-x.torch_vram_free<=16777216);if(!released)throw new Error('VRAM grew during stable confirmation; retain lock');return [{json:{...s,cleanupReady:released,cleanupReadAt:Date.now(),before:$('VRAM before cleanup').first().json.devices,after:stats.devices}}];"
+      },
+      "id": "Verify_stable_cleanup",
+      "name": "Verify stable cleanup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7488,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ JSON.stringify($('Verify stable cleanup').first().json) }}",
+        "name": "={{ $('Record prompt ID').first().json.id + '-' + $execution.id + '-recovered-cleanup.json' }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PRIVATE_RESOURCE_316c8f065256"
+        },
+        "options": {}
+      },
+      "id": "Log_cleanup_evidence",
+      "name": "Log cleanup evidence",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": false,
+      "position": [
+        5072,
+        0
+      ],
+      "notes": "Credential reference bound. Google account OAuth sign-in is pending; keep validation lock and workflow inactive."
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dsEKf75WMtcuHO2i"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "fileId",
+              "keyValue": "={{ $('Record prompt ID').first().json.id }}"
+            },
+            {
+              "keyName": "executionId",
+              "keyValue": "344"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "cleanup_verified",
+            "updatedOn": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "fileId",
+              "displayName": "fileId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "executionId",
+              "displayName": "executionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "promptId",
+              "displayName": "promptId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "outputFileId",
+              "displayName": "outputFileId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "updatedOn",
+              "displayName": "updatedOn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "Persist_cleanup_verified",
+      "name": "Persist cleanup verified",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4656,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": 1
+            },
+            {
+              "keyName": "owner",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": false,
+            "owner": ""
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "Release_successful_worker",
+      "name": "Release successful worker",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        5264,
+        656
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "Manual_recovery",
+      "name": "Manual recovery",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": 1
+            },
+            {
+              "keyName": "busy",
+              "keyValue": true
+            },
+            {
+              "keyName": "owner",
+              "keyValue": "344"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": true,
+            "owner": "={{ $execution.id }}",
+            "claimedAt": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "Claim_stranded_lock",
+      "name": "Claim stranded lock",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if($input.all().length!==1||$json.busy!==true||String($json.owner)!==String($execution.id))throw new Error('Stranded lock already claimed or changed; stop');return $input.all();"
+      },
+      "id": "Verify_recovery_claim",
+      "name": "Verify recovery claim",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dsEKf75WMtcuHO2i"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "fileId",
+              "keyValue": "PRIVATE_RESOURCE_d77e1227608e"
+            },
+            {
+              "keyName": "executionId",
+              "keyValue": "344"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "Read_stranded_ledger",
+      "name": "Read stranded ledger",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "alwaysOutputData": true,
+      "position": [
+        912,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if($input.all().length!==1||$json.fileId!=='PRIVATE_RESOURCE_d77e1227608e'||$json.promptId!=='b99fa1f9-e54d-4438-84ec-ddd20742da15'||$json.status!=='submitted'||$json.outputFileId)throw new Error('Recovery ledger changed; retain claimed lock for reconciliation');return [{json:{id:$json.fileId,promptId:$json.promptId,executionId:'344',recoveryExecutionId:String($execution.id),status:'processing',submittedAt:1792111350686}}];"
+      },
+      "id": "Record_prompt_ID",
+      "name": "Record prompt ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://host.docker.internal:8188/history/' + $('Record prompt ID').first().json.promptId }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "Read_recovery_history",
+      "name": "Read recovery history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        6880,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j=$('Record prompt ID').first().json,h=$input.first().json[j.promptId];if(h?.status?.completed!==true||h.status.status_str!=='success')throw new Error('Recovery only accepts exact terminal success; no generation');const prefix='AI_Creator_'+j.id+'_344_';const a=Object.values(h.outputs?.['75']||{}).flat().filter(x=>x?.type==='output'&&String(x.filename||'').startsWith(prefix)&&/\\.mp4$/i.test(x.filename));if(a.length!==1)throw new Error('Expected one persisted recovery MP4');return [{json:{...j,status:'success',video:a[0]}}];"
+      },
+      "id": "Capture_terminal_result",
+      "name": "Capture terminal result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "'PRIVATE_RESOURCE_4f5dd7e4c7ae' in parents and trashed = false and name = 'PRIVATE_RESOURCE_d77e1227608e.mp4'",
+        "limit": 2,
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "id": "Find_recovery_duplicates",
+      "name": "Find recovery duplicates",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "alwaysOutputData": true,
+      "position": [
+        1008,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if($input.all().some(i=>i.json.id))throw new Error('Existing output found. Never upload a duplicate; reconcile existing file instead. Retain lock.');return $('Verify video bytes').all();"
+      },
+      "id": "Prevent_recovery_duplicate_upload",
+      "name": "Prevent recovery duplicate upload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "content": "INACTIVE recovery of completed prompt from failed n8n execution 344 ONLY. Before running, recheck execution 344 is stopped, original collector/watcher are quiescent, exact history and saved output exist. CAS transfers owner=344 busy=true lock to this recovery execution; no TTL release. Never generates or resubmits. Existing Drive output blocks upload for manual reconciliation. Output verification and inline cleanup release only this execution's lock. Do not run concurrently with old collector/watcher during cutover. Needs explicit approval.",
+        "height": 330,
+        "width": 700
+      },
+      "id": "Recovery_notes",
+      "name": "Recovery notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -400
+      ]
+    }
+  ],
+  "connections": {
+    "Download verified video": {
+      "main": [
+        [
+          {
+            "node": "Verify video bytes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify video bytes": {
+      "main": [
+        [
+          {
+            "node": "Find recovery duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Output": {
+      "main": [
+        [
+          {
+            "node": "Read persisted Drive output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read persisted Drive output": {
+      "main": [
+        [
+          {
+            "node": "Confirm Drive output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm Drive output": {
+      "main": [
+        [
+          {
+            "node": "Persist ledger success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist ledger success": {
+      "main": [
+        [
+          {
+            "node": "Move original Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move original Done": {
+      "main": [
+        [
+          {
+            "node": "Log success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log success": {
+      "main": [
+        [
+          {
+            "node": "Start cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start cleanup": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read cleanup lock": {
+      "main": [
+        [
+          {
+            "node": "Verify cleanup ownership",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify cleanup ownership": {
+      "main": [
+        [
+          {
+            "node": "Recheck completed prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recheck completed prompt": {
+      "main": [
+        [
+          {
+            "node": "Verify completed saved output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify completed saved output": {
+      "main": [
+        [
+          {
+            "node": "VRAM before cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VRAM before cleanup": {
+      "main": [
+        [
+          {
+            "node": "Queue before cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue before cleanup": {
+      "main": [
+        [
+          {
+            "node": "Check cleanup queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check cleanup queue": {
+      "main": [
+        [
+          {
+            "node": "Cleanup queue idle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup queue idle": {
+      "main": [
+        [
+          {
+            "node": "Settle before unload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for idle cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for idle cleanup": {
+      "main": [
+        [
+          {
+            "node": "Queue before cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settle before unload": {
+      "main": [
+        [
+          {
+            "node": "Queue immediately before unload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue immediately before unload": {
+      "main": [
+        [
+          {
+            "node": "Final idle guard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final idle guard": {
+      "main": [
+        [
+          {
+            "node": "Unload after persisted output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unload after persisted output": {
+      "main": [
+        [
+          {
+            "node": "Wait for unload processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for unload processing": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read cleanup VRAM": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read cleanup queue": {
+      "main": [
+        [
+          {
+            "node": "Evaluate VRAM release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate VRAM release": {
+      "main": [
+        [
+          {
+            "node": "VRAM release observed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VRAM release observed": {
+      "main": [
+        [
+          {
+            "node": "Confirm stable release",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for VRAM release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for VRAM release": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm stable release": {
+      "main": [
+        [
+          {
+            "node": "Read stable VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stable VRAM": {
+      "main": [
+        [
+          {
+            "node": "Read stable queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stable queue": {
+      "main": [
+        [
+          {
+            "node": "Verify stable cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify stable cleanup": {
+      "main": [
+        [
+          {
+            "node": "Log cleanup evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log cleanup evidence": {
+      "main": [
+        [
+          {
+            "node": "Persist cleanup verified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist cleanup verified": {
+      "main": [
+        [
+          {
+            "node": "Release successful worker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual recovery": {
+      "main": [
+        [
+          {
+            "node": "Claim stranded lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim stranded lock": {
+      "main": [
+        [
+          {
+            "node": "Verify recovery claim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify recovery claim": {
+      "main": [
+        [
+          {
+            "node": "Read stranded ledger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stranded ledger": {
+      "main": [
+        [
+          {
+            "node": "Record prompt ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record prompt ID": {
+      "main": [
+        [
+          {
+            "node": "Read recovery history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read recovery history": {
+      "main": [
+        [
+          {
+            "node": "Capture terminal result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture terminal result": {
+      "main": [
+        [
+          {
+            "node": "Download verified video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find recovery duplicates": {
+      "main": [
+        [
+          {
+            "node": "Prevent recovery duplicate upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prevent recovery duplicate upload": {
+      "main": [
+        [
+          {
+            "node": "Upload Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 600,
+    "timezone": "America/New_York"
+  },
+  "versionId": "a3e06fb3-402c-4dbe-ab37-fe17da20e8a8",
+  "nodeGroups": [],
+  "id": "QOX2gAXVhRChbfjH",
+  "tags": []
+}

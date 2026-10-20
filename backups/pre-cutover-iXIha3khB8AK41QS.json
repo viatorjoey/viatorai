@@ -1,0 +1,315 @@
+{
+  "id": "iXIha3khB8AK41QS",
+  "versionId": "526c3960-3740-4420-a0b6-1747349d7dcd",
+  "active": false,
+  "name": "AI Creator Studio - LTX 2.3+2.5 완료 후 안전 VRAM 정리 v2",
+  "nodes": [
+    {
+      "id": "watch-trigger",
+      "name": "Check every minute",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "history",
+      "name": "Recent LTX History",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/history?max_items=20",
+        "options": {}
+      }
+    },
+    {
+      "id": "queue",
+      "name": "Current ComfyUI Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        300
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {}
+      }
+    },
+    {
+      "id": "gate",
+      "name": "Detect newly completed LTX video",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const history=$('Recent LTX History').first().json||{};\nconst queue=$('Current ComfyUI Queue').first().json||{};\nconst state=$getWorkflowStaticData('global');\nconst idle=Array.isArray(queue.queue_running)&&Array.isArray(queue.queue_pending)&&queue.queue_running.length===0&&queue.queue_pending.length===0;\nif(!idle)return [];\nconst records=Object.entries(history).filter(([id,h])=>{\n if(h?.status?.completed!==true||h?.status?.status_str!=='success')return false;\n const nodes=Object.values(h?.prompt?.[2]||{});\n const classes=nodes.map(n=>String(n?.class_type||''));\n const isLtx=classes.some(t=>/LTXV|LTX2|LTX/i.test(t))||nodes.some(n=>/ltx[-_]2[.\\d-]*/i.test(String(n?.inputs?.unet_name||'')));\n const saved=classes.includes('SaveVideo')||classes.includes('VHS_VideoCombine');\n return isLtx&&saved&&h.outputs&&Object.keys(h.outputs).length>0;\n}).map(([id,h])=>({id,completedMs:Math.max(0,...(h.status.messages||[]).filter(m=>m[0]==='execution_success').map(m=>Number(m[1]?.timestamp||0)))}));\nconst allIds=records.map(x=>x.id);\nif(state.cleanupTrackerVersion!==2){\n state.cleanupTrackerVersion=2;\n state.processedIds=allIds.slice(-200);\n return [];\n}\nconst processed=new Set(Array.isArray(state.processedIds)?state.processedIds:[]);\nconst pending=records.filter(x=>!processed.has(x.id));\nif(!pending.length)return [];\npending.sort((a,b)=>b.completedMs-a.completedMs||a.id.localeCompare(b.id));\nreturn [{json:{promptId:pending[0].id,completedAt:pending[0].completedMs,readyToFree:true}}];"
+      }
+    },
+    {
+      "id": "cleanup",
+      "name": "Unload models and free VRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/free",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"unload_models\":true,\"free_memory\":true}",
+        "options": {}
+      }
+    },
+    {
+      "id": "delay",
+      "name": "Wait for VRAM cleanup",
+      "webhookId": "f9159778-3231-4b84-a29e-85e6b185cd71",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        300
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 5,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "stats",
+      "name": "Read VRAM after cleanup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1550,
+        300
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {}
+      }
+    },
+    {
+      "id": "settle-wait",
+      "name": "Allow queue to settle",
+      "webhookId": "6649f3fa-b70a-4d49-829e-b82a72990f58",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1080,
+        300
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 5,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "check-idle",
+      "name": "Double-check ComfyUI Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1300,
+        300
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {}
+      }
+    },
+    {
+      "id": "queue-guard",
+      "name": "Queue still empty?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1520,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "idle-v2",
+              "leftValue": "={{ Array.isArray($json.queue_running) && Array.isArray($json.queue_pending) && $json.queue_running.length === 0 && $json.queue_pending.length === 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "mark-completed",
+      "name": "Mark exact prompt ID processed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        210
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const state=$getWorkflowStaticData('global');\nconst id=$('Detect newly completed LTX video').first().json.promptId;\nif(!id)throw new Error('Missing prompt ID');\nconst ids=Array.isArray(state.processedIds)?state.processedIds:[];\nstate.processedIds=[...new Set([...ids,id])].slice(-200);\nreturn [{json:{promptId:id,markedProcessed:true}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Check every minute": {
+      "main": [
+        [
+          {
+            "node": "Recent LTX History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recent LTX History": {
+      "main": [
+        [
+          {
+            "node": "Current ComfyUI Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Current ComfyUI Queue": {
+      "main": [
+        [
+          {
+            "node": "Detect newly completed LTX video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect newly completed LTX video": {
+      "main": [
+        [
+          {
+            "node": "Allow queue to settle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Allow queue to settle": {
+      "main": [
+        [
+          {
+            "node": "Double-check ComfyUI Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Double-check ComfyUI Queue": {
+      "main": [
+        [
+          {
+            "node": "Queue still empty?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue still empty?": {
+      "main": [
+        [
+          {
+            "node": "Mark exact prompt ID processed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Mark exact prompt ID processed": {
+      "main": [
+        [
+          {
+            "node": "Unload models and free VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unload models and free VRAM": {
+      "main": [
+        [
+          {
+            "node": "Wait for VRAM cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for VRAM cleanup": {
+      "main": [
+        [
+          {
+            "node": "Read VRAM after cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "timezone": "America/New_York",
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {appendEditorImages,imageEditPayload,IMAGE_EDIT_LIMIT} from '../public/media-editor.js';
+test('image editor accepts fifty attachments across additions and rejects the fifty-first without replacing existing photos',()=>{
+ const first=Array.from({length:30},(_,i)=>({id:crypto.randomUUID(),title:'사진 '+i})),next=Array.from({length:20},()=>({id:crypto.randomUUID()})),all=appendEditorImages(first,next);assert.equal(IMAGE_EDIT_LIMIT,50);assert.equal(all.length,50);assert.equal(first.length,30);assert.throws(()=>appendEditorImages(all,[{id:crypto.randomUUID()}]),/50/);assert.equal(all.length,50);
+ const payload=imageEditPayload(all,{prompt:'이미지의 글자 제거',model:'gemini:image',aspect:'1:1'});assert.equal(payload.mode,'image-image');assert.deepEqual(payload.uploadIds,all.map(a=>a.id));assert.equal(payload.prompt,'이미지의 글자 제거');assert.equal(payload.uploadId,undefined);assert.equal(imageEditPayload([first[0]],{}).uploadId,first[0].id);assert.throws(()=>imageEditPayload([],{}));assert.throws(()=>imageEditPayload([...all,{}],{}),/50/);
+});

@@ -1,0 +1,190 @@
+{
+  "updatedAt": "2026-10-16T07:48:38.306Z",
+  "createdAt": "2026-10-15T20:35:23.269Z",
+  "id": "1jLlG2oKaSLlcOkx",
+  "name": "AI Creator Studio - 일회성 안전 VRAM 정리",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "일회성 정리 요청",
+      "webhookId": "47549c25-fe67-4e65-a614-afbfe0d48527",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-vram-cleanup-7f2d8c1e904a",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "queue",
+      "name": "ComfyUI 작업 큐 확인",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {}
+      }
+    },
+    {
+      "id": "guard",
+      "name": "생성 작업이 없는가",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        690,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "idle-cond",
+              "leftValue": "={{ Array.isArray($json.queue_running) && Array.isArray($json.queue_pending) && $json.queue_running.length === 0 && $json.queue_pending.length === 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "free",
+      "name": "모델 언로드 및 VRAM 해제",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        920,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/free",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"unload_models\":true,\"free_memory\":true}",
+        "options": {}
+      }
+    },
+    {
+      "id": "wait",
+      "name": "정리 반영 대기",
+      "webhookId": "bdb690e5-9148-4942-a586-33881b90627c",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1150,
+        200
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 5,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "stats",
+      "name": "정리 후 VRAM 확인",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1380,
+        200
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "일회성 정리 요청": {
+      "main": [
+        [
+          {
+            "node": "ComfyUI 작업 큐 확인",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComfyUI 작업 큐 확인": {
+      "main": [
+        [
+          {
+            "node": "생성 작업이 없는가",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "생성 작업이 없는가": {
+      "main": [
+        [
+          {
+            "node": "모델 언로드 및 VRAM 해제",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "모델 언로드 및 VRAM 해제": {
+      "main": [
+        [
+          {
+            "node": "정리 반영 대기",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "정리 반영 대기": {
+      "main": [
+        [
+          {
+            "node": "정리 후 VRAM 확인",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "f5fd07c0-92f6-4a8f-a2f9-b737ab117a93",
+  "versionCounter": 2,
+  "sourceWorkflowId": null,
+  "tags": []
+}

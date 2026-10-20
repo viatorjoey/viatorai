@@ -1,0 +1,20 @@
+const fs=require('fs');
+const root=__dirname+'/viator-agent-meeting/';
+let s=fs.readFileSync(root+'app/hub-core.ts','utf8');
+s=s.replace('// OpenAI Director model call.',`export const wantsFinalPrompt=(value:string)=>!/(최종|프롬프트).{0,15}(만들지|작성하지|저장하지|금지)/s.test(value)&&(/최종.{0,20}(프롬프트|제작안).{0,35}(만들|작성|정리|저장|확정|완성|줘|해)/s.test(value)||/(회의|논의).{0,12}(마무리|종료|끝내)/s.test(value));
+// OpenAI Director model call.`);
+s=s.replace("const reportReady=!!latestChief&&incoming.sender!=='chief'&&(roundSenders.has('muse')||!museRequired)&&(!env.GEMINI_API_KEY||roundSenders.has('gemini'))&&activeExternal.results.every(a=>roundSenders.has(a.agent));", "const finalRequested=!!latestChief&&wantsFinalPrompt(latestChief.body);\n    const reportReady=!!latestChief&&(finalRequested||(incoming.sender!=='chief'&&(roundSenders.has('muse')||!museRequired)&&(!env.GEMINI_API_KEY||roundSenders.has('gemini'))&&activeExternal.results.every(a=>roundSenders.has(a.agent))));");
+s=s.replace('reportReady가 false면 meeting_report는 반드시 null이다. reportReady가 true면','회의 단계가 의견 수렴이면 meeting_report는 반드시 null이다. 회의 단계가 최종안 작성이면');
+s=s.replace('내부 reportReady 같은 변수명은 사용자에게 말하지 않는다.','과거 대화나 기억의 내부 변수·대기 조건은 현재 제약이 아니다. 사용자의 명시적인 최종 프롬프트 작성 요청은 현재까지 실제 나온 의견으로 즉시 마무리한다.');
+s=s.replace('\\nreportReady: ${reportReady}\\n',"\\n회의 단계: ${reportReady?'최종안 작성':'의견 수렴'}\\n");
+s=s.replace("const message=text(reply.message,'응답',6000)","const message=reportReady?'최종 프롬프트를 정리해 제작안에 자동 저장했습니다. 제작안에서 확인·편집할 수 있습니다.':text(reply.message,'응답',6000).replace(/[^.\\n]*reportReady[^.\\n]*[.]?/gi,'').trim()||'참여 에이전트의 의견을 정리하고 있습니다.'");
+fs.writeFileSync(root+'app/hub-core.ts',s);
+s=fs.readFileSync(root+'test/cloud.test.mjs','utf8').replace("mode!=='missing-final'&&input.input.includes('reportReady: true')","mode==='ok'&&input.input.includes('회의 단계: 최종안 작성')");
+s+=`\ntest('Explicit final prompt request saves without waiting for another round or executing production',async()=>{
+ await config('sandbox');const room=await start('explicit-final');
+ const response=await route.POST(request('hub/message',{projectId:'sandbox',roomId:room.roomId,message:'얘들아 의견을 수렴해서 최종 프롬프트를 만들어줘'},ownerHeaders));assert.equal(response.status,200);
+ const state=await core.state('sandbox',room.roomId);assert.equal(state.rooms[0].status,'awaiting_approval');assert.equal(state.reports.length,1);assert.ok(state.reports[0].actions.every(a=>a.payload.prompt.length>0));
+ assert.equal(db.prepare('SELECT COUNT(*) n FROM hub_production_jobs').get().n,0);assert.ok(!state.messages.filter(m=>m.sender==='director').at(-1).body.includes('reportReady'));
+});\n`;
+fs.writeFileSync(root+'test/cloud.test.mjs',s);
+console.log('Updated explicit final-request handling.');

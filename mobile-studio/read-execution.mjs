@@ -1,0 +1,1 @@
+import {DatabaseSync} from 'node:sqlite';const d=new DatabaseSync('/home/node/.n8n/database.sqlite',{readOnly:true});console.log(d.prepare('SELECT id,status,stoppedAt FROM execution_entity WHERE id=1133').get());

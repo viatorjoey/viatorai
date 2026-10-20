@@ -1,0 +1,92 @@
+{
+  "updatedAt": "2026-10-16T00:11:48.545Z",
+  "createdAt": "2026-10-16T00:11:48.545Z",
+  "id": "6nc22C1hSeR6UDXI",
+  "name": "AI Creator - queue status read only 20261016",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Read queue webhook",
+      "webhookId": "d84192fe-66e8-46fd-85e7-09f79c13e455",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        260
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "creator-queue-readonly-20261016-8d74c2",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "q",
+      "name": "ComfyUI queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        260
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {}
+      }
+    },
+    {
+      "id": "c",
+      "name": "Queue summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        260
+      ],
+      "parameters": {
+        "jsCode": "const q=$input.first().json;return [{json:{runningCount:(q.queue_running||[]).length,pendingCount:(q.queue_pending||[]).length,runningPromptIds:(q.queue_running||[]).map(x=>x[1]),pendingPromptIds:(q.queue_pending||[]).map(x=>x[1])}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Read queue webhook": {
+      "main": [
+        [
+          {
+            "node": "ComfyUI queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComfyUI queue": {
+      "main": [
+        [
+          {
+            "node": "Queue summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "64596a00-aa29-4340-81df-3093874bae92",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

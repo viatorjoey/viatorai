@@ -1,0 +1,49 @@
+[
+  {
+    "id": "z_image_turbo_bf16.safetensors",
+    "label": "Z-Image Turbo",
+    "modes": [
+      "text-image"
+    ]
+  },
+  {
+    "id": "flux-2-klein-4b.safetensors",
+    "label": "FLUX.2 Klein 4B · 빠르게",
+    "modes": [
+      "text-image",
+      "image-image"
+    ]
+  },
+  {
+    "id": "flux-2-klein-4b-fp8.safetensors",
+    "label": "FLUX.2 Klein 4B FP8 · 메모리 절약",
+    "modes": [
+      "text-image",
+      "image-image"
+    ]
+  },
+  {
+    "id": "flux-2-klein-base-4b.safetensors",
+    "label": "FLUX.2 Klein Base 4B · 세밀하게",
+    "modes": [
+      "text-image",
+      "image-image"
+    ]
+  },
+  {
+    "id": "flux-2-klein-base-9b-fp8.safetensors",
+    "label": "FLUX.2 Klein Base 9B FP8 · 오래 걸려요",
+    "modes": [
+      "text-image",
+      "image-image"
+    ]
+  },
+  {
+    "id": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+    "label": "LTX 2.5 · 이미지·텍스트 영상",
+    "modes": [
+      "text-video",
+      "image-video"
+    ]
+  }
+]

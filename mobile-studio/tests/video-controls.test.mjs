@@ -1,0 +1,20 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {attachVideoControls} from '../public/video-controls.js';
+test('videos start muted/looping, navigation starts playback and overlay toggles persist',async()=>{
+ class Node{constructor(){this.attrs={};this.children=[];this.handlers={};}setAttribute(k,v){this.attrs[k]=v;}replaceChildren(...n){this.children=n;}append(...n){this.children.push(...n);}addEventListener(k,fn){this.handlers[k]=fn;}}
+ globalThis.document={createElement:()=>new Node(),createElementNS:()=>new Node()};let plays=0;const video=()=>Object.assign(new Node(),{getBoundingClientRect:()=>({left:0,top:0,width:400,height:400}),play(){plays++;this.paused=false;return Promise.resolve();},pause(){this.paused=true;},isConnected:true,paused:false});
+ const first=video(),a=attachVideoControls(first);assert(first.muted&&first.defaultMuted&&first.loop&&first.playsInline&&first.autoplay);a.start();assert.equal(plays,1);assert.equal(first.controls,false);assert.equal(a.wrapper.children[1].hidden,true);first.handlers.click({clientX:10,clientY:10});assert.equal(first.controls,true);assert.equal(a.wrapper.children[1].hidden,false);const center={clientX:200,clientY:200,preventDefault(){},stopPropagation(){}};first.handlers.click(center);assert.equal(first.paused,true);assert.equal(first.controls,false);assert.equal(a.wrapper.children[1].hidden,true);first.handlers.click(center);assert.equal(first.paused,false);
+ const [sound,loop]=a.wrapper.children[1].children,event={stopPropagation(){}};sound.onclick(event);loop.onclick(event);assert.equal(first.muted,false);assert.equal(first.loop,false);assert.equal(sound.attrs['aria-label'],'소리 끄기');assert.equal(loop.attrs['aria-pressed'],'false');
+ const second=video(),b=attachVideoControls(second);b.start();assert.equal(plays,3);assert.equal(second.controls,false);assert.equal(b.wrapper.children[1].hidden,true);assert.equal(second.muted,false);assert.equal(second.loop,false);const [sound2,loop2]=b.wrapper.children[1].children;sound2.onclick(event);loop2.onclick(event);assert(second.muted&&second.loop);const third=video();attachVideoControls(third);assert.equal(third.muted,true);assert.equal(third.defaultMuted,true);third.muted=false;third.handlers.volumechange();const fourth=video();attachVideoControls(fourth);assert.equal(fourth.muted,false);fourth.muted=true;fourth.handlers.volumechange();
+});
+
+test('playing overlays expire, each toggle dismisses both buttons, and playback resumes cleanly',t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ class Node{constructor(){this.attrs={};this.children=[];this.handlers={};}setAttribute(k,v){this.attrs[k]=v;}replaceChildren(...n){this.children=n;}append(...n){this.children.push(...n);}addEventListener(k,fn){this.handlers[k]=fn;}}
+ globalThis.document={createElement:()=>new Node(),createElementNS:()=>new Node()};
+ const video=Object.assign(new Node(),{paused:false,isConnected:true,getBoundingClientRect:()=>({left:0,top:0,width:400,height:400}),play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;}}),{wrapper}=attachVideoControls(video),controls=wrapper.children[1],event={stopPropagation(){}};
+ const reveal=()=>video.handlers.click({clientX:10,clientY:10});
+ reveal();assert.equal(controls.hidden,false);t.mock.timers.tick(1999);assert.equal(controls.hidden,false);t.mock.timers.tick(1);assert.equal(controls.hidden,true);assert.equal(video.controls,false);
+ for(const button of controls.children){reveal();button.onclick(event);assert.equal(controls.hidden,true);assert.equal(video.controls,false);assert.equal(video.paused,false);}
+ reveal();t.mock.timers.tick(1500);reveal();t.mock.timers.tick(1500);assert.equal(controls.hidden,false);t.mock.timers.tick(500);assert.equal(controls.hidden,true);
+ video.paused=true;reveal();t.mock.timers.tick(3000);assert.equal(controls.hidden,false);video.paused=false;video.handlers.play();assert.equal(controls.hidden,true);reveal();video.handlers.playing();assert.equal(controls.hidden,true);
+});

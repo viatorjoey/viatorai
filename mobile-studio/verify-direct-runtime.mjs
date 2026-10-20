@@ -1,0 +1,4 @@
+import {providerVault} from './provider-vault.mjs';
+const health=await(await fetch('http://127.0.0.1:8801/health')).json();console.log(JSON.stringify({services:health.services.map(s=>({name:s.name,pid:s.pid,ready:s.ready}))}));
+for(const port of [8799,8787]){const r=await fetch('http://127.0.0.1:'+port+'/');const text=await r.text();console.log(JSON.stringify({port,status:r.status,directSettings:text.includes('클라우드 API 직접 연결'),openaiKeyOption:text.includes('value="openai"')}));}
+const key=await providerVault('data').get('gemini');if(key){const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-fast-generate-preview',{headers:{'x-goog-api-key':key},signal:AbortSignal.timeout(15000)});console.log(JSON.stringify({check:'Gemini model metadata (no generation)',status:r.status}));}

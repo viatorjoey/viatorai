@@ -1,0 +1,2963 @@
+{
+  "KSampler": {
+    "python_module": "nodes"
+  },
+  "CheckpointLoaderSimple": {
+    "python_module": "nodes"
+  },
+  "CLIPTextEncode": {
+    "python_module": "nodes"
+  },
+  "CLIPSetLastLayer": {
+    "python_module": "nodes"
+  },
+  "VAEDecode": {
+    "python_module": "nodes"
+  },
+  "VAEEncode": {
+    "python_module": "nodes"
+  },
+  "VAEEncodeForInpaint": {
+    "python_module": "nodes"
+  },
+  "VAELoader": {
+    "python_module": "nodes"
+  },
+  "EmptyLatentImage": {
+    "python_module": "nodes"
+  },
+  "LatentUpscale": {
+    "python_module": "nodes"
+  },
+  "LatentUpscaleBy": {
+    "python_module": "nodes"
+  },
+  "LatentFromBatch": {
+    "python_module": "nodes"
+  },
+  "RepeatLatentBatch": {
+    "python_module": "nodes"
+  },
+  "SaveImage": {
+    "python_module": "nodes"
+  },
+  "PreviewImage": {
+    "python_module": "nodes"
+  },
+  "LoadImage": {
+    "python_module": "nodes"
+  },
+  "LoadImageMask": {
+    "python_module": "nodes"
+  },
+  "LoadImageOutput": {
+    "python_module": "nodes"
+  },
+  "ImageScale": {
+    "python_module": "nodes"
+  },
+  "ImageScaleBy": {
+    "python_module": "nodes"
+  },
+  "ImageInvert": {
+    "python_module": "nodes"
+  },
+  "ImageBatch": {
+    "python_module": "nodes"
+  },
+  "ImagePadForOutpaint": {
+    "python_module": "nodes"
+  },
+  "EmptyImage": {
+    "python_module": "nodes"
+  },
+  "ConditioningAverage": {
+    "python_module": "nodes"
+  },
+  "ConditioningCombine": {
+    "python_module": "nodes"
+  },
+  "ConditioningConcat": {
+    "python_module": "nodes"
+  },
+  "ConditioningMultiply": {
+    "python_module": "nodes"
+  },
+  "ConditioningSetArea": {
+    "python_module": "nodes"
+  },
+  "ConditioningSetAreaPercentage": {
+    "python_module": "nodes"
+  },
+  "ConditioningSetAreaStrength": {
+    "python_module": "nodes"
+  },
+  "ConditioningSetMask": {
+    "python_module": "nodes"
+  },
+  "KSamplerAdvanced": {
+    "python_module": "nodes"
+  },
+  "SetLatentNoiseMask": {
+    "python_module": "nodes"
+  },
+  "LatentComposite": {
+    "python_module": "nodes"
+  },
+  "LatentBlend": {
+    "python_module": "nodes"
+  },
+  "LatentRotate": {
+    "python_module": "nodes"
+  },
+  "LatentFlip": {
+    "python_module": "nodes"
+  },
+  "LatentCrop": {
+    "python_module": "nodes"
+  },
+  "LoraLoader": {
+    "python_module": "nodes"
+  },
+  "CLIPLoader": {
+    "python_module": "nodes"
+  },
+  "UNETLoader": {
+    "python_module": "nodes"
+  },
+  "DualCLIPLoader": {
+    "python_module": "nodes"
+  },
+  "CLIPVisionEncode": {
+    "python_module": "nodes"
+  },
+  "StyleModelApply": {
+    "python_module": "nodes"
+  },
+  "unCLIPConditioning": {
+    "python_module": "nodes"
+  },
+  "ControlNetApply": {
+    "python_module": "nodes"
+  },
+  "ControlNetApplyAdvanced": {
+    "python_module": "nodes"
+  },
+  "ControlNetLoader": {
+    "python_module": "nodes"
+  },
+  "DiffControlNetLoader": {
+    "python_module": "nodes"
+  },
+  "StyleModelLoader": {
+    "python_module": "nodes"
+  },
+  "CLIPVisionLoader": {
+    "python_module": "nodes"
+  },
+  "VAEDecodeTiled": {
+    "python_module": "nodes"
+  },
+  "VAEEncodeTiled": {
+    "python_module": "nodes"
+  },
+  "unCLIPCheckpointLoader": {
+    "python_module": "nodes"
+  },
+  "GLIGENLoader": {
+    "python_module": "nodes"
+  },
+  "GLIGENTextBoxApply": {
+    "python_module": "nodes"
+  },
+  "InpaintModelConditioning": {
+    "python_module": "nodes"
+  },
+  "CheckpointLoader": {
+    "python_module": "nodes"
+  },
+  "DiffusersLoader": {
+    "python_module": "nodes"
+  },
+  "LoadLatent": {
+    "python_module": "nodes"
+  },
+  "SaveLatent": {
+    "python_module": "nodes"
+  },
+  "ConditioningZeroOut": {
+    "python_module": "nodes"
+  },
+  "ConditioningSetTimestepRange": {
+    "python_module": "nodes"
+  },
+  "LoraLoaderModelOnly": {
+    "python_module": "nodes"
+  },
+  "LatentAdd": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentSubtract": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentMultiply": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentInterpolate": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentConcat": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentCut": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentCutToBatch": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentBatch": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentBatchSeedBehavior": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentApplyOperation": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentApplyOperationCFG": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentOperationBlend": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentOperationTonemapReinhard": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "LatentOperationSharpen": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "ReplaceVideoLatentFrames": {
+    "python_module": "comfy_extras.nodes_latent"
+  },
+  "HypernetworkLoader": {
+    "python_module": "comfy_extras.nodes_hypernetwork"
+  },
+  "UpscaleModelLoader": {
+    "python_module": "comfy_extras.nodes_upscale_model"
+  },
+  "ImageUpscaleWithModel": {
+    "python_module": "comfy_extras.nodes_upscale_model"
+  },
+  "ImageBlend": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "ImageBlur": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "ImageQuantize": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "ImageSharpen": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "ImageScaleToTotalPixels": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "ResizeImageMaskNode": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "BatchImagesNode": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "BatchMasksNode": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "BatchLatentsNode": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "ColorTransfer": {
+    "python_module": "comfy_extras.nodes_post_processing"
+  },
+  "LatentCompositeMasked": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "ImageCompositeMasked": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "MaskToImage": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "ImageToMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "ImageColorToMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "SolidMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "InvertMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "CropMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "MaskComposite": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "FeatherMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "GrowMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "ThresholdMask": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "MaskPreview": {
+    "python_module": "comfy_extras.nodes_mask"
+  },
+  "PorterDuffImageComposite": {
+    "python_module": "comfy_extras.nodes_compositing"
+  },
+  "SplitImageWithAlpha": {
+    "python_module": "comfy_extras.nodes_compositing"
+  },
+  "JoinImageWithAlpha": {
+    "python_module": "comfy_extras.nodes_compositing"
+  },
+  "RebatchLatents": {
+    "python_module": "comfy_extras.nodes_rebatch"
+  },
+  "RebatchImages": {
+    "python_module": "comfy_extras.nodes_rebatch"
+  },
+  "ModelMergeSimple": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "ModelMergeBlocks": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "ModelMergeSubtract": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "ModelMergeAdd": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "CheckpointSave": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "CLIPMergeSimple": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "CLIPMergeSubtract": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "CLIPMergeAdd": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "CLIPSave": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "VAESave": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "ModelSave": {
+    "python_module": "comfy_extras.nodes_model_merging"
+  },
+  "TomePatchModel": {
+    "python_module": "comfy_extras.nodes_tomesd"
+  },
+  "CLIPTextEncodeSDXLRefiner": {
+    "python_module": "comfy_extras.nodes_clip_sdxl"
+  },
+  "CLIPTextEncodeSDXL": {
+    "python_module": "comfy_extras.nodes_clip_sdxl"
+  },
+  "Canny": {
+    "python_module": "comfy_extras.nodes_canny"
+  },
+  "FreeU": {
+    "python_module": "comfy_extras.nodes_freelunch"
+  },
+  "FreeU_V2": {
+    "python_module": "comfy_extras.nodes_freelunch"
+  },
+  "SamplerCustom": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "CFGOverride": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "BasicScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "KarrasScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "ExponentialScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "PolyexponentialScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "LaplaceScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "VPScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "BetaSamplingScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SDTurboScheduler": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "KSamplerSelect": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerEulerAncestral": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerEulerAncestralCFGPP": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerLMS": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerDPMPP_3M_SDE": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerDPMPP_2M_SDE": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerDPMPP_SDE": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerDPMPP_2S_Ancestral": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerDPMAdaptative": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerER_SDE": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerSASolver": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerSEEDS2": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SplitSigmas": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SplitSigmasDenoise": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "FlipSigmas": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SetFirstSigma": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "ExtendIntermediateSigmas": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplingPercentToSigma": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "CFGGuider": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "DualCFGGuider": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "DualModelGuider": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "BasicGuider": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "RandomNoise": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "DisableNoise": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "AddNoise": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "SamplerCustomAdvanced": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "ManualSigmas": {
+    "python_module": "comfy_extras.nodes_custom_sampler"
+  },
+  "HyperTile": {
+    "python_module": "comfy_extras.nodes_hypertile"
+  },
+  "ModelSamplingDiscrete": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelSamplingContinuousEDM": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelSamplingContinuousV": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelSamplingStableCascade": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelSamplingSD3": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelSamplingAuraFlow": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelSamplingFlux": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelNoiseScale": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "RescaleCFG": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelComputeDtype": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "ModelAttentionBackend": {
+    "python_module": "comfy_extras.nodes_model_advanced"
+  },
+  "PatchModelAddDownscale": {
+    "python_module": "comfy_extras.nodes_model_downscale"
+  },
+  "ImageCrop": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageCropV2": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageCropToMask": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "PrimitiveBoundingBox": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "RepeatImageBatch": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageFromBatch": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageAddNoise": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageSDRToHDR": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageColorSpace": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "SaveAnimatedWEBP": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "SaveAnimatedPNG": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "SaveImageAdvanced": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "SaveSVGNode": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageStitch": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ResizeAndPadImage": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "GetImageSize": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "GetLatentSize": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageRotate": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageFlip": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageScaleToMaxDimension": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "SplitImageToTileList": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageMergeTileList": {
+    "python_module": "comfy_extras.nodes_images"
+  },
+  "ImageOnlyCheckpointLoader": {
+    "python_module": "comfy_extras.nodes_video_model"
+  },
+  "SVD_img2vid_Conditioning": {
+    "python_module": "comfy_extras.nodes_video_model"
+  },
+  "VideoLinearCFGGuidance": {
+    "python_module": "comfy_extras.nodes_video_model"
+  },
+  "VideoTriangleCFGGuidance": {
+    "python_module": "comfy_extras.nodes_video_model"
+  },
+  "ImageOnlyCheckpointSave": {
+    "python_module": "comfy_extras.nodes_video_model"
+  },
+  "ConditioningSetAreaPercentageVideo": {
+    "python_module": "comfy_extras.nodes_video_model"
+  },
+  "Ideogram4Scheduler": {
+    "python_module": "comfy_extras.nodes_ideogram4"
+  },
+  "CreateBoundingBoxes": {
+    "python_module": "comfy_extras.nodes_bounding_boxes"
+  },
+  "BuildJsonPromptIdeogram": {
+    "python_module": "comfy_extras.nodes_json_prompt"
+  },
+  "TrainLoraNode": {
+    "python_module": "comfy_extras.nodes_train"
+  },
+  "LoraModelLoader": {
+    "python_module": "comfy_extras.nodes_train"
+  },
+  "SaveLoRA": {
+    "python_module": "comfy_extras.nodes_train"
+  },
+  "LossGraphNode": {
+    "python_module": "comfy_extras.nodes_train"
+  },
+  "LoadImageDataSetFromFolder": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "LoadImageTextDataSetFromFolder": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "SaveImageDataSetToFolder": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "SaveImageTextDataSetToFolder": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "LoadVideoDataSetFromFolder": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "LoadVideoTextDataSetFromFolder": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ResizeImagesByShorterEdge": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ResizeImagesByLongerEdge": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "CenterCropImages": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "RandomCropImages": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "NormalizeImages": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "AdjustBrightness": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "AdjustContrast": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ShuffleDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ShuffleImageTextDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "VideoFrameSample": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "VideoTemporalCrop": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "VideoRandomTemporalCrop": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ShuffleVideoDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ShuffleVideoTextDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "TextToLowercase": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "TextToUppercase": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "TruncateText": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "AddTextPrefix": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "AddTextSuffix": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ReplaceText": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "StripWhitespace": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ImageDeduplication": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ImageGrid": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "MergeImageLists": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "MergeTextLists": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "MakeTrainingDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "SaveTrainingDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "LoadTrainingDataset": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "ResolutionBucket": {
+    "python_module": "comfy_extras.nodes_dataset"
+  },
+  "SelfAttentionGuidance": {
+    "python_module": "comfy_extras.nodes_sag"
+  },
+  "PerpNeg": {
+    "python_module": "comfy_extras.nodes_perpneg"
+  },
+  "PerpNegGuider": {
+    "python_module": "comfy_extras.nodes_perpneg"
+  },
+  "StableZero123_Conditioning": {
+    "python_module": "comfy_extras.nodes_stable3d"
+  },
+  "StableZero123_Conditioning_Batched": {
+    "python_module": "comfy_extras.nodes_stable3d"
+  },
+  "SV3D_Conditioning": {
+    "python_module": "comfy_extras.nodes_stable3d"
+  },
+  "SD_4XUpscale_Conditioning": {
+    "python_module": "comfy_extras.nodes_sdupscale"
+  },
+  "PhotoMakerLoader": {
+    "python_module": "comfy_extras.nodes_photomaker"
+  },
+  "PhotoMakerEncode": {
+    "python_module": "comfy_extras.nodes_photomaker"
+  },
+  "CLIPTextEncodePixArtAlpha": {
+    "python_module": "comfy_extras.nodes_pixart"
+  },
+  "CLIPTextEncodeControlnet": {
+    "python_module": "comfy_extras.nodes_cond"
+  },
+  "T5TokenizerOptions": {
+    "python_module": "comfy_extras.nodes_cond"
+  },
+  "ConditioningLoader": {
+    "python_module": "comfy_extras.nodes_cond"
+  },
+  "SaveConditioning": {
+    "python_module": "comfy_extras.nodes_cond"
+  },
+  "Morphology": {
+    "python_module": "comfy_extras.nodes_morphology"
+  },
+  "ImageRGBToYUV": {
+    "python_module": "comfy_extras.nodes_morphology"
+  },
+  "ImageYUVToRGB": {
+    "python_module": "comfy_extras.nodes_morphology"
+  },
+  "StableCascade_EmptyLatentImage": {
+    "python_module": "comfy_extras.nodes_stable_cascade"
+  },
+  "StableCascade_StageB_Conditioning": {
+    "python_module": "comfy_extras.nodes_stable_cascade"
+  },
+  "StableCascade_StageC_VAEEncode": {
+    "python_module": "comfy_extras.nodes_stable_cascade"
+  },
+  "StableCascade_SuperResolutionControlnet": {
+    "python_module": "comfy_extras.nodes_stable_cascade"
+  },
+  "DifferentialDiffusion": {
+    "python_module": "comfy_extras.nodes_differential_diffusion"
+  },
+  "InstructPixToPixConditioning": {
+    "python_module": "comfy_extras.nodes_ip2p"
+  },
+  "ModelMergeSD1": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeSD2": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeSDXL": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeSD3_2B": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeAuraflow": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeFlux1": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeSD35_Large": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeMochiPreview": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeLTXV": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeCosmos7B": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeCosmos14B": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeWAN2_1": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeCosmosPredict2_2B": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeCosmosPredict2_14B": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeQwenImage": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "ModelMergeKrea2": {
+    "python_module": "comfy_extras.nodes_model_merging_model_specific"
+  },
+  "PerturbedAttentionGuidance": {
+    "python_module": "comfy_extras.nodes_pag"
+  },
+  "AlignYourStepsScheduler": {
+    "python_module": "comfy_extras.nodes_align_your_steps"
+  },
+  "UNetSelfAttentionMultiply": {
+    "python_module": "comfy_extras.nodes_attention_multiply"
+  },
+  "UNetCrossAttentionMultiply": {
+    "python_module": "comfy_extras.nodes_attention_multiply"
+  },
+  "CLIPAttentionMultiply": {
+    "python_module": "comfy_extras.nodes_attention_multiply"
+  },
+  "UNetTemporalAttentionMultiply": {
+    "python_module": "comfy_extras.nodes_attention_multiply"
+  },
+  "SamplerLCMUpscale": {
+    "python_module": "comfy_extras.nodes_advanced_samplers"
+  },
+  "SamplerLCM": {
+    "python_module": "comfy_extras.nodes_advanced_samplers"
+  },
+  "SamplerEulerCFGpp": {
+    "python_module": "comfy_extras.nodes_advanced_samplers"
+  },
+  "WebcamCapture": {
+    "python_module": "comfy_extras.nodes_webcam"
+  },
+  "EmptyLatentAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "VAEEncodeAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "VAEDecodeAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "GetAudioLatentSize": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "VAEDecodeAudioTiled": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "SaveAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "SaveAudioMP3": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "SaveAudioOpus": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "SaveAudioAdvanced": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "LoadAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "PreviewAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "ConditioningStableAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "RecordAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "TrimAudioDuration": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "SplitAudioChannels": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "JoinAudioChannels": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "AudioConcat": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "AudioMerge": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "AudioAdjustVolume": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "EmptyAudio": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "AudioEqualizer3Band": {
+    "python_module": "comfy_extras.nodes_audio"
+  },
+  "TripleCLIPLoader": {
+    "python_module": "comfy_extras.nodes_sd3"
+  },
+  "EmptySD3LatentImage": {
+    "python_module": "comfy_extras.nodes_sd3"
+  },
+  "CLIPTextEncodeSD3": {
+    "python_module": "comfy_extras.nodes_sd3"
+  },
+  "ControlNetApplySD3": {
+    "python_module": "comfy_extras.nodes_sd3"
+  },
+  "SkipLayerGuidanceSD3": {
+    "python_module": "comfy_extras.nodes_sd3"
+  },
+  "GITSScheduler": {
+    "python_module": "comfy_extras.nodes_gits"
+  },
+  "SetUnionControlNetType": {
+    "python_module": "comfy_extras.nodes_controlnet"
+  },
+  "ControlNetInpaintingAliMamaApply": {
+    "python_module": "comfy_extras.nodes_controlnet"
+  },
+  "CLIPTextEncodeHunyuanDiT": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "TextEncodeHunyuanVideo_ImageToVideo": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "EmptyHunyuanLatentVideo": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "EmptyHunyuanVideo15Latent": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "HunyuanVideo15ImageToVideo": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "HunyuanVideo15SuperResolution": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "HunyuanVideo15LatentUpscaleWithModel": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "LatentUpscaleModelLoader": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "HunyuanImageToVideo": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "EmptyHunyuanImageLatent": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "HunyuanRefinerLatent": {
+    "python_module": "comfy_extras.nodes_hunyuan"
+  },
+  "Epsilon Scaling": {
+    "python_module": "comfy_extras.nodes_eps"
+  },
+  "TemporalScoreRescaling": {
+    "python_module": "comfy_extras.nodes_eps"
+  },
+  "CLIPTextEncodeFlux": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "FluxGuidance": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "FluxDisableGuidance": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "FluxKontextImageScale": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "FluxKontextMultiReferenceLatentMethod": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "EmptyFlux2LatentImage": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "Flux2Scheduler": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "FluxKVCache": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "Flux3LayoutPrompt": {
+    "python_module": "comfy_extras.nodes_flux"
+  },
+  "LoraSave": {
+    "python_module": "comfy_extras.nodes_lora_extract"
+  },
+  "LoadLoraModel": {
+    "python_module": "comfy_extras.nodes_lora_stack"
+  },
+  "LoadLoraTextEncoder": {
+    "python_module": "comfy_extras.nodes_lora_stack"
+  },
+  "TorchCompileModel": {
+    "python_module": "comfy_extras.nodes_torch_compile"
+  },
+  "EmptyMochiLatentVideo": {
+    "python_module": "comfy_extras.nodes_mochi"
+  },
+  "SkipLayerGuidanceDiT": {
+    "python_module": "comfy_extras.nodes_slg"
+  },
+  "SkipLayerGuidanceDiTSimple": {
+    "python_module": "comfy_extras.nodes_slg"
+  },
+  "Mahiro": {
+    "python_module": "comfy_extras.nodes_mahiro"
+  },
+  "LTXVLatentUpsampler": {
+    "python_module": "comfy_extras.nodes_lt_upsampler"
+  },
+  "LTXVAudioVAELoader": {
+    "python_module": "comfy_extras.nodes_lt_audio"
+  },
+  "LTXVAudioVAEEncode": {
+    "python_module": "comfy_extras.nodes_lt_audio"
+  },
+  "LTXVAudioVAEDecode": {
+    "python_module": "comfy_extras.nodes_lt_audio"
+  },
+  "LTXVEmptyLatentAudio": {
+    "python_module": "comfy_extras.nodes_lt_audio"
+  },
+  "LTXAVTextEncoderLoader": {
+    "python_module": "comfy_extras.nodes_lt_audio"
+  },
+  "MiniMaxMusic3TextEncode": {
+    "python_module": "comfy_extras.nodes_minimax_music"
+  },
+  "EmptyMiniMaxMusic3LatentAudio": {
+    "python_module": "comfy_extras.nodes_minimax_music"
+  },
+  "YuE2GenerateABC": {
+    "python_module": "comfy_extras.nodes_yue2"
+  },
+  "YuE2GenerateMusic": {
+    "python_module": "comfy_extras.nodes_yue2"
+  },
+  "EmptyYuE2LatentAudio": {
+    "python_module": "comfy_extras.nodes_yue2"
+  },
+  "EmptyMiniMaxH3LatentAV": {
+    "python_module": "comfy_extras.nodes_minimax_h3"
+  },
+  "MiniMaxH3ImageToVideo": {
+    "python_module": "comfy_extras.nodes_minimax_h3"
+  },
+  "MiniMaxH3AddGuide": {
+    "python_module": "comfy_extras.nodes_minimax_h3"
+  },
+  "MiniMaxH3ReferenceToVideo": {
+    "python_module": "comfy_extras.nodes_minimax_h3"
+  },
+  "MiniMaxH3SigmaShift": {
+    "python_module": "comfy_extras.nodes_minimax_h3"
+  },
+  "MiniMaxH3FunControlNetApply": {
+    "python_module": "comfy_extras.nodes_minimax_h3"
+  },
+  "EmptyLTXVLatentVideo": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVImgToVideo": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVImgToVideoInplace": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "ModelSamplingLTXV": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVConditioning": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVScheduler": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "GetICLoRAParameters": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVAddGuide": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVAddLatentGuide": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVPreprocess": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVCropGuides": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVConcatAVLatent": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVSeparateAVLatent": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVReferenceAudio": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVDualCFGGuider": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVModalityGuidance": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVSpatioTemporalGuidance": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVDurationPredictor": {
+    "python_module": "comfy_extras.nodes_lt"
+  },
+  "LTXVAddGeneratedKeyframes": {
+    "python_module": "comfy_extras.nodes_lt_keyframes"
+  },
+  "LTXVSeparateGeneratedKeyframes": {
+    "python_module": "comfy_extras.nodes_lt_keyframes"
+  },
+  "LTXVGeneratedKeyframesToGuides": {
+    "python_module": "comfy_extras.nodes_lt_keyframes"
+  },
+  "LTXVFreezeLatent": {
+    "python_module": "comfy_extras.nodes_lt_keyframes"
+  },
+  "CreateHookLora": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CreateHookLoraModelOnly": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CreateHookModelAsLora": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CreateHookModelAsLoraModelOnly": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "SetHookKeyframes": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CreateHookKeyframe": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CreateHookKeyframesInterpolated": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CreateHookKeyframesFromFloats": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CombineHooks2": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CombineHooks4": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "CombineHooks8": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "ConditioningSetProperties": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "ConditioningSetPropertiesAndCombine": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "PairConditioningSetProperties": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "PairConditioningSetPropertiesAndCombine": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "ConditioningSetDefaultCombine": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "PairConditioningSetDefaultCombine": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "PairConditioningCombine": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "SetClipHooks": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "ConditioningTimestepsRange": {
+    "python_module": "comfy_extras.nodes_hooks"
+  },
+  "MultiGPU_WorkUnits": {
+    "python_module": "comfy_extras.nodes_multigpu"
+  },
+  "SelectModelDevice": {
+    "python_module": "comfy_extras.nodes_multigpu"
+  },
+  "SelectCLIPDevice": {
+    "python_module": "comfy_extras.nodes_multigpu"
+  },
+  "SelectVAEDevice": {
+    "python_module": "comfy_extras.nodes_multigpu"
+  },
+  "Load3D": {
+    "python_module": "comfy_extras.nodes_load_3d"
+  },
+  "Load3DAdvanced": {
+    "python_module": "comfy_extras.nodes_load_3d"
+  },
+  "Preview3D": {
+    "python_module": "comfy_extras.nodes_load_3d"
+  },
+  "Preview3DAdvanced": {
+    "python_module": "comfy_extras.nodes_load_3d"
+  },
+  "PreviewGaussianSplat": {
+    "python_module": "comfy_extras.nodes_load_3d"
+  },
+  "PreviewPointCloud": {
+    "python_module": "comfy_extras.nodes_load_3d"
+  },
+  "EmptyCosmosLatentVideo": {
+    "python_module": "comfy_extras.nodes_cosmos"
+  },
+  "CosmosImageToVideoLatent": {
+    "python_module": "comfy_extras.nodes_cosmos"
+  },
+  "CosmosPredict2ImageToVideoLatent": {
+    "python_module": "comfy_extras.nodes_cosmos"
+  },
+  "SaveWEBM": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "SaveVideo": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "CreateVideo": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "ConcatenateVideo": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "GetVideoComponents": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "LoadVideo": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "Video Slice": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "VideoTrim": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "VideoCrop": {
+    "python_module": "comfy_extras.nodes_video"
+  },
+  "CLIPTextEncodeLumina2": {
+    "python_module": "comfy_extras.nodes_lumina2"
+  },
+  "RenormCFG": {
+    "python_module": "comfy_extras.nodes_lumina2"
+  },
+  "WanTrackToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanImageToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanFunControlToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "Wan22FunControlToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanFunInpaintToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanFirstLastFrameToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanVaceToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "TrimVideoLatent": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanCameraImageToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanPhantomSubjectToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanSoundImageToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanSoundImageToVideoExtend": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanHuMoImageToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanAnimateToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanAnimate2ToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanAnimate2Cache": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "Wan22ImageToVideoLatent": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "WanInfiniteTalkToVideo": {
+    "python_module": "comfy_extras.nodes_wan"
+  },
+  "BerniniConditioning": {
+    "python_module": "comfy_extras.nodes_bernini"
+  },
+  "LotusConditioning": {
+    "python_module": "comfy_extras.nodes_lotus"
+  },
+  "EmptyLatentHunyuan3Dv2": {
+    "python_module": "comfy_extras.nodes_hunyuan3d"
+  },
+  "Hunyuan3Dv2Conditioning": {
+    "python_module": "comfy_extras.nodes_hunyuan3d"
+  },
+  "Hunyuan3Dv2ConditioningMultiView": {
+    "python_module": "comfy_extras.nodes_hunyuan3d"
+  },
+  "VAEDecodeHunyuan3D": {
+    "python_module": "comfy_extras.nodes_hunyuan3d"
+  },
+  "VoxelToMeshBasic": {
+    "python_module": "comfy_extras.nodes_hunyuan3d"
+  },
+  "VoxelToMesh": {
+    "python_module": "comfy_extras.nodes_hunyuan3d"
+  },
+  "PrimitiveString": {
+    "python_module": "comfy_extras.nodes_primitive"
+  },
+  "PrimitiveStringMultiline": {
+    "python_module": "comfy_extras.nodes_primitive"
+  },
+  "PrimitiveInt": {
+    "python_module": "comfy_extras.nodes_primitive"
+  },
+  "PrimitiveFloat": {
+    "python_module": "comfy_extras.nodes_primitive"
+  },
+  "PrimitiveBoolean": {
+    "python_module": "comfy_extras.nodes_primitive"
+  },
+  "CFGZeroStar": {
+    "python_module": "comfy_extras.nodes_cfg"
+  },
+  "CFGNorm": {
+    "python_module": "comfy_extras.nodes_cfg"
+  },
+  "OptimalStepsScheduler": {
+    "python_module": "comfy_extras.nodes_optimalsteps"
+  },
+  "QuadrupleCLIPLoader": {
+    "python_module": "comfy_extras.nodes_hidream"
+  },
+  "CLIPTextEncodeHiDream": {
+    "python_module": "comfy_extras.nodes_hidream"
+  },
+  "FreSca": {
+    "python_module": "comfy_extras.nodes_fresca"
+  },
+  "APG": {
+    "python_module": "comfy_extras.nodes_apg"
+  },
+  "PreviewAny": {
+    "python_module": "comfy_extras.nodes_preview_any"
+  },
+  "TextEncodeAceStepAudio": {
+    "python_module": "comfy_extras.nodes_ace"
+  },
+  "EmptyAceStepLatentAudio": {
+    "python_module": "comfy_extras.nodes_ace"
+  },
+  "TextEncodeAceStepAudio1.5": {
+    "python_module": "comfy_extras.nodes_ace"
+  },
+  "EmptyAceStep1.5LatentAudio": {
+    "python_module": "comfy_extras.nodes_ace"
+  },
+  "ReferenceTimbreAudio": {
+    "python_module": "comfy_extras.nodes_ace"
+  },
+  "StringFormat": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringConcatenate": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringSubstring": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringLength": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "CaseConverter": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringTrim": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringReplace": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringContains": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "StringCompare": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "RegexMatch": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "RegexExtract": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "RegexReplace": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "JsonExtractString": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "ConvertDictionaryToString": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "ConvertArrayToString": {
+    "python_module": "comfy_extras.nodes_string"
+  },
+  "WanCameraEmbedding": {
+    "python_module": "comfy_extras.nodes_camera_trajectory"
+  },
+  "ReferenceLatent": {
+    "python_module": "comfy_extras.nodes_edit_model"
+  },
+  "ReferenceMultiLatent": {
+    "python_module": "comfy_extras.nodes_edit_model"
+  },
+  "TCFG": {
+    "python_module": "comfy_extras.nodes_tcfg"
+  },
+  "SeedVR2Conditioning": {
+    "python_module": "comfy_extras.nodes_seedvr"
+  },
+  "SeedVR2Preprocess": {
+    "python_module": "comfy_extras.nodes_seedvr"
+  },
+  "SeedVR2PostProcessing": {
+    "python_module": "comfy_extras.nodes_seedvr"
+  },
+  "SeedVR2TemporalChunk": {
+    "python_module": "comfy_extras.nodes_seedvr"
+  },
+  "SeedVR2TemporalMerge": {
+    "python_module": "comfy_extras.nodes_seedvr"
+  },
+  "ContextWindowsManual": {
+    "python_module": "comfy_extras.nodes_context_windows"
+  },
+  "WanContextWindowsManual": {
+    "python_module": "comfy_extras.nodes_context_windows"
+  },
+  "LTXVContextWindows": {
+    "python_module": "comfy_extras.nodes_context_windows"
+  },
+  "TextEncodeQwenImageEdit": {
+    "python_module": "comfy_extras.nodes_qwen"
+  },
+  "TextEncodeQwenImageEditPlus": {
+    "python_module": "comfy_extras.nodes_qwen"
+  },
+  "TextEncodeQwenImage21": {
+    "python_module": "comfy_extras.nodes_qwen"
+  },
+  "QwenImage21Cache": {
+    "python_module": "comfy_extras.nodes_qwen"
+  },
+  "EmptyQwenImageLayeredLatentImage": {
+    "python_module": "comfy_extras.nodes_qwen"
+  },
+  "TextEncodeMingImageEdit": {
+    "python_module": "comfy_extras.nodes_ming"
+  },
+  "TextEncodeMageFlowEdit": {
+    "python_module": "comfy_extras.nodes_mage"
+  },
+  "TextEncodeJoyImageEdit": {
+    "python_module": "comfy_extras.nodes_joyimage"
+  },
+  "TextEncodeBooguEdit": {
+    "python_module": "comfy_extras.nodes_boogu"
+  },
+  "EmptyChromaRadianceLatentImage": {
+    "python_module": "comfy_extras.nodes_chroma_radiance"
+  },
+  "ChromaRadianceOptions": {
+    "python_module": "comfy_extras.nodes_chroma_radiance"
+  },
+  "PiDConditioning": {
+    "python_module": "comfy_extras.nodes_pid"
+  },
+  "ModelPatchLoader": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "QwenImageDiffsynthControlnet": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "ZImageFunControlnet": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "WanUni3CControlnetApply": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "USOStyleReference": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "SUPIRApply": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "AnimaLLLiteApply": {
+    "python_module": "comfy_extras.nodes_model_patch"
+  },
+  "EasyCache": {
+    "python_module": "comfy_extras.nodes_easycache"
+  },
+  "LazyCache": {
+    "python_module": "comfy_extras.nodes_easycache"
+  },
+  "BlockSparseAttention": {
+    "python_module": "comfy_extras.nodes_sparse_attention"
+  },
+  "AudioEncoderLoader": {
+    "python_module": "comfy_extras.nodes_audio_encoder"
+  },
+  "AudioEncoderEncode": {
+    "python_module": "comfy_extras.nodes_audio_encoder"
+  },
+  "SheetSage2AudioToABC": {
+    "python_module": "comfy_extras.nodes_audio_encoder"
+  },
+  "ScaleROPE": {
+    "python_module": "comfy_extras.nodes_rope"
+  },
+  "ComfySwitchNode": {
+    "python_module": "comfy_extras.nodes_logic"
+  },
+  "CustomCombo": {
+    "python_module": "comfy_extras.nodes_logic"
+  },
+  "ComfyNotNode": {
+    "python_module": "comfy_extras.nodes_logic"
+  },
+  "ComfyAndNode": {
+    "python_module": "comfy_extras.nodes_logic"
+  },
+  "ComfyOrNode": {
+    "python_module": "comfy_extras.nodes_logic"
+  },
+  "ResolutionSelector": {
+    "python_module": "comfy_extras.nodes_resolution"
+  },
+  "wanBlockSwap": {
+    "python_module": "comfy_extras.nodes_nop"
+  },
+  "Kandinsky5ImageToVideo": {
+    "python_module": "comfy_extras.nodes_kandinsky5"
+  },
+  "NormalizeVideoLatentStart": {
+    "python_module": "comfy_extras.nodes_kandinsky5"
+  },
+  "CLIPTextEncodeKandinsky5": {
+    "python_module": "comfy_extras.nodes_kandinsky5"
+  },
+  "WanMoveTrackToVideo": {
+    "python_module": "comfy_extras.nodes_wanmove"
+  },
+  "WanMoveTracksFromCoords": {
+    "python_module": "comfy_extras.nodes_wanmove"
+  },
+  "WanMoveConcatTrack": {
+    "python_module": "comfy_extras.nodes_wanmove"
+  },
+  "WanMoveVisualizeTracks": {
+    "python_module": "comfy_extras.nodes_wanmove"
+  },
+  "GenerateTracks": {
+    "python_module": "comfy_extras.nodes_wanmove"
+  },
+  "EmptyARVideoLatent": {
+    "python_module": "comfy_extras.nodes_ar_video"
+  },
+  "SamplerARVideo": {
+    "python_module": "comfy_extras.nodes_ar_video"
+  },
+  "ARVideoI2V": {
+    "python_module": "comfy_extras.nodes_ar_video"
+  },
+  "ImageCompare": {
+    "python_module": "comfy_extras.nodes_image_compare"
+  },
+  "TextEncodeZImageOmni": {
+    "python_module": "comfy_extras.nodes_zimage"
+  },
+  "GLSLShader": {
+    "python_module": "comfy_extras.nodes_glsl"
+  },
+  "LoraLoaderBypass": {
+    "python_module": "comfy_extras.nodes_lora_debug"
+  },
+  "LoraLoaderBypassModelOnly": {
+    "python_module": "comfy_extras.nodes_lora_debug"
+  },
+  "TextGenerate": {
+    "python_module": "comfy_extras.nodes_textgen"
+  },
+  "TextGenerateLTX2Prompt": {
+    "python_module": "comfy_extras.nodes_textgen"
+  },
+  "TextOverlay": {
+    "python_module": "comfy_extras.nodes_text_overlay"
+  },
+  "ColorToRGBInt": {
+    "python_module": "comfy_extras.nodes_color"
+  },
+  "CreateList": {
+    "python_module": "comfy_extras.nodes_toolkit"
+  },
+  "GetItemFromList": {
+    "python_module": "comfy_extras.nodes_toolkit"
+  },
+  "NAGuidance": {
+    "python_module": "comfy_extras.nodes_nag"
+  },
+  "Trellis2Conditioning": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "Pixal3DConditioning": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "Pixal3DMultiViewConditioning": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "Trellis2ShapeStage": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "EmptyTrellis2LatentStructure": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "Trellis2TextureStage": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "VaeDecodeTextureTrellis": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "VaeDecodeShapeTrellis": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "VaeDecodeStructureTrellis2": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "Trellis2UpsampleStage": {
+    "python_module": "comfy_extras.nodes_trellis2"
+  },
+  "FillHoles": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "WeldVertices": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "DecimateMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "RemeshMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "UnwrapMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "RenderUVAtlas": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "PaintMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "BakeTextureFromVoxel": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "MeshTextureToImage": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "ApplyTextureToMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "BakeNormalMapFromMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "BakeAmbientOcclusion": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "RenderMesh": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "MeshSmoothNormals": {
+    "python_module": "comfy_extras.nodes_mesh_postprocess"
+  },
+  "SDPoseKeypointExtractor": {
+    "python_module": "comfy_extras.nodes_sdpose"
+  },
+  "SDPoseDrawKeypoints": {
+    "python_module": "comfy_extras.nodes_sdpose"
+  },
+  "SDPoseFaceBBoxes": {
+    "python_module": "comfy_extras.nodes_sdpose"
+  },
+  "CropByBBoxes": {
+    "python_module": "comfy_extras.nodes_sdpose"
+  },
+  "ComfyMathExpression": {
+    "python_module": "comfy_extras.nodes_math"
+  },
+  "ComfyNumberConvert": {
+    "python_module": "comfy_extras.nodes_number_convert"
+  },
+  "Painter": {
+    "python_module": "comfy_extras.nodes_painter"
+  },
+  "ImageCompositor": {
+    "python_module": "comfy_extras.nodes_compositor"
+  },
+  "AddLayer": {
+    "python_module": "comfy_extras.nodes_compositor"
+  },
+  "LayersFromBoundingBoxes": {
+    "python_module": "comfy_extras.nodes_compositor"
+  },
+  "CurveEditor": {
+    "python_module": "comfy_extras.nodes_curve"
+  },
+  "ImageHistogram": {
+    "python_module": "comfy_extras.nodes_curve"
+  },
+  "LoadBackgroundRemovalModel": {
+    "python_module": "comfy_extras.nodes_bg_removal"
+  },
+  "RemoveBackground": {
+    "python_module": "comfy_extras.nodes_bg_removal"
+  },
+  "RTDETR_detect": {
+    "python_module": "comfy_extras.nodes_rtdetr"
+  },
+  "DrawBBoxes": {
+    "python_module": "comfy_extras.nodes_rtdetr"
+  },
+  "FrameInterpolationModelLoader": {
+    "python_module": "comfy_extras.nodes_frame_interpolation"
+  },
+  "FrameInterpolate": {
+    "python_module": "comfy_extras.nodes_frame_interpolation"
+  },
+  "SAM3_Detect": {
+    "python_module": "comfy_extras.nodes_sam3"
+  },
+  "SAM3_VideoTrack": {
+    "python_module": "comfy_extras.nodes_sam3"
+  },
+  "SAM3_TrackPreview": {
+    "python_module": "comfy_extras.nodes_sam3"
+  },
+  "SAM3_TrackToMask": {
+    "python_module": "comfy_extras.nodes_sam3"
+  },
+  "WanSCAILToVideo": {
+    "python_module": "comfy_extras.nodes_scail"
+  },
+  "SCAIL2ColoredMask": {
+    "python_module": "comfy_extras.nodes_scail"
+  },
+  "OpticalFlowLoader": {
+    "python_module": "comfy_extras.nodes_void"
+  },
+  "VOIDQuadmaskPreprocess": {
+    "python_module": "comfy_extras.nodes_void"
+  },
+  "VOIDInpaintConditioning": {
+    "python_module": "comfy_extras.nodes_void"
+  },
+  "VOIDWarpedNoise": {
+    "python_module": "comfy_extras.nodes_void"
+  },
+  "VOIDWarpedNoiseSource": {
+    "python_module": "comfy_extras.nodes_void"
+  },
+  "VOIDSampler": {
+    "python_module": "comfy_extras.nodes_void"
+  },
+  "WanDancerVideo": {
+    "python_module": "comfy_extras.nodes_wandancer"
+  },
+  "WanDancerEncodeAudio": {
+    "python_module": "comfy_extras.nodes_wandancer"
+  },
+  "WanDancerPadKeyframes": {
+    "python_module": "comfy_extras.nodes_wandancer"
+  },
+  "WanDancerPadKeyframesList": {
+    "python_module": "comfy_extras.nodes_wandancer"
+  },
+  "EmptyHiDreamO1LatentImage": {
+    "python_module": "comfy_extras.nodes_hidream_o1"
+  },
+  "HiDreamO1ReferenceImages": {
+    "python_module": "comfy_extras.nodes_hidream_o1"
+  },
+  "HiDreamO1PatchSeamSmoothing": {
+    "python_module": "comfy_extras.nodes_hidream_o1"
+  },
+  "SenseNovaSamplingOptions": {
+    "python_module": "comfy_extras.nodes_sensenova"
+  },
+  "SaveGLB": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "MeshToFile3D": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "RotateMesh": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "MergeMeshes": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "GetMeshInfo": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "Save3DAdvanced": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "SaveGaussianSplat": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "SavePointCloud": {
+    "python_module": "comfy_extras.nodes_save_3d"
+  },
+  "Get3DComponents": {
+    "python_module": "comfy_extras.nodes_mesh_io"
+  },
+  "LoadMoGeModel": {
+    "python_module": "comfy_extras.nodes_moge"
+  },
+  "MoGeInference": {
+    "python_module": "comfy_extras.nodes_moge"
+  },
+  "MoGePanoramaInference": {
+    "python_module": "comfy_extras.nodes_moge"
+  },
+  "MoGeRender": {
+    "python_module": "comfy_extras.nodes_moge"
+  },
+  "MoGePointMapToMesh": {
+    "python_module": "comfy_extras.nodes_moge"
+  },
+  "MoGeGeometryToFOV": {
+    "python_module": "comfy_extras.nodes_moge"
+  },
+  "LoadMediaPipeFaceLandmarker": {
+    "python_module": "comfy_extras.nodes_mediapipe"
+  },
+  "MediaPipeFaceLandmarker": {
+    "python_module": "comfy_extras.nodes_mediapipe"
+  },
+  "MediaPipeFaceMeshVisualize": {
+    "python_module": "comfy_extras.nodes_mediapipe"
+  },
+  "MediaPipeFaceMask": {
+    "python_module": "comfy_extras.nodes_mediapipe"
+  },
+  "SplatToFile3D": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "File3DToSplat": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "RenderSplat": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "TransformSplat": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "GetSplatCount": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "MergeSplat": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "SplatToMesh": {
+    "python_module": "comfy_extras.nodes_gaussian_splat"
+  },
+  "CreateCameraInfo": {
+    "python_module": "comfy_extras.nodes_camera"
+  },
+  "CameraAngle": {
+    "python_module": "comfy_extras.nodes_camera_angle"
+  },
+  "TripoSplatPreprocessImage": {
+    "python_module": "comfy_extras.nodes_triposplat"
+  },
+  "TripoSplatConditioning": {
+    "python_module": "comfy_extras.nodes_triposplat"
+  },
+  "VAEDecodeTripoSplat": {
+    "python_module": "comfy_extras.nodes_triposplat"
+  },
+  "TripoSplatSamplingPreview": {
+    "python_module": "comfy_extras.nodes_triposplat"
+  },
+  "LoadDA3Model": {
+    "python_module": "comfy_extras.nodes_depth_anything_3"
+  },
+  "DA3Inference": {
+    "python_module": "comfy_extras.nodes_depth_anything_3"
+  },
+  "DA3Render": {
+    "python_module": "comfy_extras.nodes_depth_anything_3"
+  },
+  "DA3GeometryToMesh": {
+    "python_module": "comfy_extras.nodes_depth_anything_3"
+  },
+  "SeedNode": {
+    "python_module": "comfy_extras.nodes_seed"
+  },
+  "SaveText": {
+    "python_module": "comfy_extras.nodes_text"
+  },
+  "StartLoop": {
+    "python_module": "comfy_extras.nodes_loop"
+  },
+  "EndLoop": {
+    "python_module": "comfy_extras.nodes_loop"
+  },
+  "LoopIteration": {
+    "python_module": "comfy_extras.nodes_loop"
+  },
+  "LoopProgress": {
+    "python_module": "comfy_extras.nodes_loop"
+  },
+  "LoopResult": {
+    "python_module": "comfy_extras.nodes_loop"
+  },
+  "SAM3DBody_Loader": {
+    "python_module": "comfy_extras.nodes_sam3d_body"
+  },
+  "SAM3DBody_Predict": {
+    "python_module": "comfy_extras.nodes_sam3d_body"
+  },
+  "SAM3DBody_FaceExpression": {
+    "python_module": "comfy_extras.nodes_sam3d_body"
+  },
+  "SAM3DBody_Smooth": {
+    "python_module": "comfy_extras.nodes_sam3d_body"
+  },
+  "SAM3DBody_Render": {
+    "python_module": "comfy_extras.nodes_sam3d_body"
+  },
+  "BuildPoseFile": {
+    "python_module": "comfy_extras.nodes_sam3d_body"
+  },
+  "MarigoldV2PostProcess": {
+    "python_module": "comfy_extras.nodes_marigold"
+  },
+  "ClaudeNode": {
+    "python_module": "comfy_api_nodes.nodes_anthropic"
+  },
+  "BeebleSwitchXVideoEdit": {
+    "python_module": "comfy_api_nodes.nodes_beeble"
+  },
+  "BeebleSwitchXImageEdit": {
+    "python_module": "comfy_api_nodes.nodes_beeble"
+  },
+  "FluxProUltraImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxKontextProImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxKontextMaxImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxProExpandNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxProFillNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxEraseNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxVTONode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux2ProImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux2MaxImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux2ImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux3TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux3ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux3VideoContinuationNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxVideoUpscaleNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "FluxVideoEditNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "Flux3ImageNode": {
+    "python_module": "comfy_api_nodes.nodes_bfl"
+  },
+  "BriaImageEditNode": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaRemoveImageBackground": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaGenFill": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaEraser": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaExpandImage": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaIncreaseResolution": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaRemoveVideoBackground": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaVideoGreenScreen": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaVideoReplaceBackground": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaTransparentVideoBackground": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaEraseByText": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaAddObject": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaReplaceObject": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaRelight": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaRestorePhoto": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaReseason": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaEraseForeground": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaReplaceImageBackground": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "BriaVideoEraser": {
+    "python_module": "comfy_api_nodes.nodes_bria"
+  },
+  "ByteDanceSeedreamNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceSeedreamNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceSeedreamNodeV3": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceSeedreamLayerSeparationNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceSeedreamLayerSeparationNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceFirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDance2TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDance2FirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDance2ReferenceNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDance2ReferenceNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDance2DraftToFinalVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceCreateImageAsset": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceCreateVideoAsset": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceSeedAudio": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceVideoEnhanceNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance"
+  },
+  "ByteDanceSeedNode": {
+    "python_module": "comfy_api_nodes.nodes_bytedance_llm"
+  },
+  "ClarityCrystalUpscaleNode": {
+    "python_module": "comfy_api_nodes.nodes_clarityai"
+  },
+  "ComfyCloudMiniMaxH3TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudMiniMaxH3FirstLastFrameToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudMiniMaxH3ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudMiniMaxMusic3TextToAudioNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudFlux2TextToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudZImageTurboNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudMageFlowTextToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ComfyCloudMageFlowTurboTextToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_comfy_cloud"
+  },
+  "ElevenLabsSpeechToText": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsVoiceSelector": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsTextToSpeech": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsAudioIsolation": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsTextToSoundEffects": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsInstantVoiceClone": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsSpeechToSpeech": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "ElevenLabsTextToDialogue": {
+    "python_module": "comfy_api_nodes.nodes_elevenlabs"
+  },
+  "FishAudioVoiceSelector": {
+    "python_module": "comfy_api_nodes.nodes_fishaudio"
+  },
+  "FishAudioTextToSpeech": {
+    "python_module": "comfy_api_nodes.nodes_fishaudio"
+  },
+  "FishAudioSpeechToText": {
+    "python_module": "comfy_api_nodes.nodes_fishaudio"
+  },
+  "FishAudioInstantVoiceClone": {
+    "python_module": "comfy_api_nodes.nodes_fishaudio"
+  },
+  "GeminiNode": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiNodeV3": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiImageNode": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiImage2Node": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiNanoBanana2": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiNanoBanana2V2": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiVideoOmni": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiVideoOmniV2": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GeminiInputFiles": {
+    "python_module": "comfy_api_nodes.nodes_gemini"
+  },
+  "GrokImageNode": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "GrokImageEditNode": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "GrokImageEditNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "GrokVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "GrokVideoReferenceNode": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "GrokVideoEditNode": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "GrokVideoExtendNode": {
+    "python_module": "comfy_api_nodes.nodes_grok"
+  },
+  "HeyGenTalkingPhotoNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HeyGenAvatarVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HeyGenCreateAvatarNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HeyGenVideoTranslateNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HeyGenTextToSpeechNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HeyGenReferenceToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HeyGenImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_heygen"
+  },
+  "HiggsfieldMotionTransferNode": {
+    "python_module": "comfy_api_nodes.nodes_higgsfield"
+  },
+  "HitPawGeneralImageEnhance": {
+    "python_module": "comfy_api_nodes.nodes_hitpaw"
+  },
+  "HitPawVideoEnhance": {
+    "python_module": "comfy_api_nodes.nodes_hitpaw"
+  },
+  "TencentTextToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan3d"
+  },
+  "TencentImageToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan3d"
+  },
+  "TencentModelTo3DUVNode": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan3d"
+  },
+  "Tencent3DTextureEditNode": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan3d"
+  },
+  "Tencent3DPartNode": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan3d"
+  },
+  "TencentSmartTopologyNode": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan3d"
+  },
+  "HunyuanImageTextToImageApi": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan_image"
+  },
+  "HunyuanImageEditApi": {
+    "python_module": "comfy_api_nodes.nodes_hunyuan_image"
+  },
+  "IdeogramV3": {
+    "python_module": "comfy_api_nodes.nodes_ideogram"
+  },
+  "IdeogramV4": {
+    "python_module": "comfy_api_nodes.nodes_ideogram"
+  },
+  "IdeogramPImage": {
+    "python_module": "comfy_api_nodes.nodes_ideogram"
+  },
+  "IdeogramTextToImageApi": {
+    "python_module": "comfy_api_nodes.nodes_ideogram"
+  },
+  "IdeogramEditApi": {
+    "python_module": "comfy_api_nodes.nodes_ideogram"
+  },
+  "IdeogramPreciseEditApi": {
+    "python_module": "comfy_api_nodes.nodes_ideogram"
+  },
+  "KlingTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingImage2VideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingStartEndFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingLipSyncAudioToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingLipSyncTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingImageGenerationNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingOmniProTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingOmniProFirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingOmniProImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingOmniProVideoToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingOmniProEditVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingOmniProImageNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingTextToVideoWithAudio": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingImageToVideoWithAudio": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingMotionControl": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingFirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingAvatarNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "KlingTryOnNode": {
+    "python_module": "comfy_api_nodes.nodes_kling"
+  },
+  "Krea2ImageNode": {
+    "python_module": "comfy_api_nodes.nodes_krea"
+  },
+  "Krea2StyleReferenceNode": {
+    "python_module": "comfy_api_nodes.nodes_krea"
+  },
+  "Krea3ImageNode": {
+    "python_module": "comfy_api_nodes.nodes_krea"
+  },
+  "LtxApi25TextToVideo": {
+    "python_module": "comfy_api_nodes.nodes_ltxv"
+  },
+  "LtxApi25ImageToVideo": {
+    "python_module": "comfy_api_nodes.nodes_ltxv"
+  },
+  "LtxApi25AudioToVideo": {
+    "python_module": "comfy_api_nodes.nodes_ltxv"
+  },
+  "LumaImageNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaImageModifyNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaReferenceNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaConceptsNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaImageNode2": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaImageEditNode2": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32KeyframeNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32KeyframesToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32VideoEditNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32VideoReframeNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "LumaRay32ExtendVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_luma"
+  },
+  "MagnificImageUpscalerCreativeNode": {
+    "python_module": "comfy_api_nodes.nodes_magnific"
+  },
+  "MagnificImageUpscalerPreciseV2Node": {
+    "python_module": "comfy_api_nodes.nodes_magnific"
+  },
+  "MagnificImageStyleTransferNode": {
+    "python_module": "comfy_api_nodes.nodes_magnific"
+  },
+  "MagnificImageRelightNode": {
+    "python_module": "comfy_api_nodes.nodes_magnific"
+  },
+  "MagnificImageSkinEnhancerNode": {
+    "python_module": "comfy_api_nodes.nodes_magnific"
+  },
+  "MeshyTextToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyRefineNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyImageToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyMultiImageToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyRigModelNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyAnimateModelNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyTextureNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MeshyTextureMultiViewNode": {
+    "python_module": "comfy_api_nodes.nodes_meshy"
+  },
+  "MetaMuseImageTextToImageApi": {
+    "python_module": "comfy_api_nodes.nodes_meta"
+  },
+  "MetaMuseImageEditApi": {
+    "python_module": "comfy_api_nodes.nodes_meta"
+  },
+  "MinimaxTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxHailuoVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxHailuo03TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxHailuo03FirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxHailuo03ReferenceNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxHailuo03ContextIRNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "MinimaxHailuo03RegenerateNode": {
+    "python_module": "comfy_api_nodes.nodes_minimax"
+  },
+  "OpenAIGPTImage1": {
+    "python_module": "comfy_api_nodes.nodes_openai"
+  },
+  "OpenAIGPTImageNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_openai"
+  },
+  "OpenAIChatNode": {
+    "python_module": "comfy_api_nodes.nodes_openai"
+  },
+  "OpenAIInputFiles": {
+    "python_module": "comfy_api_nodes.nodes_openai"
+  },
+  "OpenAIChatConfig": {
+    "python_module": "comfy_api_nodes.nodes_openai"
+  },
+  "OpenRouterLLMNode": {
+    "python_module": "comfy_api_nodes.nodes_openrouter"
+  },
+  "OpenRouterImageNode": {
+    "python_module": "comfy_api_nodes.nodes_openrouter"
+  },
+  "PixverseTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseTransitionVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseTemplateNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseV6TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseV6ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseV6FirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseV6ExtendVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PixverseV6FusionVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pixverse"
+  },
+  "PrunaTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pruna"
+  },
+  "PrunaImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_pruna"
+  },
+  "QuiverTextToSVGNode": {
+    "python_module": "comfy_api_nodes.nodes_quiver"
+  },
+  "QuiverImageToSVGNode": {
+    "python_module": "comfy_api_nodes.nodes_quiver"
+  },
+  "QuiverTextToSVGNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_quiver"
+  },
+  "QuiverImageToSVGNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_quiver"
+  },
+  "QwenImageTextToImageApi": {
+    "python_module": "comfy_api_nodes.nodes_qwen"
+  },
+  "QwenImageEditApi": {
+    "python_module": "comfy_api_nodes.nodes_qwen"
+  },
+  "RecraftTextToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftImageToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftImageInpaintingNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftTextToVectorNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftVectorizeImageNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftRemoveBackgroundNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftReplaceBackgroundNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftCrispUpscaleNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftCreativeUpscaleNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftStyleV3RealisticImage": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftStyleV3DigitalIllustration": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftStyleV3LogoRaster": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftStyleV3InfiniteStyleLibrary": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftCreateStyleNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftColorRGB": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftControls": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftV4TextToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftV4TextToVectorNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "RecraftV4CreateStyleNode": {
+    "python_module": "comfy_api_nodes.nodes_recraft"
+  },
+  "ReveImageCreateNode": {
+    "python_module": "comfy_api_nodes.nodes_reve"
+  },
+  "ReveImageEditNode": {
+    "python_module": "comfy_api_nodes.nodes_reve"
+  },
+  "ReveImageRemixNode": {
+    "python_module": "comfy_api_nodes.nodes_reve"
+  },
+  "Rodin3D_Regular": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "Rodin3D_Detail": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "Rodin3D_Smooth": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "Rodin3D_Sketch": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "Rodin3D_Gen2": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "Rodin3D_Gen25_Image": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "Rodin3D_Gen25_Text": {
+    "python_module": "comfy_api_nodes.nodes_rodin"
+  },
+  "RunwayFirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "RunwayImageToVideoNodeGen3a": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "RunwayImageToVideoNodeGen4": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "RunwayTextToImageNode": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "RunwayAleph2VideoToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "RunwayAleph2KeyframeNode": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "RunwayAleph2PromptImageNode": {
+    "python_module": "comfy_api_nodes.nodes_runway"
+  },
+  "SoniloVideoToMusic": {
+    "python_module": "comfy_api_nodes.nodes_sonilo"
+  },
+  "SoniloTextToMusic": {
+    "python_module": "comfy_api_nodes.nodes_sonilo"
+  },
+  "SyncLipSyncNode": {
+    "python_module": "comfy_api_nodes.nodes_sync_so"
+  },
+  "SyncTalkingImageNode": {
+    "python_module": "comfy_api_nodes.nodes_sync_so"
+  },
+  "TopazImageEnhance": {
+    "python_module": "comfy_api_nodes.nodes_topaz"
+  },
+  "TopazImageEnhanceV2": {
+    "python_module": "comfy_api_nodes.nodes_topaz"
+  },
+  "TopazVideoEnhance": {
+    "python_module": "comfy_api_nodes.nodes_topaz"
+  },
+  "TopazVideoEnhanceV2": {
+    "python_module": "comfy_api_nodes.nodes_topaz"
+  },
+  "TripoTextToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoTextToModelNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoImageToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoImageToModelNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoMultiviewToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoP1TextToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoP1ImageToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoP1MultiviewToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoPSeriesTextToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoPSeriesImageToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoPSeriesMultiviewToModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoImportModelNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoImageToMultiviewNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoEditMultiviewNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoTextureNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoTextureNodeV2": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoRigCheckNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoRigNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoRetargetNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoSegmentNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoMeshCompleteNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoRetopologyNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoSmartSegmentNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "TripoConversionNode": {
+    "python_module": "comfy_api_nodes.nodes_tripo"
+  },
+  "Veo3VideoGenerationNode": {
+    "python_module": "comfy_api_nodes.nodes_veo2"
+  },
+  "Veo3FirstLastFrameNode": {
+    "python_module": "comfy_api_nodes.nodes_veo2"
+  },
+  "ViduTextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "ViduImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "ViduReferenceVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "ViduStartEndToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu2TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu2ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu2ReferenceVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu2StartEndToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "ViduExtendVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "ViduMultiFrameVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu3TextToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu3ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu3StartEndToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu4ImageToVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "Vidu4ReferenceVideoNode": {
+    "python_module": "comfy_api_nodes.nodes_vidu"
+  },
+  "WanTextToImageApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "WanImageToImageApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "WanTextToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "WanImageToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "WanReferenceVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan2TextToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan2ImageToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan2VideoContinuationApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan2VideoEditApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan2ReferenceVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan3ReferenceToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "Wan3ImageToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "HappyHorseTextToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "HappyHorseImageToVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "HappyHorseVideoEditApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "HappyHorseReferenceVideoApi": {
+    "python_module": "comfy_api_nodes.nodes_wan"
+  },
+  "WavespeedFlashVSRNode": {
+    "python_module": "comfy_api_nodes.nodes_wavespeed"
+  },
+  "WavespeedImageUpscaleNode": {
+    "python_module": "comfy_api_nodes.nodes_wavespeed"
+  },
+  "SaveImageWebsocket": {
+    "python_module": "custom_nodes.websocket_image_save"
+  }
+}

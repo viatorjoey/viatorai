@@ -1,0 +1,146 @@
+{
+  "updatedAt": "2026-10-16T03:38:51.544Z",
+  "createdAt": "2026-10-16T03:37:35.974Z",
+  "id": "PWzGFgWzqUhYe9Ti",
+  "name": "AI Creator - 10초 길이 읽기 전용 사전진단",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "diagnostic_webhook",
+      "name": "Read-only duration preflight",
+      "webhookId": "936cf327-5d84-4915-9437-8040e237d385",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "ltx10s-preflight-01a142c7",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "queue",
+      "name": "Read queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "stats",
+      "name": "Read stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "schema",
+      "name": "Read installed ComfyUI schemas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/object_info",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "summary",
+      "name": "Return duration schemas and idle state",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const all=$input.first().json;const names=['EmptyLTXVLatentVideo','ImageFromBatch','CropAudio','AudioCrop','Video Slice','VideoTrim','CreateVideo','SaveVideo','UNETLoader','VAELoader'];return [{json:{queue:$('Read queue').first().json,stats:$('Read stats').first().json,schemas:Object.fromEntries(names.filter(n=>all[n]).map(n=>[n,all[n]]))}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Read-only duration preflight": {
+      "main": [
+        [
+          {
+            "node": "Read queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read queue": {
+      "main": [
+        [
+          {
+            "node": "Read stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stats": {
+      "main": [
+        [
+          {
+            "node": "Read installed ComfyUI schemas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read installed ComfyUI schemas": {
+      "main": [
+        [
+          {
+            "node": "Return duration schemas and idle state",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "nodeGroups": [],
+  "versionId": "b3df79af-2f61-4ecc-8808-d58f975bb262",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

@@ -1,0 +1,147 @@
+{
+  "updatedAt": "2026-10-16T05:42:33.200Z",
+  "createdAt": "2026-10-16T05:41:40.999Z",
+  "id": "nVrK8jsar5Xgxqeh",
+  "name": "AI Creator - 이미지 포즈 API 사전진단 READ ONLY",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "hook",
+      "name": "Read-only image preflight",
+      "webhookId": "f3386661-53e7-45cb-8995-371f07f8b399",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "image-pose-preflight-20261016",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "stats",
+      "name": "Read current ComfyUI stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "queue",
+      "name": "Read current queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "schemas",
+      "name": "Read installed schemas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/object_info",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "summary",
+      "name": "Return image node schemas only",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const all=$input.first().json;const names=['LoadImage','SaveImage','UNETLoader','CLIPLoader','VAELoader','EmptyFlux2LatentImage','ImageScaleToTotalPixels','Flux2Scheduler','CLIPTextEncode','ConditioningZeroOut','ReferenceLatent','GetImageSize','VAEEncode','SamplerCustomAdvanced','VAEDecode','RandomNoise','CFGGuider','KSamplerSelect'];return [{json:{readOnly:true,observedAt:new Date().toISOString(),stats:$('Read current ComfyUI stats').first().json,queue:$('Read current queue').first().json,missing:names.filter(n=>!all[n]),schemas:Object.fromEntries(names.filter(n=>all[n]).map(n=>[n,all[n]]))}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Read-only image preflight": {
+      "main": [
+        [
+          {
+            "node": "Read current ComfyUI stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read current ComfyUI stats": {
+      "main": [
+        [
+          {
+            "node": "Read current queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read current queue": {
+      "main": [
+        [
+          {
+            "node": "Read installed schemas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read installed schemas": {
+      "main": [
+        [
+          {
+            "node": "Return image node schemas only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "e43057ec-d08f-4f97-b622-bcb05a8fd886",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

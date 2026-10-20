@@ -1,0 +1,98 @@
+{
+  "updatedAt": "2026-10-16T01:06:48.163Z",
+  "createdAt": "2026-10-16T01:06:27.892Z",
+  "id": "zeUSkSeChe59WW3n",
+  "name": "AI Creator Studio - Restart decision read-only 20261015",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Check",
+      "webhookId": "4be5fbe6-8757-41c8-b587-7fef41634c2b",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "restart-check-20261015-2110",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "q",
+      "name": "Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 12000
+        }
+      }
+    },
+    {
+      "id": "h",
+      "name": "History",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/history/b99fa1f9-e54d-4438-84ec-ddd20742da15",
+        "options": {
+          "timeout": 12000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Check": {
+      "main": [
+        [
+          {
+            "node": "Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue": {
+      "main": [
+        [
+          {
+            "node": "History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "457d4c85-61ac-41dd-afe4-8dbf74c16137",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

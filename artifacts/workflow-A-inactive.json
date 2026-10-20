@@ -1,0 +1,212 @@
+{
+  "id": "tOPx5GuKmdtf3p2V",
+  "name": "AI Creator - A Drive 사진 수집 및 큐잉 [검증 잠금]",
+  "description": null,
+  "active": false,
+  "createdAt": "2026-10-15T22:41:28.210Z",
+  "updatedAt": "2026-10-15T22:43:01.979Z",
+  "isArchived": false,
+  "versionId": "962a84db-52d7-4b96-a46f-e1cca7535fbf",
+  "versionCounter": 2,
+  "sourceWorkflowId": null,
+  "nodes": [
+    {
+      "id": "manual",
+      "name": "Manual controlled test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "schedule",
+      "name": "Poll Input disabled",
+      "disabled": true,
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gate",
+      "name": "Validation lock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const validated = false; if (!validated) throw new Error('VALIDATION_LOCK: Google Drive OAuth2 and single-image recovery verification required. Keep inactive.'); return $input.all();"
+      }
+    },
+    {
+      "id": "list",
+      "name": "Find one Input image",
+      "notes": "Missing Google Drive OAuth2 credential; select only after same-account access verification.",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "fileFolder",
+        "operation": "search",
+        "searchMethod": "query",
+        "queryString": "'PRIVATE_RESOURCE_594e44099a3c' in parents and trashed = false and (mimeType = 'image/jpeg' or mimeType = 'image/png' or mimeType = 'image/webp')",
+        "returnAll": false,
+        "limit": 1,
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "prepare",
+      "name": "Prepare durable job key",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const a=$input.all();if(a.length>1)throw new Error('Only one candidate allowed');return a.map(i=>({json:{...i.json,jobKey:i.json.id,collectorExecutionId:$execution.id,status:'queued'}}));"
+      }
+    },
+    {
+      "id": "call",
+      "name": "Run B and wait",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "RuWgD7QNIghOLrlA"
+        },
+        "mode": "each",
+        "workflowInputs": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    },
+    {
+      "id": "notes",
+      "name": "Deployment blockers",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -420
+      ],
+      "parameters": {
+        "content": "INACTIVE + DISABLED SCHEDULE + VALIDATION LOCK\nGoogle Drive folder IDs are real and verified. OAuth credential absent in n8n; ChatGPT connector credentials cannot be copied.\nA processes at most ONE file per execution and waits for B. B claims Processing before GPU submission.\nBefore activating production: verify account/folder access, add persistent atomic single-worker lease and dedup ledger keyed by Drive file ID, validate recovery and run one image.\nDo not start overlapping manual runs. Do not auto-requeue Processing after uncertain submission.\nExisting LTX and VRAM watcher preserved.",
+        "width": 620,
+        "height": 340
+      }
+    }
+  ],
+  "connections": {
+    "Manual controlled test": {
+      "main": [
+        [
+          {
+            "node": "Validation lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll Input disabled": {
+      "main": [
+        [
+          {
+            "node": "Validation lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation lock": {
+      "main": [
+        [
+          {
+            "node": "Find one Input image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find one Input image": {
+      "main": [
+        [
+          {
+            "node": "Prepare durable job key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare durable job key": {
+      "main": [
+        [
+          {
+            "node": "Run B and wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodeGroups": [],
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3700,
+    "timezone": "America/New_York",
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

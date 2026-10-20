@@ -1,0 +1,70 @@
+{
+  "updatedAt": "2026-10-16T01:53:04.057Z",
+  "createdAt": "2026-10-16T01:53:04.057Z",
+  "id": "46cXA9xLEvzBDDzb",
+  "name": "Temporary ComfyUI queue read-only check 20261015-2152",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Check",
+      "webhookId": "22ccbff6-8e33-40b3-959e-b6a7a83bcd34",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "comfy-queue-2152-20261015",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "q",
+      "name": "Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 12000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Check": {
+      "main": [
+        [
+          {
+            "node": "Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "98df79f7-6b10-465d-85af-ae3f32d5f57c",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

@@ -1,0 +1,270 @@
+{
+  "id": "tOPx5GuKmdtf3p2V",
+  "versionId": "b86fd375-e838-472a-9030-f0fad2cdc1a2",
+  "active": false,
+  "name": "AI Creator - A Drive 사진 자동 수집",
+  "nodes": [
+    {
+      "id": "manual",
+      "name": "Manual controlled test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "schedule",
+      "name": "Poll Input every 2 minutes",
+      "disabled": false,
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gate",
+      "name": "Validation lock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{automatic:true,collectorExecutionId:$execution.id}}];"
+      }
+    },
+    {
+      "id": "list",
+      "name": "Find one Input image",
+      "notes": "Connected Google Drive credential verified. Up to 1000 supported images; recorded IDs are excluded before selecting one.",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "fileFolder",
+        "operation": "search",
+        "searchMethod": "query",
+        "queryString": "'PRIVATE_RESOURCE_594e44099a3c' in parents and trashed = false and (mimeType = 'image/jpeg' or mimeType = 'image/png' or mimeType = 'image/webp')",
+        "returnAll": false,
+        "limit": 1000,
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "prepare",
+      "name": "Prepare durable job key",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return $input.all().filter(i=>i.json.id && /^image\\/(jpeg|png|webp)$/.test(i.json.mimeType) && Number(i.json.size)<=20971520 && Number(i.json.imageMediaMetadata?.width)>0 && Number(i.json.imageMediaMetadata?.height)>0).map(i=>({json:{...i.json,jobKey:i.json.id,collectorExecutionId:$execution.id,status:'queued'}}));"
+      }
+    },
+    {
+      "id": "call",
+      "name": "Run B and wait",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "RuWgD7QNIghOLrlA"
+        },
+        "mode": "each",
+        "workflowInputs": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    },
+    {
+      "id": "notes",
+      "name": "Deployment blockers",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -420
+      ],
+      "parameters": {
+        "content": "AUTOMATIC INPUT WATCHER — every 2 minutes, one photo per run.\nInput: JPEG / PNG / WebP, max 20 MiB with valid image dimensions. Scan up to 1000 candidates and skip recorded Drive file IDs.\nWorker B uses a persistent single-worker lock and processing ledger. Overlapping polls cannot submit while the lock is held.\n720p output / 4 seconds / 24 fps. Output, Done, Error and Logs folders are configured.\nUncertain failures retain Processing and lock for reconciliation; no blind resubmission. Existing VRAM watcher unchanged.",
+        "width": 620,
+        "height": 340
+      }
+    },
+    {
+      "id": "Exclude_recorded_files",
+      "name": "Exclude recorded files",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        900
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "rowNotExists",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dsEKf75WMtcuHO2i"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "fileId",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Select_one_unprocessed_photo",
+      "name": "Select one unprocessed photo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        900
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return $input.all().slice(0,1);"
+      }
+    }
+  ],
+  "connections": {
+    "Manual controlled test": {
+      "main": [
+        [
+          {
+            "node": "Validation lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll Input every 2 minutes": {
+      "main": [
+        [
+          {
+            "node": "Validation lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation lock": {
+      "main": [
+        [
+          {
+            "node": "Find one Input image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find one Input image": {
+      "main": [
+        [
+          {
+            "node": "Prepare durable job key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare durable job key": {
+      "main": [
+        [
+          {
+            "node": "Exclude recorded files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exclude recorded files": {
+      "main": [
+        [
+          {
+            "node": "Select one unprocessed photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select one unprocessed photo": {
+      "main": [
+        [
+          {
+            "node": "Run B and wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3700,
+    "timezone": "America/New_York",
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  }
+}

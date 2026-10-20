@@ -1,0 +1,44 @@
+# Dependencies and generated framework state
+**/node_modules/
+**/.next/
+**/.vinext/
+**/.wrangler/
+**/.sites-runtime/
+**/dist/
+**/coverage/
+**/__pycache__/
+**/.test-tmp/
+**/*.tsbuildinfo
+# Runtime databases, credentials, private media and local sessions
+**/data/
+**/outputs/
+**/work/
+**/.agents/
+**/.codex/
+**/.env
+**/.env.*
+!**/.env.example
+**/*.sqlite*
+**/*.db
+**/*.dpapi
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.log
+**/*.tar.gz
+**/*.zip
+**/.DS_Store
+/mobile-studio/backups/
+/artifacts/*.json
+!/artifacts/workflow-*.json
+/artifacts/*.png
+/artifacts/*.jpg
+/artifacts/*.mp4
+/artifacts/backup-tools/
+/tests/results.json
+/tests/lock-results.json
+/tests/recovery-execution-*.json
+# Only binding names are included in the sanitized hosting config.
+!/sites/viator-agent-meeting/.openai/
+!/sites/viator-agent-meeting/.openai/hosting.json

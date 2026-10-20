@@ -1,0 +1,18 @@
+from pathlib import Path
+root=Path(__file__).resolve().parent
+p=root/'server.mjs';t=p.read_text(encoding='utf-8')
+t=t.replace("vaes.includes(c.kind==='image'?'flux2-vae.safetensors':'ltx-2.5-video-vae-bf16.safetensors')","vaes.includes(c.vae||(c.kind==='image'?'flux2-vae.safetensors':'ltx-2.5-video-vae-bf16.safetensors'))")
+t=t.replace("modes:c.kind==='image'?['text-image','image-image']:['text-video','image-video']","modes:c.modes||(c.kind==='image'?['text-image','image-image']:['text-video','image-video'])")
+p.write_text(t,encoding='utf-8')
+p=root/'public/app.js';t=p.read_text(encoding='utf-8')
+t=t.replace('old=preferred||s.value',"old=preferred||(mode==='text-image'?'z_image_turbo_bf16.safetensors':s.value)")
+t=t.replace('for(const j of terminal()){const b=', 'for(const j of terminal().filter(j=>!seen.includes(key(j)))){const b=')
+t=t.replace("'아직 알림이 없습니다.'","'읽지 않은 알림이 없습니다.'")
+t=t.replace("$('#count').textContent=active.length||'';","$('#count').textContent=active.filter(j=>j.state!=='blocked').length||'';")
+t=t.replace("$('#model-note').textContent=mode.endsWith('video')?", "$('#model-note').textContent=s.value==='z_image_turbo_bf16.safetensors'?'Z-Image Turbo · 공식 image_z_image_turbo 구성 · 8단계, 설명 충실도 1 고정.':mode.endsWith('video')?")
+t=t.replace("'설치된 호환 FLUX.2 모델입니다. Base·9B는 더 오래 걸립니다.'", "'설치된 호환 모델입니다. Base·9B는 더 오래 걸립니다.'")
+t=t.replace("document.querySelectorAll('[data-mode]')", "document.querySelectorAll('[data-mode]')",1)
+p.write_text(t,encoding='utf-8')
+p=root/'public/index.html';t=p.read_text(encoding='utf-8')
+t=t.replace('aria-label="완료 및 오류 알림">알림 <i', 'aria-label="완료 및 오류 알림"><svg class="bell-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><i')
+p.write_text(t,encoding='utf-8')

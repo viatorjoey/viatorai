@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import ts from 'typescript';
+const out=new URL('../.sites-runtime/voice-test/',import.meta.url);mkdirSync(out,{recursive:true});
+writeFileSync(new URL('voice-recorder.mjs',out),ts.transpileModule(readFileSync(new URL('../app/voice-recorder.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText);
+const {createVoiceRecorder}=await import(new URL('voice-recorder.mjs',out));
+function fixture({permission=null,fail=false,empty=false}={}){let stops=0,last;const track={stop(){stops++;}},stream={getTracks:()=>[track]};class Recorder{static isTypeSupported(type){return type==='audio/mp4';}constructor(s,options){assert.equal(s,stream);this.mimeType=options.mimeType;last=this;}start(){if(fail)throw Error('mic failed');this.state='recording';}stop(){this.state='inactive';queueMicrotask(()=>{if(!empty)this.ondataavailable({data:new Blob(['sound'],{type:this.mimeType})});this.onstop();});}}const control=createVoiceRecorder({media:{getUserMedia:async options=>{assert.equal(options.video,false);if(permission)await permission;return stream;}},Recorder});return {control,get stops(){return stops;},get last(){return last;}};}
+test('Safari recording selects MP4, stops all tracks and preserves final chunk',async()=>{const f=fixture();await f.control.start();const audio=await f.control.stop();assert.equal(audio.type,'audio/mp4');assert.equal(await audio.text(),'sound');assert.ok(f.stops>0);});
+test('cancel before permission grant releases late microphone and never starts recording',async()=>{let grant;const f=fixture({permission:new Promise(r=>grant=r)}),start=f.control.start();f.control.cancel();grant();await assert.rejects(start,/취소/);assert.equal(f.last,undefined);assert.ok(f.stops>0);});
+test('recording cancellation discards audio and releases tracks',async()=>{const f=fixture();await f.control.start();f.control.cancel();await assert.rejects(f.control.stop(),/취소/);assert.ok(f.stops>0);});
+test('recorder setup failure and empty recording both release tracks',async()=>{const broken=fixture({fail:true});await assert.rejects(broken.control.start(),/mic failed/);assert.ok(broken.stops>0);const empty=fixture({empty:true});await empty.control.start();await assert.rejects(empty.control.stop(),/음성/);assert.ok(empty.stops>0);});

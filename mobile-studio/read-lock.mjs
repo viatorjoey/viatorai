@@ -1,0 +1,1 @@
+import {DatabaseSync} from 'node:sqlite';const d=new DatabaseSync('/home/node/.n8n/database.sqlite',{readOnly:true});console.log(d.prepare('SELECT id,busy,owner FROM data_table_user_gd2WF5s9jDTeftKt WHERE id=1').get());

@@ -1,0 +1,75 @@
+import {openAIConnection} from './provider-connections';
+import {env} from 'cloudflare:workers';
+import {database,hash,HubError,stamp} from './hub-core';
+
+const definitions=[
+ {id:'openai:chatgpt-image-latest',label:'OpenAI · ChatGPT 이미지',provider:'openai',modes:['text-image','image-image']},
+ {id:'openai:gpt-image-2.5-flare',label:'OpenAI · 빠른 이미지',provider:'openai',modes:['text-image','image-image']},
+ {id:'openai:gpt-image-2.5-sunburst',label:'OpenAI · 정밀 이미지',provider:'openai',modes:['text-image','image-image']},
+ {id:'gemini:gemini-3.1-flash-image',label:'Gemini · Nano Banana 2',provider:'gemini',modes:['text-image','image-image']},
+ {id:'gemini:gemini-3-pro-image',label:'Gemini · Nano Banana Pro',provider:'gemini',modes:['text-image','image-image']},
+ {id:'gemini:veo-3.1-fast-generate-preview',label:'Gemini · Veo 3.1 Fast',provider:'gemini',modes:['text-video','image-video'],durations:[4,6,8],aspects:['16:9','9:16']},
+ {id:'gemini:veo-3.1-generate-preview',label:'Gemini · Veo 3.1',provider:'gemini',modes:['text-video','image-video'],durations:[4,6,8],aspects:['16:9','9:16']},
+ {id:'xai:grok-imagine-image-2.0',label:'Grok · Imagine 이미지',provider:'xai',modes:['text-image','image-image']},
+ {id:'xai:grok-imagine-video-1.5-lite',label:'Grok · Imagine 영상 Lite',provider:'xai',modes:['text-video','image-video'],durations:[5,10,15]},
+ {id:'xai:grok-imagine-video-1.5',label:'Grok · Imagine 영상',provider:'xai',modes:['text-video','image-video'],durations:[5,10,15]},
+ {id:'openai:chat',label:'ChatGPT · 대화·분석·작성',provider:'openai',modes:['llm-chat']},
+ {id:'gemini:chat',label:'Gemini · 대화·이미지 분석',provider:'gemini',modes:['llm-chat']},
+ {id:'xai:chat',label:'Grok · 대화·이미지 분석',provider:'xai',modes:['llm-chat']},
+ {id:'anthropic:chat',label:'Claude · 분석·작성·코딩',provider:'anthropic',modes:['llm-chat']}
+];
+async function credential(provider:string,override?:string){if(['gemini','xai','anthropic'].includes(provider)&&typeof override==='string'&&(provider==='gemini'?/^[A-Za-z0-9._~+/=-]{20,4096}$/:/^[A-Za-z0-9_-]{20,512}$/).test(override))return override;return ({openai:(await openAIConnection()).key,gemini:env.GEMINI_API_KEY,xai:env.XAI_API_KEY,anthropic:env.ANTHROPIC_API_KEY} as any)[provider];}
+export async function studioCapabilities(){const connected:Record<string,boolean>={};for(const provider of new Set(definitions.map(m=>m.provider)))connected[provider]=!!(await credential(provider));return {executionOwner:'studio',models:definitions.map(m=>({...m,vision:m.modes.includes('llm-chat'),connected:connected[m.provider],reason:connected[m.provider]?null:'API 키 연결 필요'})),notes:['Claude는 대화·분석용이며 이미지·영상 생성은 제공하지 않습니다.','ChatGPT·Gemini·Grok·Claude 앱 전용 기능은 API 제공 범위와 다를 수 있습니다.','OpenAI 영상 API는 제공 종료로 사용할 수 없습니다.']};}
+async function schema(){await database().prepare('CREATE TABLE IF NOT EXISTS studio_cloud_requests(project TEXT NOT NULL,id TEXT NOT NULL,fingerprint TEXT NOT NULL,state TEXT NOT NULL,body TEXT NOT NULL,updated TEXT NOT NULL,PRIMARY KEY(project,id))').run();}
+async function update(pid:string,id:string,state:string,value:any){await database().prepare('UPDATE studio_cloud_requests SET state=?,body=?,updated=? WHERE project=? AND id=?').bind(state,JSON.stringify(value),stamp(),pid,id).run();return {state,...value};}
+export function providerFailure(status:number,data:any,retryAfter:string|null=null,secrets:string[]=[]){
+ const e=data?.error||{},details=Array.isArray(e.details)?e.details:[];
+ let original=String(e.message||'').replace(/AIza[\w-]{20,}|sk-[\w-]{10,}|Bearer\s+[^\s]+/gi,'[비공개]');
+ for(const secret of secrets)if(secret)original=original.split(secret).join('[비공개]');
+ original=original.slice(0,700);
+ const quotas=details.flatMap((d:any)=>Array.isArray(d.violations)?d.violations:[]).slice(0,8).map((v:any)=>({metric:String(v.quotaMetric||'').slice(0,160),id:String(v.quotaId||'').slice(0,160),limit:String(v.quotaValue??'').slice(0,40)}));
+ const delay=details.find((d:any)=>d.retryDelay)?.retryDelay;
+ const seconds=/^\d+(\.\d+)?s$/.test(String(delay))?Math.ceil(parseFloat(delay)):/^\d+$/.test(retryAfter||'')?Number(retryAfter):null;
+ const code=String(e.status||e.code||status).slice(0,80),q=quotas.map((v:any)=>v.id+' '+v.metric).join(' '),hint=original+' '+q;
+ const reason=status===429?(/prepay|credit.*deplet|billing|payment|balance/i.test(original)?'billing':/perday|daily|daylimit/i.test(hint)?'daily_quota':quotas.length?'quota':seconds?'rate_limit':'resource_exhausted'):status===401||status===403?'permission':status>=500?'unavailable':'request';
+ const advice:any={billing:'API 프로젝트의 결제 연결·선불 잔액을 확인해주세요.',daily_quota:'일일 생성 한도에 도달했습니다. Google AI Studio에서 해당 프로젝트의 한도를 확인해주세요.',quota:'해당 모델의 API 할당량 제한입니다. Google AI Studio에서 한도와 사용량을 확인해주세요.',rate_limit:'요청 속도 제한입니다.',resource_exhausted:'Google이 요청을 제한했습니다. 할당량 또는 일시적 처리 용량을 확인해야 합니다.',permission:'API 키 또는 모델 접근 권한을 확인해주세요.',unavailable:'제공 서비스가 일시적으로 요청을 처리하지 못했습니다.',request:'요청 설정을 확인해주세요.'};
+ return {message:'클라우드 API '+status+' · '+advice[reason]+(seconds?' '+seconds+'초 후 다시 시도할 수 있습니다.':'')+(original?'\n제공사 사유: '+original:''),diagnostics:{httpStatus:status,code,reason,retryAfterSeconds:seconds,quotas}};
+}
+async function api(url:string,headers:any,value?:any){const r=await fetch(url,{method:value===undefined?'GET':'POST',headers:{...headers,...(value instanceof FormData?{}:{'Content-Type':'application/json'})},body:value===undefined?undefined:value instanceof FormData?value:JSON.stringify(value),signal:AbortSignal.timeout(120000)});let d:any;try{d=await r.json();}catch{d={};}if(!r.ok){const failure=providerFailure(r.status,d,r.headers.get('retry-after'),Object.values(headers).map(v=>String(v).replace(/^Bearer /,'')));const error=new HubError(r.status===429?429:502,failure.message);(error as any).diagnostics=failure.diagnostics;throw error;}return d;}
+
+function image(b:any){if(!b.image)return null;const i=b.image;if(!['image/png','image/jpeg','image/webp'].includes(i.mime)||typeof i.data!=='string'||i.data.length>28*1024*1024||!/^[A-Za-z0-9+/=]+$/.test(i.data))throw new HubError(400,'첨부 이미지 형식을 확인하세요.');return i;}
+function dataUri(i:any){return `data:${i.mime};base64,${i.data}`;}
+async function media(pid:string,id:string,bytes:Uint8Array,mime:string){if(mime.startsWith('image/')&&bytes[0]===255&&bytes[1]===216)mime='image/jpeg';if(!env.BUCKET||!bytes.length||bytes.length>200*1024*1024)throw new HubError(502,'클라우드 결과 저장소 또는 파일 크기를 확인하세요.');await env.BUCKET.put(`studio-cloud/${pid}/${id}`,bytes,{httpMetadata:{contentType:mime}});return {asset:{mime,bytes:bytes.length,kind:mime.startsWith('video/')?'video':'image'}};}
+function decode(s:string){return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
+function textOutput(d:any){return d.output_text||d.output?.flatMap((o:any)=>o.content||[]).filter((c:any)=>c.type==='output_text').map((c:any)=>c.text).join('\n')||'';}
+async function chat(provider:string,b:any,key:string){
+ const messages=Array.isArray(b.messages)?b.messages.slice(-20):[];if(!messages.length||messages.some((m:any)=>!['user','assistant'].includes(m.role)||typeof m.content!=='string'||m.content.length>12000))throw new HubError(400,'대화 내용을 확인하세요.');
+ if(provider==='gemini'){const contents=messages.map((m:any)=>({role:m.role==='assistant'?'model':'user',parts:[{text:m.content},...(m.image?[{inlineData:{mimeType:image(m).mime,data:m.image.data}}]:[])]}));const d=await api(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(env.GEMINI_MODEL||'gemini-3.8-flash')}:generateContent`,{'x-goog-api-key':key},{contents,generationConfig:{maxOutputTokens:4096}});return d.candidates?.[0]?.content?.parts?.map((p:any)=>p.text||'').join('')||'';}
+ if(provider==='anthropic'){const d=await api('https://api.anthropic.com/v1/messages',{'x-api-key':key,'anthropic-version':'2023-06-01'},{model:'claude-sonnet-5-5',max_tokens:4096,messages:messages.map((m:any)=>({role:m.role,content:[{type:'text',text:m.content},...(m.image?[{type:'image',source:{type:'base64',media_type:image(m).mime,data:m.image.data}}]:[])]}))});return d.content?.filter((p:any)=>p.type==='text').map((p:any)=>p.text).join('')||'';}
+ const input=messages.map((m:any)=>({role:m.role,content:[{type:m.role==='assistant'?'output_text':'input_text',text:m.content},...(m.image?[{type:'input_image',image_url:dataUri(image(m))}]:[])]}));const d=await api(provider==='xai'?'https://api.x.ai/v1/responses':'https://api.openai.com/v1/responses',{Authorization:`Bearer ${key}`},{model:provider==='xai'?'grok-4.7':env.OPENAI_MODEL||'gpt-5.4-mini',input,store:false,max_output_tokens:4096});return textOutput(d);
+}
+export async function studioCloudSubmit(pid:string,b:any){
+ await schema();const id=String(b.id||'');if(!/^[a-f0-9-]{36}$/.test(id))throw new HubError(400,'스튜디오 작업 번호가 필요합니다.');const model=definitions.find(m=>m.id===b.model&&m.modes.includes(b.mode));if(!model)throw new HubError(400,'지원하는 클라우드 모델을 선택하세요.');const key=await credential(model.provider,b.providerKey);if(!key)throw new HubError(503,'이 서비스의 API 키를 먼저 연결하세요.');const fingerprint=await hash(JSON.stringify(b)),old=await database().prepare('SELECT * FROM studio_cloud_requests WHERE project=? AND id=?').bind(pid,id).first<any>();if(old){if(old.fingerprint!==fingerprint)throw new HubError(409,'같은 작업 번호의 내용이 변경되었습니다.');return {state:old.state,...JSON.parse(old.body)};}
+ if(b.mode!=='llm-chat'&&(typeof b.prompt!=='string'||!b.prompt.trim()||b.prompt.length>6000))throw new HubError(400,'프롬프트를 확인하세요.');const img=image(b);if(b.mode.startsWith('image-')&&!img)throw new HubError(400,'첨부 이미지가 필요합니다.');if(!env.BUCKET&&b.mode!=='llm-chat')throw new HubError(503,'결과 저장소를 연결하세요.');
+ const inserted=await database().prepare("INSERT OR IGNORE INTO studio_cloud_requests VALUES(?,?,?,'submitting',?,?)").bind(pid,id,fingerprint,JSON.stringify({provider:model.provider,model:b.model}),stamp()).run();if(!inserted.meta.changes)return studioCloudStatus(pid,id);
+ try{
+  if(b.mode==='llm-chat'){const answer=await chat(model.provider,b,key);if(!answer.trim())throw new HubError(502,'답변이 비어 있습니다.');return update(pid,id,'complete',{text:answer});}
+  const raw=b.model.slice(b.model.indexOf(':')+1),aspect=['16:9','9:16','1:1','4:3','3:4'].includes(b.aspect)?b.aspect:'9:16';let d:any;
+  if(b.mode.endsWith('video')){
+   if(model.provider==='gemini'){if(![4,6,8].includes(b.duration)||!['16:9','9:16'].includes(aspect))throw new HubError(400,'Veo는 4·6·8초와 16:9·9:16을 지원합니다.');d=await api(`https://generativelanguage.googleapis.com/v1beta/models/${raw}:predictLongRunning`,{'x-goog-api-key':key},{instances:[{prompt:b.prompt,...(img?{image:{bytesBase64Encoded:img.data,mimeType:img.mime}}:{})}],parameters:{aspectRatio:aspect,durationSeconds:b.duration,resolution:'720p',sampleCount:1}});if(!/^models\/[\w.-]+\/operations\/[\w.-]+$/.test(d.name||''))throw Error('operation');return update(pid,id,'pending',{provider:'gemini',operation:d.name});}
+   d=await api('https://api.x.ai/v1/videos/generations',{Authorization:`Bearer ${key}`},{model:raw,prompt:b.prompt,duration:b.duration,aspect_ratio:aspect,resolution:'720p',...(img?{image:{url:dataUri(img)}}:{})});if(!/^[\w-]{1,200}$/.test(d.request_id||''))throw Error('operation');return update(pid,id,'pending',{provider:'xai',operation:d.request_id});
+  }
+  let bytes:Uint8Array,mime='image/png';
+  if(model.provider==='openai'){const size=aspect==='1:1'?'1024x1024':['9:16','3:4'].includes(aspect)?'1024x1536':'1536x1024',common={model:raw,prompt:b.prompt,n:1,size,quality:'high',output_format:'png'};if(img){const f=new FormData();for(const[k,v]of Object.entries(common))f.append(k,String(v));f.append('image',new Blob([decode(img.data)],{type:img.mime}),'input.'+(img.mime==='image/jpeg'?'jpg':img.mime.split('/')[1]));d=await api('https://api.openai.com/v1/images/edits',{Authorization:`Bearer ${key}`},f);}else d=await api('https://api.openai.com/v1/images/generations',{Authorization:`Bearer ${key}`},common);bytes=decode(d.data?.[0]?.b64_json||'');}
+  else if(model.provider==='gemini'){d=await api('https://generativelanguage.googleapis.com/v1beta/interactions',{'x-goog-api-key':key},{model:raw,input:[{type:'text',text:b.prompt},...(img?[{type:'image',data:img.data,mime_type:img.mime}]:[])],response_format:{type:'image',mime_type:'image/png',aspect_ratio:aspect,image_size:'2K'}});const o=d.interaction||d,out=o.output_image||o.outputImage||o.outputs?.find((x:any)=>x.type==='image');bytes=decode(out?.data||'');mime=out?.mime_type||'image/png';}
+  else{d=await api('https://api.x.ai/v1/images/'+(img?'edits':'generations'),{Authorization:`Bearer ${key}`},{model:raw,prompt:b.prompt,n:1,response_format:'b64_json',aspect_ratio:aspect,...(img?{image:{url:dataUri(img),type:'image_url'}}:{})});bytes=decode(d.data?.[0]?.b64_json||'');}
+  return update(pid,id,'complete',await media(pid,id,bytes,mime));
+ }catch(e){const error=e instanceof HubError?e.message:'클라우드 요청 결과를 확인해야 합니다. 중복 결제 방지를 위해 자동 재요청하지 않았습니다.';return update(pid,id,'blocked',{error,...((e as any)?.diagnostics?{diagnostics:(e as any).diagnostics}:{})});}
+}
+export async function studioCloudStatus(pid:string,id:string,providerKey?:string){await schema();const r=await database().prepare('SELECT * FROM studio_cloud_requests WHERE project=? AND id=?').bind(pid,id).first<any>();if(!r)return {state:'missing'};const value=JSON.parse(r.body);if(r.state!=='pending')return {state:r.state,...value};
+ const key=await credential(value.provider,providerKey);let d:any,url:string;
+ if(value.provider==='gemini'){d=await api('https://generativelanguage.googleapis.com/v1beta/'+value.operation,{'x-goog-api-key':key});if(!d.done)return {state:'pending'};url=d.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;if(d.error||!url)return update(pid,id,'blocked',{error:'Gemini 영상 생성이 완료되지 않았습니다.'});}
+ else{d=await api('https://api.x.ai/v1/videos/'+encodeURIComponent(value.operation),{Authorization:`Bearer ${key}`});if(d.status==='pending')return {state:'pending'};url=d.video?.url;if(d.status!=='done'||!url)return update(pid,id,'blocked',{error:'Grok 영상 생성이 완료되지 않았습니다.'});}
+ const u=new URL(url);const allowed=value.provider==='gemini'?u.hostname==='generativelanguage.googleapis.com':u.hostname.endsWith('.x.ai')||u.hostname==='x.ai';if(u.protocol!=='https:'||!allowed)throw new HubError(502,'결과 다운로드 주소를 확인해야 합니다.');const res=await fetch(url,{headers:value.provider==='gemini'?{'x-goog-api-key':key}:{},signal:AbortSignal.timeout(120000),redirect:'error'});if(!res.ok||Number(res.headers.get('content-length'))>200*1024*1024)throw new HubError(502,'결과 다운로드를 확인해야 합니다.');const result=await media(pid,id,new Uint8Array(await res.arrayBuffer()),'video/mp4');return update(pid,id,'complete',result);
+}
+export async function studioCloudAsset(pid:string,id:string){if(!/^[a-f0-9-]{36}$/.test(id))throw new HubError(400,'작업 번호를 확인하세요.');const object=await env.BUCKET?.get(`studio-cloud/${pid}/${id}`);if(!object)throw new HubError(404,'결과 파일을 찾지 못했습니다.');return new Response(object.body,{headers:{'Content-Type':object.httpMetadata?.contentType||'application/octet-stream','Cache-Control':'no-store'}});}

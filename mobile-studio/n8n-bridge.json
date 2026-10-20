@@ -1,0 +1,301 @@
+{
+  "name": "AI Creator Mobile - 공용 GPU 안전 작업",
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Mobile worker",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "job",
+      "name": "Read requested job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8788/next",
+        "options": {
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "acquire",
+      "name": "Acquire shared GPU",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "busy",
+              "condition": "eq",
+              "keyValue": false
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": true,
+            "owner": "={{ $execution.id }}",
+            "claimedAt": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "verify",
+      "name": "Verify owned GPU",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "jsCode": "if($input.all().length!==1||$json.busy!==true||String($json.owner)!==String($execution.id))throw new Error('Shared GPU unavailable');return [{json:{jobId:$('Read requested job').first().json.id,owner:String($execution.id)}}];"
+      }
+    },
+    {
+      "id": "run",
+      "name": "Run mobile job and verify cleanup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8788/run",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 10800000
+        }
+      }
+    },
+    {
+      "id": "safe",
+      "name": "Require persisted output and clean GPU",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "jsCode": "if($json.releaseSafe!==true||String($json.owner)!==String($execution.id)||$json.jobId!==$('Read requested job').first().json.id)throw new Error('Keep shared lock for reconciliation');return $input.all();"
+      }
+    },
+    {
+      "id": "release",
+      "name": "Release owned GPU",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "owner",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": false,
+            "owner": ""
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "released",
+      "name": "Verify released owner",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ],
+      "parameters": {
+        "jsCode": "if($input.all().length!==1||$json.busy!==false||$json.owner!=='')throw new Error('GPU release not verified');return [{json:{jobId:$('Read requested job').first().json.id,owner:String($execution.id)}}];"
+      }
+    },
+    {
+      "id": "ack",
+      "name": "Confirm mobile completion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8788/released",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 10000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Mobile worker": {
+      "main": [
+        [
+          {
+            "node": "Read requested job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read requested job": {
+      "main": [
+        [
+          {
+            "node": "Acquire shared GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acquire shared GPU": {
+      "main": [
+        [
+          {
+            "node": "Verify owned GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify owned GPU": {
+      "main": [
+        [
+          {
+            "node": "Run mobile job and verify cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run mobile job and verify cleanup": {
+      "main": [
+        [
+          {
+            "node": "Require persisted output and clean GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Require persisted output and clean GPU": {
+      "main": [
+        [
+          {
+            "node": "Release owned GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Release owned GPU": {
+      "main": [
+        [
+          {
+            "node": "Verify released owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify released owner": {
+      "main": [
+        [
+          {
+            "node": "Confirm mobile completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 11000,
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false
+}

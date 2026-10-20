@@ -1,0 +1,3 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {chatMemoryBudget,isCpuChat} from '../cpu-chat.mjs';
+test('CPU chat budget preserves 10 GiB of free RAM and uses the larger budget for GPT-OSS',()=>{const g=1024**3;assert.equal(chatMemoryBudget('qwen3.5:9b',19*g).allowed,true);assert.equal(chatMemoryBudget('qwen3.5:9b',19*g-1).allowed,false);assert.equal(chatMemoryBudget('gpt-oss:20b',25*g).allowed,false);assert.equal(chatMemoryBudget('gpt-oss:20b',26*g).allowed,true);});
+test('CPU jobs are identified separately from legacy GPU chats and media work',()=>{assert(isCpuChat({mode:'llm-chat',chatLane:'cpu'}));assert(!isCpuChat({mode:'llm-chat'}));assert(!isCpuChat({mode:'text-video',chatLane:'cpu'}));});

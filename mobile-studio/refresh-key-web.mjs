@@ -1,0 +1,10 @@
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync} from 'node:fs';
+const local=JSON.parse(readFileSync('data/supervisor-status.json','utf8'));
+const remote=await (await fetch('http://127.0.0.1:8801/health',{signal:AbortSignal.timeout(3000)})).json();
+const web=remote.services.find(s=>s.name==='web');
+if(remote.pid!==local.pid||web?.pid!==local.services.find(s=>s.name==='web')?.pid||!web.ready)throw Error('Supervisor ownership changed');
+const db=new DatabaseSync('data/studio.sqlite',{readOnly:true});
+const active=db.prepare("SELECT count(*) n FROM jobs WHERE state NOT IN ('blocked','cancelled','complete')").get().n;db.close();
+if(active)throw Error('Active jobs exist; deferred restart');
+process.kill(web.pid,'SIGTERM');console.log('Verified idle web server restarted through supervisor.');

@@ -1,0 +1,198 @@
+[
+  {
+    "id": "sPQ9BYfDZqYAbNKC",
+    "name": "My workflow",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/sPQ9BYfDZqYAbNKC.json"
+  },
+  {
+    "id": "roHqfZyPGApV83Di",
+    "name": "AI Creator Studio - GPU 상태 확인 테스트",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/roHqfZyPGApV83Di.json"
+  },
+  {
+    "id": "1jLlG2oKaSLlcOkx",
+    "name": "AI Creator Studio - 일회성 안전 VRAM 정리",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/1jLlG2oKaSLlcOkx.json"
+  },
+  {
+    "id": "1Cj26Juyp7vIFo8V",
+    "name": "AI Creator Studio - LTX history read-only probe",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/1Cj26Juyp7vIFo8V.json"
+  },
+  {
+    "id": "iXIha3khB8AK41QS",
+    "name": "AI Creator Studio - LTX 2.3+2.5 완료 후 안전 VRAM 정리 v2",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/iXIha3khB8AK41QS.json"
+  },
+  {
+    "id": "wpElRw5jUyxF312U",
+    "name": "AI Creator Studio - VRAM 읽기 전용 점검",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/wpElRw5jUyxF312U.json"
+  },
+  {
+    "id": "rkWxVJb3PoH3Lz4O",
+    "name": "AI Creator Studio - LTX 2.5 4초 풍경 영상 생성 테스트",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/rkWxVJb3PoH3Lz4O.json"
+  },
+  {
+    "id": "RuWgD7QNIghOLrlA",
+    "name": "AI Creator - B 사진별 프롬프트 및 LTX 2.5 720p 제작",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/RuWgD7QNIghOLrlA.json"
+  },
+  {
+    "id": "tOPx5GuKmdtf3p2V",
+    "name": "AI Creator - A Drive 사진 자동 수집",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/tOPx5GuKmdtf3p2V.json"
+  },
+  {
+    "id": "7EVdfpOJLX6BEZoB",
+    "name": "AI Creator - Drive 연결 읽기 전용 검증",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/7EVdfpOJLX6BEZoB.json"
+  },
+  {
+    "id": "pXAqJo6UVTsOzGPo",
+    "name": "AI Creator Studio - ComfyUI 모델 읽기 전용 진단",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/pXAqJo6UVTsOzGPo.json"
+  },
+  {
+    "id": "jR9cLsG9KQsqUSHi",
+    "name": "AI Creator Studio - 이미지 모델 설치 사전진단 (읽기 전용)",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/jR9cLsG9KQsqUSHi.json"
+  },
+  {
+    "id": "6nc22C1hSeR6UDXI",
+    "name": "AI Creator - queue status read only 20261016",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/6nc22C1hSeR6UDXI.json"
+  },
+  {
+    "id": "qyidsxvaQ8PYt8Wu",
+    "name": "AI Creator Studio - ComfyUI 큐 확인 (임시 읽기 전용)",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/qyidsxvaQ8PYt8Wu.json"
+  },
+  {
+    "id": "zeUSkSeChe59WW3n",
+    "name": "AI Creator Studio - Restart decision read-only 20261015",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/zeUSkSeChe59WW3n.json"
+  },
+  {
+    "id": "pU2BbyefB9L09iu0",
+    "name": "AI Creator Studio - GPU VRAM live read-only",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/pU2BbyefB9L09iu0.json"
+  },
+  {
+    "id": "46cXA9xLEvzBDDzb",
+    "name": "Temporary ComfyUI queue read-only check 20261015-2152",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/46cXA9xLEvzBDDzb.json"
+  },
+  {
+    "id": "ezWnajluvcVbz7PM",
+    "name": "AI Creator - B LTX25 순차 생성 및 VRAM 정리",
+    "sourceActive": true,
+    "backupActive": false,
+    "path": "workflows/n8n/ezWnajluvcVbz7PM.json"
+  },
+  {
+    "id": "62K6BJYPjscOdoCz",
+    "name": "AI Creator - A 순차 영상 자동 수집",
+    "sourceActive": true,
+    "backupActive": false,
+    "path": "workflows/n8n/62K6BJYPjscOdoCz.json"
+  },
+  {
+    "id": "QOX2gAXVhRChbfjH",
+    "name": "AI Creator - Recover completed job 344 DRAFT",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/QOX2gAXVhRChbfjH.json"
+  },
+  {
+    "id": "14znuJAKW377t9Xg",
+    "name": "AI Creator - Safe cleanup fixture TEST ONLY",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/14znuJAKW377t9Xg.json"
+  },
+  {
+    "id": "PWzGFgWzqUhYe9Ti",
+    "name": "AI Creator - 10초 길이 읽기 전용 사전진단",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/PWzGFgWzqUhYe9Ti.json"
+  },
+  {
+    "id": "nVrK8jsar5Xgxqeh",
+    "name": "AI Creator - 이미지 포즈 API 사전진단 READ ONLY",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/nVrK8jsar5Xgxqeh.json"
+  },
+  {
+    "id": "kvFPt1H5hIWWyGMC",
+    "name": "AI Creator - C 원본 인물 포즈 5장 수동 생성",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/kvFPt1H5hIWWyGMC.json"
+  },
+  {
+    "id": "aufZMv1WCSzBKBlB",
+    "name": "AI Creator - D 원본 인물 만원 버스 1장",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/aufZMv1WCSzBKBlB.json"
+  },
+  {
+    "id": "fMX2MjSSZZPRuO93",
+    "name": "AI Creator Studio - Ollama Qwen 연결 테스트",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/fMX2MjSSZZPRuO93.json"
+  },
+  {
+    "id": "OUEvnzeelRd84Sr8",
+    "name": "AI Creator Mobile - 공용 GPU 안전 작업",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/OUEvnzeelRd84Sr8.json"
+  },
+  {
+    "id": "2Fn3if59BIQZyrVf",
+    "name": "AI Creator Mobile - 완료 작업 안전 복구",
+    "sourceActive": false,
+    "backupActive": false,
+    "path": "workflows/n8n/2Fn3if59BIQZyrVf.json"
+  }
+]

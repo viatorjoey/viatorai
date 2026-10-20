@@ -1,0 +1,8 @@
+import assert from 'node:assert/strict';import {randomUUID} from 'node:crypto';
+const base='http://127.0.0.1:8799',s=await fetch(base+'/api/local-session',{method:'POST'}),headers={Origin:base,Cookie:s.headers.get('set-cookie').split(';')[0],'Content-Type':'application/json'},id=randomUUID();
+const before=await(await fetch(base+'/api/status',{headers})).json();let peakVram=0,observed=false;const watch=setInterval(async()=>{try{const ps=await(await fetch('http://127.0.0.1:11435/api/ps')).json();for(const m of ps.models||[]){observed=true;peakVram=Math.max(peakVram,m.size_vram||0);}}catch{}},1000);
+try{const start=Date.now(),value={mode:'text-image',model:'z_image_turbo_bf16.safetensors',prompt:'햇살이 들어오는 작은 카페 창가에 놓인 커피 한 잔 사진',negative:'글씨, 워터마크',aspect:'16:9',resolution:'512x288',duration:4,seed:42,guidance:1};
+const r=await fetch(base+'/api/refinements',{method:'POST',headers:{...headers,'Idempotency-Key':id},body:JSON.stringify(value)}),out=await r.json();assert.equal(r.status,200,JSON.stringify(out));assert.equal(out.state,'complete');assert.equal(out.refineOnly,true);assert.equal(out.originalPrompt,value.prompt);assert(out.refinedAt);assert(!/[가-힣]/.test(out.prompt));assert.equal(peakVram,0);
+const replay=await fetch(base+'/api/refinements',{method:'POST',headers:{...headers,'Idempotency-Key':id},body:JSON.stringify(value)});assert.equal((await replay.json()).id,id);const ps=await(await fetch('http://127.0.0.1:11435/api/ps')).json();assert.equal(ps.models.length,0);
+console.log(JSON.stringify({seconds:(Date.now()-start)/1000,gpuRunningBefore:before.running,cpuModelObserved:observed,cpuVramBytes:peakVram,unloaded:true,prompt:out.prompt,negative:out.negative,id}));
+}finally{clearInterval(watch);}

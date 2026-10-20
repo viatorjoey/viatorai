@@ -1,0 +1,26 @@
+{
+  "name": "VIATOR DIRECTING ROOM",
+  "short_name": "VIATOR DIRECTING ROOM",
+  "description": "비아토르 AI 크리에이터 스튜디오 회의실",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "/",
+  "scope": "/"
+}

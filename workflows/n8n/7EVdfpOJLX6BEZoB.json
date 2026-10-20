@@ -1,0 +1,120 @@
+{
+  "updatedAt": "2026-10-15T23:01:18.227Z",
+  "createdAt": "2026-10-15T23:01:18.227Z",
+  "id": "7EVdfpOJLX6BEZoB",
+  "name": "AI Creator - Drive 연결 읽기 전용 검증",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "m",
+      "name": "Manual read-only probe",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "a",
+      "name": "Read Drive identity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/about",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "user(emailAddress,displayName),storageQuota"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "f",
+      "name": "Read AI Creator folders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "'PRIVATE_RESOURCE_cdc8b0c0b838' in parents and trashed = false"
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name,mimeType,capabilities(canAddChildren)),nextPageToken"
+            },
+            {
+              "name": "pageSize",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual read-only probe": {
+      "main": [
+        [
+          {
+            "node": "Read Drive identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Drive identity": {
+      "main": [
+        [
+          {
+            "node": "Read AI Creator folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 90,
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "0f829673-3823-4c52-b10a-8dfa08f5733b",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

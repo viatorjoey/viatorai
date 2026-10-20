@@ -1,0 +1,1 @@
+const fs=require('fs');const p='mobile-studio/server.mjs';let s=fs.readFileSync(p,'utf8');s=s.replace('statusCache.maintenanceActive=!!maintenance.active();','statusCache.maintenanceActive=!!maintenance.active();statusCache.engineRecovery={enabled:API_ONLY,...engineWatch.status};');fs.writeFileSync(p,s);

@@ -1,0 +1,63 @@
+{
+  "updatedAt": "2026-10-15T21:54:29.009Z",
+  "createdAt": "2026-10-15T21:53:58.461Z",
+  "id": "wpElRw5jUyxF312U",
+  "name": "AI Creator Studio - VRAM 읽기 전용 점검",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "tr",
+      "name": "Read-only Check",
+      "webhookId": "6b678f64-ee71-4d8e-a819-d0f29a53a928",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vram-check-f93a7b2c1e",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "gpu",
+      "name": "Read GPU Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Read-only Check": {
+      "main": [
+        [
+          {
+            "node": "Read GPU Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "221abbf2-84dd-4487-a25c-552c79e7aedd",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

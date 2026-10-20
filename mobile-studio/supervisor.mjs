@@ -1,0 +1,34 @@
+import {mkdirSync,readFileSync,writeFileSync,appendFileSync,openSync,closeSync,existsSync,renameSync,statSync} from 'node:fs';
+import {spawn,execFile} from 'node:child_process';import {promisify} from 'node:util';import http from 'node:http';import net from 'node:net';import path from 'node:path';import {fileURLToPath} from 'node:url';
+const exec=promisify(execFile),root=path.dirname(fileURLToPath(import.meta.url));
+export const restartDelay=failures=>Math.min(30000,2000*2**Math.min(4,Math.max(0,failures-1)));
+export function connectionTransition(previous,online){return {state:online?'online':'offline',changed:previous!==(online?'online':'offline'),recovered:previous==='offline'&&online};}
+export async function startSupervisor(config={}){
+ const testing=config.testMode===true,data=config.data||path.join(root,'data'),node=config.node||process.execPath,script=path.join(root,'server.mjs'),port=config.port||8801,interval=config.interval||5000,comfy=config.comfy||'http://127.0.0.1:8188';mkdirSync(data,{recursive:true});
+ const logFile=path.join(data,'supervisor.log'),stateFile=path.join(data,'supervisor-status.json');const log=(event,detail={})=>{try{if(existsSync(logFile)&&statSync(logFile).size>5*1024*1024)renameSync(logFile,logFile+'.previous');appendFileSync(logFile,JSON.stringify({at:new Date().toISOString(),event,...detail})+'\n');}catch{}};
+ const services=[{name:'web',port:config.webPort||8799,internal:config.webInternal||8800},{name:'worker',port:config.workerPort||8787,internal:config.workerInternal||8788}].map(s=>({...s,pid:null,failures:0,nextStart:0,ready:false}));
+ const status={pid:process.pid,startedAt:new Date().toISOString(),comfy:{state:'unknown'},services};let stopping=false,ticking=false,preloadReady=false,lastDockerTry=0;
+ const openPort=p=>new Promise(resolve=>{const socket=net.connect({host:'127.0.0.1',port:p});let settled=false;const end=ok=>{if(settled)return;settled=true;socket.destroy();resolve(ok);};socket.setTimeout(600);socket.once('connect',()=>end(true));socket.once('error',()=>end(false));socket.once('timeout',()=>end(false));});
+ async function owner(p){const ps="$listener=Get-NetTCPConnection -LocalPort "+p+" -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1; if($listener){Get-CimInstance Win32_Process -Filter ('ProcessId='+$listener.OwningProcess) | Select-Object ProcessId,ExecutablePath,CommandLine | ConvertTo-Json -Compress}";const {stdout}=await exec('powershell.exe',['-NoProfile','-Command',ps],{windowsHide:true,timeout:10000});const x=stdout.trim()?JSON.parse(stdout):null;return x&&path.resolve(x.ExecutablePath||'').toLowerCase()===path.resolve(node).toLowerCase()&&(String(x.CommandLine).toLowerCase().includes(script.toLowerCase())||p===services[1].port&&relativeWorkerOwned(x))?Number(x.ProcessId):null;}
+ function relativeWorkerOwned(x){try{const marker=JSON.parse(readFileSync(path.join(data,'worker-v2.json'),'utf8'));return marker.version===6&&marker.pid===Number(x.ProcessId)&&/\bserver\.mjs[\s\"]*$/.test(String(x.CommandLine));}catch{return false;}}
+ async function dockerReady(){if(testing)return true;if(preloadReady)return true;if(Date.now()-lastDockerTry<15000)return false;lastDockerTry=Date.now();try{await exec('docker',['cp',path.join(root,'n8n-cli-preload.cjs'),'n8n:/tmp/ai-creator-mobile-preload.cjs'],{windowsHide:true,timeout:10000});preloadReady=true;return true;}catch{log('worker_waiting_for_docker');return false;}}
+ async function ensure(s){
+  if(await openPort(s.port)){if(s.pid){try{process.kill(s.pid,0);}catch{s.pid=null;}}if(!s.pid){s.pid=await owner(s.port);if(!s.pid){s.ready=false;s.error='port_owned_by_another_process';return;}log('adopted',{service:s.name,pid:s.pid});}s.ready=true;s.error=undefined;if(s.stableSince&&Date.now()-s.stableSince>60000)s.failures=0;return;}
+  s.ready=false;if(s.pid){try{process.kill(s.pid,0);s.error='process_alive_port_unavailable';return;}catch{s.pid=null;s.failures++;s.nextStart=Date.now()+restartDelay(s.failures);if(s.name==='worker')preloadReady=false;log('exit_detected',{service:s.name,retryMs:restartDelay(s.failures)});}}
+  if(Date.now()<s.nextStart)return;if(s.name==='worker'&&!await dockerReady()){s.error='waiting_for_docker';return;}
+  const env={...process.env,STUDIO_PORT:String(s.port),STUDIO_INTERNAL_PORT:String(s.internal),STUDIO_DATA_DIR:data};delete env.STUDIO_API_ONLY;delete env.STUDIO_TEST_MODE;if(s.name==='web')env.STUDIO_API_ONLY='1';if(testing){env.STUDIO_TEST_MODE='1';env.STUDIO_TEST_COMFY=comfy;}
+  const output=path.join(data,s.name==='web'?'web-v2.log':'server.log'),errors=path.join(data,s.name==='web'?'web-v2-error.log':'server-error.log');const out=openSync(output,'a'),err=openSync(errors,'a');try{const child=spawn(node,[script],{cwd:root,env,windowsHide:true,stdio:['ignore',out,err]});s.pid=child.pid||null;s.stableSince=Date.now();s.nextStart=Date.now()+15000;child.once('error',()=>{s.pid=null;s.failures++;s.nextStart=Date.now()+restartDelay(s.failures);log('launch_failed',{service:s.name});});child.unref();log('started',{service:s.name,pid:s.pid});}finally{closeSync(out);closeSync(err);}
+ }
+ async function tick(){if(stopping||ticking)return;ticking=true;try{
+  // Always restore the web first; the worker may wait independently for Docker.
+  await ensure(services[0]);await ensure(services[1]);let online=false;try{const r=await fetch(comfy+'/queue',{signal:AbortSignal.timeout(2000)}),q=await r.json();online=r.ok&&Array.isArray(q.queue_running)&&Array.isArray(q.queue_pending);}catch{}
+  const transition=connectionTransition(status.comfy.state,online);if(transition.changed){status.comfy.changedAt=new Date().toISOString();log(transition.recovered?'comfy_reconnected':online?'comfy_online':'comfy_disconnected');}status.comfy.state=transition.state;status.checkedAt=new Date().toISOString();writeFileSync(stateFile,JSON.stringify(status,null,2));
+ }catch(e){log('monitor_error',{message:e.message.slice(0,160)});}finally{ticking=false;}}
+ const server=http.createServer((req,res)=>{if(req.url!=='/health'||req.method!=='GET'){res.writeHead(404);res.end();return;}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(status));});
+ await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',resolve);});log('supervisor_started',{pid:process.pid});const timer=setInterval(()=>void tick(),interval);void tick();
+ const stop=()=>{stopping=true;clearInterval(timer);server.close();};return {stop,status,tick};
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ const index=process.argv.indexOf('--config'),config=index>=0?JSON.parse(readFileSync(process.argv[index+1],'utf8').replace(/^\uFEFF/,'')):{};
+ try{await startSupervisor(config);}catch(e){if(e.code==='EADDRINUSE')process.exit(0);console.error('Studio supervisor failed: '+e.message);process.exit(1);}
+}

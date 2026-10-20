@@ -1,0 +1,144 @@
+{
+  "updatedAt": "2026-10-16T00:09:05.467Z",
+  "createdAt": "2026-10-16T00:08:49.351Z",
+  "id": "jR9cLsG9KQsqUSHi",
+  "name": "AI Creator Studio - 이미지 모델 설치 사전진단 (읽기 전용)",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Temporary diagnostic webhook",
+      "webhookId": "5cab92a6-d7e1-4a12-9560-4e4d161a6c77",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "comfy-install-preflight-20261015",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "stats",
+      "name": "ComfyUI system stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {}
+      }
+    },
+    {
+      "id": "checkpoints",
+      "name": "ComfyUI checkpoint names",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/models/checkpoints",
+        "options": {}
+      }
+    },
+    {
+      "id": "lora",
+      "name": "ComfyUI LoRA names",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        950,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/models/loras",
+        "options": {}
+      }
+    },
+    {
+      "id": "summary",
+      "name": "Summarize without file writes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const stats=$('ComfyUI system stats').first().json;const checkpoints=$('ComfyUI checkpoint names').all().map(x=>x.json);const loras=$('ComfyUI LoRA names').all().map(x=>x.json);return [{json:{connection:'ok',system:stats,checkpoints,loras,filesystemWriteTest:'not performed'}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Temporary diagnostic webhook": {
+      "main": [
+        [
+          {
+            "node": "ComfyUI system stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComfyUI system stats": {
+      "main": [
+        [
+          {
+            "node": "ComfyUI checkpoint names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComfyUI checkpoint names": {
+      "main": [
+        [
+          {
+            "node": "ComfyUI LoRA names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComfyUI LoRA names": {
+      "main": [
+        [
+          {
+            "node": "Summarize without file writes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "889fd814-2f7c-4289-9853-0c335caef641",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

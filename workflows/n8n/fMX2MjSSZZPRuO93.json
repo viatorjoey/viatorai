@@ -1,0 +1,91 @@
+{
+  "updatedAt": "2026-10-16T15:42:43.654Z",
+  "createdAt": "2026-10-16T15:42:43.654Z",
+  "id": "fMX2MjSSZZPRuO93",
+  "name": "AI Creator Studio - Ollama Qwen 연결 테스트",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "manual",
+      "name": "Manual Test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "chain",
+      "name": "Qwen Connection Test",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "Reply with exactly: QWEN_N8N_OK",
+        "batching": {}
+      }
+    },
+    {
+      "id": "model",
+      "name": "Qwen Ollama",
+      "notes": "keepAlive=0: unload this model after each response. Verify Ollama /api/ps is empty before video generation; do not unload other users' models.",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        260,
+        240
+      ],
+      "parameters": {
+        "model": "qwen3.5:9b",
+        "options": {
+          "think": false,
+          "temperature": 0,
+          "numCtx": 2048,
+          "numPredict": 32,
+          "keepAlive": "0"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Test": {
+      "main": [
+        [
+          {
+            "node": "Qwen Connection Test",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qwen Ollama": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Qwen Connection Test",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveManualExecutions": true,
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "18d9a929-ce42-4c87-80ca-b7a8972e2ba3",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

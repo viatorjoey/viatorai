@@ -1,0 +1,58 @@
+{
+  "updatedAt": "2026-10-15T20:30:21.212Z",
+  "createdAt": "2026-10-15T20:30:21.212Z",
+  "id": "roHqfZyPGApV83Di",
+  "name": "AI Creator Studio - GPU 상태 확인 테스트",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "manual-start",
+      "name": "수동 실행",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "comfy-gpu-status",
+      "name": "ComfyUI GPU 상태 조회",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "수동 실행": {
+      "main": [
+        [
+          {
+            "node": "ComfyUI GPU 상태 조회",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "d325167d-7436-4491-a3fc-ae0e3bbe668d",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

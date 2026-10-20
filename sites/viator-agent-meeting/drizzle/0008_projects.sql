@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS hub_projects (id text PRIMARY KEY NOT NULL,name text NOT NULL COLLATE NOCASE UNIQUE,created_at text NOT NULL);

@@ -1,0 +1,366 @@
+{
+  "updatedAt": "2026-10-16T02:57:54.196Z",
+  "createdAt": "2026-10-16T02:57:54.196Z",
+  "id": "14znuJAKW377t9Xg",
+  "name": "AI Creator - Safe cleanup fixture TEST ONLY",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "Evaluate_VRAM_release",
+      "name": "Evaluate VRAM release",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const q=$input.first().json,s=$('Start cleanup').first().json,stats=$('Read cleanup VRAM').all(0,$runIndex)[0]?.json;if(Date.now()-s.cleanupStartedAt>180000)throw new Error('VRAM release not confirmed within 180 seconds; retain lock');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Queue no longer idle during cleanup; retain lock');const d=stats?.devices?.filter(x=>x.type==='cuda');if(!d?.length)throw new Error('Missing CUDA memory telemetry; retain lock');const released=d.every(x=>Number.isFinite(x.torch_vram_total)&&Number.isFinite(x.torch_vram_free)&&x.torch_vram_total>=0&&x.torch_vram_free>=0&&x.torch_vram_free<=x.torch_vram_total&&x.torch_vram_total<=134217728&&x.torch_vram_total-x.torch_vram_free<=16777216);;return [{json:{...s,cleanupReady:released,cleanupReadAt:Date.now(),before:$('VRAM before cleanup').first().json.devices,after:stats.devices}}];"
+      }
+    },
+    {
+      "id": "VRAM_release_observed",
+      "name": "VRAM release observed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check",
+              "leftValue": "={{ $json.cleanupReady === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Verify_stable_cleanup",
+      "name": "Verify stable cleanup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const q=$input.first().json,s=$('Start cleanup').first().json,stats=$('Read stable VRAM').first().json;if(Date.now()-s.cleanupStartedAt>180000)throw new Error('VRAM release not confirmed within 180 seconds; retain lock');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Queue no longer idle during cleanup; retain lock');const d=stats?.devices?.filter(x=>x.type==='cuda');if(!d?.length)throw new Error('Missing CUDA memory telemetry; retain lock');const released=d.every(x=>Number.isFinite(x.torch_vram_total)&&Number.isFinite(x.torch_vram_free)&&x.torch_vram_total>=0&&x.torch_vram_free>=0&&x.torch_vram_free<=x.torch_vram_total&&x.torch_vram_total<=134217728&&x.torch_vram_total-x.torch_vram_free<=16777216);if(!released)throw new Error('VRAM grew during stable confirmation; retain lock');return [{json:{...s,cleanupReady:released,cleanupReadAt:Date.now(),before:$('VRAM before cleanup').first().json.devices,after:stats.devices}}];"
+      }
+    },
+    {
+      "id": "Manual_test",
+      "name": "Manual test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "Start_cleanup",
+      "name": "Start cleanup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{cleanupStartedAt:Date.now(),fixtureOnly:true}}];"
+      }
+    },
+    {
+      "id": "VRAM_before_cleanup",
+      "name": "VRAM before cleanup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{\"devices\":[{\"type\":\"cuda\",\"torch_vram_total\":67108864,\"torch_vram_free\":58327040}]}}];"
+      }
+    },
+    {
+      "id": "Read_cleanup_VRAM",
+      "name": "Read cleanup VRAM",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:$runIndex===0?{devices:[{type:'cuda',torch_vram_total:10000000000,torch_vram_free:9000000000}]}:{\"devices\":[{\"type\":\"cuda\",\"torch_vram_total\":67108864,\"torch_vram_free\":58327040}]}}];"
+      }
+    },
+    {
+      "id": "Read_cleanup_queue",
+      "name": "Read cleanup queue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{queue_running:[],queue_pending:[]}}];"
+      }
+    },
+    {
+      "id": "Read_stable_VRAM",
+      "name": "Read stable VRAM",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{\"devices\":[{\"type\":\"cuda\",\"torch_vram_total\":67108864,\"torch_vram_free\":58327040}]}}];"
+      }
+    },
+    {
+      "id": "Read_stable_queue",
+      "name": "Read stable queue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{queue_running:[],queue_pending:[]}}];"
+      }
+    },
+    {
+      "id": "Assert_runtime_gate",
+      "name": "Assert runtime gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if($input.first().json.cleanupReady!==true)throw new Error('Gate not verified');const first=$('Evaluate VRAM release').all(0,0)[0].json;const second=$('Evaluate VRAM release').all(0,1)[0].json;if(first.cleanupReady!==false||second.cleanupReady!==true)throw new Error('Polling run indices failed');return [{json:{passed:true,fixtureOnly:true,generation:false,upload:false,unload:false,firstObservation:false,secondObservation:true,stableObservation:true}}];"
+      }
+    },
+    {
+      "id": "Poll_fixture",
+      "name": "Poll fixture",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 1,
+        "unit": "seconds"
+      },
+      "webhookId": "34f5932a-a3c4-4dc2-88ab-3df69c8243ce"
+    },
+    {
+      "id": "Stable_fixture",
+      "name": "Stable fixture",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "webhookId": "bcefa11a-92d3-4308-9138-0196669e3f4e"
+    }
+  ],
+  "connections": {
+    "Manual test": {
+      "main": [
+        [
+          {
+            "node": "Start cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start cleanup": {
+      "main": [
+        [
+          {
+            "node": "VRAM before cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VRAM before cleanup": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read cleanup VRAM": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read cleanup queue": {
+      "main": [
+        [
+          {
+            "node": "Evaluate VRAM release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate VRAM release": {
+      "main": [
+        [
+          {
+            "node": "VRAM release observed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VRAM release observed": {
+      "main": [
+        [
+          {
+            "node": "Stable fixture",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Poll fixture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll fixture": {
+      "main": [
+        [
+          {
+            "node": "Read cleanup VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stable fixture": {
+      "main": [
+        [
+          {
+            "node": "Read stable VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stable VRAM": {
+      "main": [
+        [
+          {
+            "node": "Read stable queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stable queue": {
+      "main": [
+        [
+          {
+            "node": "Verify stable cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify stable cleanup": {
+      "main": [
+        [
+          {
+            "node": "Assert runtime gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 60,
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "9f0736c4-36e5-465a-ade6-e2cfae003d8a",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

@@ -1,0 +1,1804 @@
+{
+  "schema_version": "1.0",
+  "project": "Viator AI Creator Studio mobile-studio",
+  "placement": "Video generation screen, immediately below LLM prompt writing area",
+  "initial_state": "collapsed",
+  "modes": {
+    "general": {
+      "표정": {
+        "label": "표정",
+        "options": [
+          {
+            "label": "자연스러운 미소",
+            "prompt": "soft natural smile"
+          },
+          {
+            "label": "환한 웃음",
+            "prompt": "bright smile"
+          },
+          {
+            "label": "수줍음",
+            "prompt": "shy smile"
+          },
+          {
+            "label": "놀람",
+            "prompt": "surprised expression"
+          },
+          {
+            "label": "진지함",
+            "prompt": "serious expression"
+          },
+          {
+            "label": "장난기",
+            "prompt": "playful smirk"
+          },
+          {
+            "label": "슬픔",
+            "prompt": "melancholic expression"
+          },
+          {
+            "label": "윙크",
+            "prompt": "playful wink"
+          },
+          {
+            "label": "호기심",
+            "prompt": "curious expression"
+          }
+        ]
+      },
+      "눈과 시선": {
+        "label": "눈과 시선",
+        "options": [
+          {
+            "label": "렌즈 응시",
+            "prompt": "direct eye contact"
+          },
+          {
+            "label": "왼쪽",
+            "prompt": "glances left"
+          },
+          {
+            "label": "오른쪽",
+            "prompt": "glances right"
+          },
+          {
+            "label": "아래에서 위로",
+            "prompt": "raises gaze to lens"
+          },
+          {
+            "label": "느린 깜빡임",
+            "prompt": "slow blink"
+          },
+          {
+            "label": "눈썹 올리기",
+            "prompt": "raises one eyebrow"
+          },
+          {
+            "label": "눈가 웃음",
+            "prompt": "smiling eyes"
+          }
+        ]
+      },
+      "입술": {
+        "label": "입술",
+        "options": [
+          {
+            "label": "입 다물고 미소",
+            "prompt": "closed-lip smile"
+          },
+          {
+            "label": "입술 살짝 벌림",
+            "prompt": "slightly parted lips"
+          },
+          {
+            "label": "입꼬리 올림",
+            "prompt": "raises mouth corners"
+          },
+          {
+            "label": "말 끝 미소",
+            "prompt": "smiles after speaking"
+          },
+          {
+            "label": "한숨",
+            "prompt": "soft sigh"
+          }
+        ]
+      },
+      "고개와 상체": {
+        "label": "고개와 상체",
+        "options": [
+          {
+            "label": "왼쪽 기울이기",
+            "prompt": "tilts head left"
+          },
+          {
+            "label": "오른쪽 기울이기",
+            "prompt": "tilts head right"
+          },
+          {
+            "label": "끄덕임",
+            "prompt": "nods gently"
+          },
+          {
+            "label": "고개 돌리기",
+            "prompt": "turns head toward camera"
+          },
+          {
+            "label": "앞으로 기대기",
+            "prompt": "leans forward"
+          },
+          {
+            "label": "어깨 으쓱",
+            "prompt": "shrugs shoulders"
+          },
+          {
+            "label": "상체 회전",
+            "prompt": "rotates torso"
+          }
+        ]
+      },
+      "손과 팔": {
+        "label": "손과 팔",
+        "options": [
+          {
+            "label": "오른손 인사",
+            "prompt": "waves right hand"
+          },
+          {
+            "label": "양손 인사",
+            "prompt": "waves both hands"
+          },
+          {
+            "label": "손가락 하트",
+            "prompt": "makes finger heart"
+          },
+          {
+            "label": "브이",
+            "prompt": "makes peace sign"
+          },
+          {
+            "label": "엄지척",
+            "prompt": "gives thumbs-up"
+          },
+          {
+            "label": "머리 넘기기",
+            "prompt": "brushes hair behind ear"
+          },
+          {
+            "label": "손바닥 펼치기",
+            "prompt": "opens palm"
+          },
+          {
+            "label": "손 모으기",
+            "prompt": "clasps hands"
+          }
+        ]
+      },
+      "전신": {
+        "label": "전신",
+        "options": [
+          {
+            "label": "제자리",
+            "prompt": "stands in place"
+          },
+          {
+            "label": "앞으로 한 걸음",
+            "prompt": "steps forward"
+          },
+          {
+            "label": "뒤로 한 걸음",
+            "prompt": "steps backward"
+          },
+          {
+            "label": "앉기",
+            "prompt": "sits down"
+          },
+          {
+            "label": "일어나기",
+            "prompt": "stands up"
+          },
+          {
+            "label": "반바퀴",
+            "prompt": "turns halfway"
+          },
+          {
+            "label": "체중 이동",
+            "prompt": "shifts weight"
+          }
+        ]
+      },
+      "수직 카메라 각도": {
+        "label": "수직 카메라 각도",
+        "options": [
+          {
+            "label": "눈높이 0°",
+            "prompt": "eye-level camera"
+          },
+          {
+            "label": "위 10°",
+            "prompt": "10 degrees above eye level"
+          },
+          {
+            "label": "위 25°",
+            "prompt": "25 degrees above eye level"
+          },
+          {
+            "label": "탑다운 90°",
+            "prompt": "top-down view"
+          },
+          {
+            "label": "아래 10°",
+            "prompt": "10 degrees below eye level"
+          },
+          {
+            "label": "아래 25°",
+            "prompt": "25 degrees below eye level"
+          }
+        ]
+      },
+      "수평 카메라 방향": {
+        "label": "수평 카메라 방향",
+        "options": [
+          {
+            "label": "정면 0°",
+            "prompt": "frontal camera"
+          },
+          {
+            "label": "왼쪽 15°",
+            "prompt": "15 degrees to subject left"
+          },
+          {
+            "label": "왼쪽 45°",
+            "prompt": "45 degrees to subject left"
+          },
+          {
+            "label": "측면 90°",
+            "prompt": "profile view"
+          },
+          {
+            "label": "오른쪽 15°",
+            "prompt": "15 degrees to subject right"
+          },
+          {
+            "label": "오른쪽 45°",
+            "prompt": "45 degrees to subject right"
+          },
+          {
+            "label": "후면 180°",
+            "prompt": "rear view"
+          }
+        ]
+      },
+      "프레이밍": {
+        "label": "프레이밍",
+        "options": [
+          {
+            "label": "눈 초근접",
+            "prompt": "extreme eye close-up"
+          },
+          {
+            "label": "얼굴 근접",
+            "prompt": "facial close-up"
+          },
+          {
+            "label": "어깨 위",
+            "prompt": "head-and-shoulders"
+          },
+          {
+            "label": "허리 위",
+            "prompt": "waist-up"
+          },
+          {
+            "label": "무릎 위",
+            "prompt": "knee-up"
+          },
+          {
+            "label": "전신",
+            "prompt": "full-body"
+          },
+          {
+            "label": "와이드",
+            "prompt": "environmental wide shot"
+          }
+        ]
+      },
+      "카메라 이동": {
+        "label": "카메라 이동",
+        "options": [
+          {
+            "label": "고정",
+            "prompt": "static camera"
+          },
+          {
+            "label": "줌인",
+            "prompt": "slow optical zoom-in"
+          },
+          {
+            "label": "줌아웃",
+            "prompt": "slow optical zoom-out"
+          },
+          {
+            "label": "돌리 인",
+            "prompt": "smooth dolly-in"
+          },
+          {
+            "label": "돌리 아웃",
+            "prompt": "smooth dolly-out"
+          },
+          {
+            "label": "왼쪽 팬",
+            "prompt": "pan left"
+          },
+          {
+            "label": "오른쪽 팬",
+            "prompt": "pan right"
+          },
+          {
+            "label": "틸트 업",
+            "prompt": "tilt up"
+          },
+          {
+            "label": "틸트 다운",
+            "prompt": "tilt down"
+          },
+          {
+            "label": "왼쪽 오비트",
+            "prompt": "orbit left"
+          },
+          {
+            "label": "오른쪽 오비트",
+            "prompt": "orbit right"
+          },
+          {
+            "label": "트래킹",
+            "prompt": "tracking shot"
+          },
+          {
+            "label": "핸드헬드",
+            "prompt": "subtle handheld"
+          }
+        ]
+      },
+      "렌즈와 초점": {
+        "label": "렌즈와 초점",
+        "options": [
+          {
+            "label": "24mm",
+            "prompt": "24mm wide lens"
+          },
+          {
+            "label": "35mm",
+            "prompt": "35mm lens"
+          },
+          {
+            "label": "50mm",
+            "prompt": "50mm lens"
+          },
+          {
+            "label": "85mm",
+            "prompt": "85mm portrait lens"
+          },
+          {
+            "label": "135mm",
+            "prompt": "135mm telephoto"
+          },
+          {
+            "label": "얕은 심도",
+            "prompt": "shallow depth of field"
+          },
+          {
+            "label": "눈 초점",
+            "prompt": "focus on eyes"
+          },
+          {
+            "label": "랙포커스",
+            "prompt": "rack focus toward face"
+          }
+        ]
+      },
+      "목소리 음색": {
+        "label": "목소리 음색",
+        "options": [
+          {
+            "label": "맑은",
+            "prompt": "bright clear voice"
+          },
+          {
+            "label": "부드러운",
+            "prompt": "soft gentle voice"
+          },
+          {
+            "label": "허스키",
+            "prompt": "warm husky voice"
+          },
+          {
+            "label": "낮고 차분함",
+            "prompt": "low calm voice"
+          },
+          {
+            "label": "몽환적",
+            "prompt": "dreamy airy voice"
+          },
+          {
+            "label": "보이시",
+            "prompt": "androgynous low voice"
+          },
+          {
+            "label": "아나운서",
+            "prompt": "presenter voice"
+          },
+          {
+            "label": "속삭임",
+            "prompt": "whisper"
+          }
+        ]
+      },
+      "목소리 감정": {
+        "label": "목소리 감정",
+        "options": [
+          {
+            "label": "친근함",
+            "prompt": "warm friendly delivery"
+          },
+          {
+            "label": "발랄함",
+            "prompt": "energetic delivery"
+          },
+          {
+            "label": "다정함",
+            "prompt": "caring delivery"
+          },
+          {
+            "label": "장난기",
+            "prompt": "playful delivery"
+          },
+          {
+            "label": "자신감",
+            "prompt": "confident delivery"
+          },
+          {
+            "label": "슬픔",
+            "prompt": "sad delivery"
+          },
+          {
+            "label": "놀람",
+            "prompt": "surprised delivery"
+          },
+          {
+            "label": "진지함",
+            "prompt": "serious delivery"
+          }
+        ]
+      },
+      "속도와 호흡": {
+        "label": "속도와 호흡",
+        "options": [
+          {
+            "label": "느림",
+            "prompt": "slow deliberate speech"
+          },
+          {
+            "label": "보통",
+            "prompt": "natural conversational pace"
+          },
+          {
+            "label": "빠름",
+            "prompt": "brisk clear speech"
+          },
+          {
+            "label": "문장 사이 쉼",
+            "prompt": "brief pauses"
+          },
+          {
+            "label": "끝 늘이기",
+            "prompt": "elongates final syllables"
+          },
+          {
+            "label": "말 전 숨",
+            "prompt": "breath before speaking"
+          },
+          {
+            "label": "말 끝 한숨",
+            "prompt": "gentle sigh"
+          }
+        ]
+      },
+      "조명": {
+        "label": "조명",
+        "options": [
+          {
+            "label": "자연광",
+            "prompt": "soft natural daylight"
+          },
+          {
+            "label": "골든아워",
+            "prompt": "golden-hour light"
+          },
+          {
+            "label": "소프트박스",
+            "prompt": "studio softbox"
+          },
+          {
+            "label": "렘브란트",
+            "prompt": "Rembrandt lighting"
+          },
+          {
+            "label": "네온",
+            "prompt": "pink blue neon"
+          },
+          {
+            "label": "로우키",
+            "prompt": "cinematic low-key"
+          },
+          {
+            "label": "역광",
+            "prompt": "soft backlighting"
+          }
+        ]
+      }
+    },
+    "sensual": {
+      "표정": {
+        "label": "표정",
+        "options": [
+          {
+            "label": "매혹적인 미소",
+            "prompt": "subtle alluring smile"
+          },
+          {
+            "label": "플러팅",
+            "prompt": "playful flirtatious smile"
+          },
+          {
+            "label": "한쪽 입꼬리",
+            "prompt": "asymmetric smirk"
+          },
+          {
+            "label": "수줍음",
+            "prompt": "bashful smile"
+          },
+          {
+            "label": "몽환적",
+            "prompt": "dreamy expression"
+          },
+          {
+            "label": "반쯤 감긴 눈",
+            "prompt": "relaxed half-lidded gaze"
+          },
+          {
+            "label": "느린 윙크",
+            "prompt": "slow wink"
+          },
+          {
+            "label": "깊은 눈빛",
+            "prompt": "lingering gaze"
+          }
+        ]
+      },
+      "눈과 시선": {
+        "label": "눈과 시선",
+        "options": [
+          {
+            "label": "렌즈를 천천히 응시",
+            "prompt": "slowly settles an expressive editorial gaze on the lens"
+          },
+          {
+            "label": "시선 왼쪽으로",
+            "prompt": "gently shifts the gaze toward frame left"
+          },
+          {
+            "label": "시선 오른쪽으로",
+            "prompt": "gently shifts the gaze toward frame right"
+          },
+          {
+            "label": "아래를 보다 렌즈로",
+            "prompt": "looks downward briefly before meeting the lens"
+          },
+          {
+            "label": "옆을 보다 정면으로",
+            "prompt": "returns the gaze from the side to the camera"
+          },
+          {
+            "label": "느리게 눈 깜빡이기",
+            "prompt": "makes one slow relaxed blink while maintaining a poised expression"
+          },
+          {
+            "label": "눈가에 은은한 미소",
+            "prompt": "softens the eyes with a restrained eye smile"
+          },
+          {
+            "label": "눈썹 살짝 올리기",
+            "prompt": "raises one eyebrow slightly with playful confidence"
+          },
+          {
+            "label": "먼 곳 바라보기",
+            "prompt": "holds a thoughtful gaze toward a distant point off camera"
+          },
+          {
+            "label": "시선을 내렸다 다시 들기",
+            "prompt": "lowers the gaze and then gently lifts the eyes toward the lens"
+          }
+        ]
+      },
+      "입술": {
+        "label": "입술",
+        "options": [
+          {
+            "label": "입 다문 은은한 미소",
+            "prompt": "keeps the lips closed in a subtle composed smile"
+          },
+          {
+            "label": "입술 살짝 벌리기",
+            "prompt": "slightly parts the lips in a relaxed fashion portrait expression"
+          },
+          {
+            "label": "한쪽 입꼬리 올리기",
+            "prompt": "gently lifts one corner of the lips for an understated smile"
+          },
+          {
+            "label": "입술 힘 풀기",
+            "prompt": "relaxes the lips into a natural neutral expression"
+          },
+          {
+            "label": "입술 가볍게 다물기",
+            "prompt": "lightly closes the lips without tension"
+          },
+          {
+            "label": "입술 모았다 풀기",
+            "prompt": "briefly presses the lips together then relaxes them naturally"
+          },
+          {
+            "label": "미소 천천히 풀기",
+            "prompt": "lets a small smile slowly fade into a calm expression"
+          },
+          {
+            "label": "짧게 미소 짓기",
+            "prompt": "forms a brief delicate smile before returning to neutral"
+          },
+          {
+            "label": "웃음 살짝 참기",
+            "prompt": "restrains a small amused smile with softly closed lips"
+          },
+          {
+            "label": "말 끝에 미소 짓기",
+            "prompt": "finishes the spoken line with a small natural smile"
+          }
+        ]
+      },
+      "고개와 상체": {
+        "label": "고개와 상체",
+        "options": [
+          {
+            "label": "고개 왼쪽으로 기울이기",
+            "prompt": "tilts the head subtly to the left while keeping the shoulders relaxed"
+          },
+          {
+            "label": "고개 오른쪽으로 기울이기",
+            "prompt": "tilts the head subtly to the right while keeping an elegant posture"
+          },
+          {
+            "label": "턱 살짝 들기",
+            "prompt": "lifts the chin slightly in a composed editorial pose"
+          },
+          {
+            "label": "턱 살짝 내리기",
+            "prompt": "lowers the chin slightly while keeping the neck comfortably aligned"
+          },
+          {
+            "label": "고개 천천히 돌리기",
+            "prompt": "turns the head slowly from a three-quarter pose toward the camera"
+          },
+          {
+            "label": "한 번 작게 끄덕이기",
+            "prompt": "gives one small deliberate nod with relaxed shoulders"
+          },
+          {
+            "label": "어깨 뒤로 펴기",
+            "prompt": "gently rolls the shoulders back into an upright fashion pose"
+          },
+          {
+            "label": "상체 살짝 앞으로",
+            "prompt": "inclines the upper body slightly forward with a balanced posture"
+          },
+          {
+            "label": "상체 옆으로 회전",
+            "prompt": "rotates the upper body gently into a three-quarter editorial pose"
+          },
+          {
+            "label": "어깨 너머로 고개 돌리기",
+            "prompt": "turns the head over one shoulder while keeping the torso still"
+          }
+        ]
+      },
+      "손과 팔": {
+        "label": "손과 팔",
+        "options": [
+          {
+            "label": "귀 옆 머리 정리",
+            "prompt": "tucks a loose strand of hair neatly behind one ear"
+          },
+          {
+            "label": "손끝으로 턱 받치기",
+            "prompt": "rests the fingertips lightly beneath the chin in a portrait pose"
+          },
+          {
+            "label": "볼 옆에 손 가져가기",
+            "prompt": "raises one hand beside the cheek without covering the face"
+          },
+          {
+            "label": "옷깃 가볍게 정리",
+            "prompt": "smooths one clothing lapel with a small controlled hand gesture"
+          },
+          {
+            "label": "소매 끝 정리",
+            "prompt": "straightens a sleeve cuff with relaxed precise fingers"
+          },
+          {
+            "label": "귀걸이 살짝 정리",
+            "prompt": "gently adjusts an earring before lowering the hand"
+          },
+          {
+            "label": "손목 액세서리 정리",
+            "prompt": "lightly adjusts a bracelet at the wrist"
+          },
+          {
+            "label": "손을 앞으로 모으기",
+            "prompt": "loosely brings both hands together in front of the body"
+          },
+          {
+            "label": "한 팔 자연스럽게 내리기",
+            "prompt": "lets one arm fall naturally to the side with relaxed fingers"
+          },
+          {
+            "label": "작게 손 흔들기",
+            "prompt": "gives a small elegant wave near shoulder level"
+          }
+        ]
+      },
+      "몸짓": {
+        "label": "몸짓",
+        "options": [
+          {
+            "label": "어깨 너머 보기",
+            "prompt": "looks back over shoulder"
+          },
+          {
+            "label": "카메라로 기대기",
+            "prompt": "leans toward camera"
+          },
+          {
+            "label": "머리카락 쓸기",
+            "prompt": "brushes hair back"
+          },
+          {
+            "label": "턱에 손끝",
+            "prompt": "fingertips under chin"
+          },
+          {
+            "label": "볼에 손",
+            "prompt": "hand against cheek"
+          },
+          {
+            "label": "옷깃 정리",
+            "prompt": "adjusts collar"
+          },
+          {
+            "label": "체중 이동",
+            "prompt": "gentle weight shift"
+          },
+          {
+            "label": "다리 꼬기",
+            "prompt": "crosses legs while seated"
+          }
+        ]
+      },
+      "음성": {
+        "label": "음성",
+        "options": [
+          {
+            "label": "낮고 부드러움",
+            "prompt": "soft lower-register voice"
+          },
+          {
+            "label": "숨결 섞임",
+            "prompt": "subtly breathy voice"
+          },
+          {
+            "label": "허스키",
+            "prompt": "warm husky voice"
+          },
+          {
+            "label": "속삭임",
+            "prompt": "quiet whisper"
+          },
+          {
+            "label": "장난기",
+            "prompt": "teasing delivery"
+          },
+          {
+            "label": "말 사이 쉼",
+            "prompt": "dramatic pauses"
+          },
+          {
+            "label": "미소 섞임",
+            "prompt": "smile audible in voice"
+          }
+        ]
+      },
+      "촬영 각도": {
+        "label": "촬영 각도",
+        "options": [
+          {
+            "label": "정면",
+            "prompt": "eye-level portrait"
+          },
+          {
+            "label": "위 10°",
+            "prompt": "10 degrees above eye level"
+          },
+          {
+            "label": "아래 10°",
+            "prompt": "10 degrees below eye level"
+          },
+          {
+            "label": "측면 30°",
+            "prompt": "three-quarter 30-degree view"
+          },
+          {
+            "label": "측면 45°",
+            "prompt": "three-quarter 45-degree view"
+          },
+          {
+            "label": "측면 90°",
+            "prompt": "profile view"
+          },
+          {
+            "label": "어깨 너머",
+            "prompt": "over-the-shoulder"
+          }
+        ]
+      },
+      "구도": {
+        "label": "구도",
+        "options": [
+          {
+            "label": "눈 초근접",
+            "prompt": "extreme eye close-up"
+          },
+          {
+            "label": "얼굴 근접",
+            "prompt": "tight facial close-up"
+          },
+          {
+            "label": "상반신",
+            "prompt": "chest-up portrait"
+          },
+          {
+            "label": "허리 위",
+            "prompt": "waist-up shot"
+          },
+          {
+            "label": "전신",
+            "prompt": "full-body portrait"
+          },
+          {
+            "label": "거울",
+            "prompt": "mirror-reflection composition"
+          },
+          {
+            "label": "실루엣",
+            "prompt": "side silhouette"
+          }
+        ]
+      },
+      "카메라 이동": {
+        "label": "카메라 이동",
+        "options": [
+          {
+            "label": "고정",
+            "prompt": "static camera"
+          },
+          {
+            "label": "느린 돌리 인",
+            "prompt": "slow dolly-in"
+          },
+          {
+            "label": "돌리 아웃",
+            "prompt": "slow dolly-out"
+          },
+          {
+            "label": "눈 초점",
+            "prompt": "rack focus to eyes"
+          },
+          {
+            "label": "얼굴 따라 팬",
+            "prompt": "pan following face"
+          },
+          {
+            "label": "오비트",
+            "prompt": "slow orbit"
+          }
+        ]
+      },
+      "조명": {
+        "label": "조명",
+        "options": [
+          {
+            "label": "따뜻한 실내",
+            "prompt": "warm interior lighting"
+          },
+          {
+            "label": "촛불",
+            "prompt": "soft candlelit ambience"
+          },
+          {
+            "label": "골든아워",
+            "prompt": "golden-hour light"
+          },
+          {
+            "label": "로우키",
+            "prompt": "cinematic low-key"
+          },
+          {
+            "label": "림라이트",
+            "prompt": "rim lighting"
+          },
+          {
+            "label": "네온",
+            "prompt": "purple pink neon"
+          }
+        ]
+      }
+    },
+    "dance": {
+      "장르": {
+        "label": "장르",
+        "options": [
+          {
+            "label": "K-pop",
+            "prompt": "K-pop idol choreography"
+          },
+          {
+            "label": "걸스힙합",
+            "prompt": "girls hip-hop"
+          },
+          {
+            "label": "힙합",
+            "prompt": "hip-hop groove"
+          },
+          {
+            "label": "재즈 펑크",
+            "prompt": "jazz funk"
+          },
+          {
+            "label": "힐 댄스",
+            "prompt": "heels dance"
+          },
+          {
+            "label": "컨템퍼러리",
+            "prompt": "contemporary dance"
+          },
+          {
+            "label": "라틴 팝",
+            "prompt": "Latin pop"
+          },
+          {
+            "label": "살사",
+            "prompt": "salsa"
+          },
+          {
+            "label": "바차타",
+            "prompt": "bachata"
+          },
+          {
+            "label": "레게톤",
+            "prompt": "reggaeton"
+          },
+          {
+            "label": "댄스홀",
+            "prompt": "dancehall"
+          },
+          {
+            "label": "아프로비츠",
+            "prompt": "Afrobeats"
+          },
+          {
+            "label": "하우스",
+            "prompt": "house dance"
+          },
+          {
+            "label": "팝핑",
+            "prompt": "popping"
+          },
+          {
+            "label": "락킹",
+            "prompt": "locking"
+          },
+          {
+            "label": "왁킹",
+            "prompt": "waacking"
+          },
+          {
+            "label": "보깅",
+            "prompt": "voguing"
+          },
+          {
+            "label": "셔플",
+            "prompt": "shuffle"
+          },
+          {
+            "label": "틱톡",
+            "prompt": "short-form dance challenge"
+          }
+        ]
+      },
+      "골반과 허리": {
+        "label": "골반과 허리",
+        "options": [
+          {
+            "label": "좌우 스웨이",
+            "prompt": "side-to-side hip sway"
+          },
+          {
+            "label": "힙 서클",
+            "prompt": "circular hip motion"
+          },
+          {
+            "label": "아이솔레이션",
+            "prompt": "hip isolation"
+          },
+          {
+            "label": "힙 바운스",
+            "prompt": "hip bounce"
+          },
+          {
+            "label": "피겨 에이트",
+            "prompt": "figure-eight hips"
+          },
+          {
+            "label": "허리 회전",
+            "prompt": "waist rotation"
+          },
+          {
+            "label": "상하체 분리",
+            "prompt": "upper-lower isolation"
+          }
+        ]
+      },
+      "상체": {
+        "label": "상체",
+        "options": [
+          {
+            "label": "바디 웨이브",
+            "prompt": "full-body wave"
+          },
+          {
+            "label": "체스트 팝",
+            "prompt": "chest pop"
+          },
+          {
+            "label": "체스트 아이솔레이션",
+            "prompt": "chest isolation"
+          },
+          {
+            "label": "상체 롤",
+            "prompt": "upper-body roll"
+          },
+          {
+            "label": "어깨 롤",
+            "prompt": "shoulder rolls"
+          },
+          {
+            "label": "상체 스웨이",
+            "prompt": "torso sway"
+          },
+          {
+            "label": "S자 웨이브",
+            "prompt": "S-shaped body wave"
+          }
+        ]
+      },
+      "팔과 손": {
+        "label": "팔과 손",
+        "options": [
+          {
+            "label": "팔 스윙",
+            "prompt": "rhythmic arm swings"
+          },
+          {
+            "label": "양팔 위로",
+            "prompt": "arms overhead"
+          },
+          {
+            "label": "팔 교차",
+            "prompt": "crossing arms"
+          },
+          {
+            "label": "스네이크 암",
+            "prompt": "snake arms"
+          },
+          {
+            "label": "팔 웨이브",
+            "prompt": "arm wave"
+          },
+          {
+            "label": "왁킹 암 서클",
+            "prompt": "waacking arm circles"
+          },
+          {
+            "label": "손목 롤",
+            "prompt": "wrist rolls"
+          },
+          {
+            "label": "얼굴 프레임",
+            "prompt": "hands frame face"
+          },
+          {
+            "label": "하트",
+            "prompt": "heart gesture"
+          },
+          {
+            "label": "포인트",
+            "prompt": "pointing gesture"
+          },
+          {
+            "label": "손가락 스냅",
+            "prompt": "finger snaps"
+          }
+        ]
+      },
+      "발과 다리": {
+        "label": "발과 다리",
+        "options": [
+          {
+            "label": "제자리",
+            "prompt": "steps in place"
+          },
+          {
+            "label": "사이드 스텝",
+            "prompt": "side steps"
+          },
+          {
+            "label": "스텝 터치",
+            "prompt": "step-touch"
+          },
+          {
+            "label": "투스텝",
+            "prompt": "two-step"
+          },
+          {
+            "label": "크로스 스텝",
+            "prompt": "cross steps"
+          },
+          {
+            "label": "힐 토",
+            "prompt": "heel-toe"
+          },
+          {
+            "label": "셔플",
+            "prompt": "shuffle footwork"
+          },
+          {
+            "label": "슬라이드",
+            "prompt": "sliding steps"
+          },
+          {
+            "label": "런닝맨",
+            "prompt": "running-man steps"
+          },
+          {
+            "label": "피벗",
+            "prompt": "pivot turn"
+          },
+          {
+            "label": "점프",
+            "prompt": "small rhythmic jumps"
+          }
+        ]
+      },
+      "회전": {
+        "label": "회전",
+        "options": [
+          {
+            "label": "정면 유지",
+            "prompt": "forward orientation"
+          },
+          {
+            "label": "45° 회전",
+            "prompt": "45-degree turn"
+          },
+          {
+            "label": "90° 회전",
+            "prompt": "quarter turn"
+          },
+          {
+            "label": "180° 회전",
+            "prompt": "half turn"
+          },
+          {
+            "label": "360° 회전",
+            "prompt": "full turn"
+          },
+          {
+            "label": "회전 후 포즈",
+            "prompt": "stable pose after turn"
+          }
+        ]
+      },
+      "강도": {
+        "label": "강도",
+        "options": [
+          {
+            "label": "매우 부드럽게",
+            "prompt": "very gentle dancing"
+          },
+          {
+            "label": "부드러운 그루브",
+            "prompt": "soft flowing groove"
+          },
+          {
+            "label": "중간 강도",
+            "prompt": "moderate energy"
+          },
+          {
+            "label": "강하고 정확하게",
+            "prompt": "strong precise choreography"
+          },
+          {
+            "label": "역동적",
+            "prompt": "fast energetic choreography"
+          }
+        ]
+      },
+      "템포": {
+        "label": "템포",
+        "options": [
+          {
+            "label": "60 BPM",
+            "prompt": "60 BPM feel"
+          },
+          {
+            "label": "80 BPM",
+            "prompt": "80 BPM groove"
+          },
+          {
+            "label": "90 BPM",
+            "prompt": "90 BPM groove"
+          },
+          {
+            "label": "100 BPM",
+            "prompt": "100 BPM feel"
+          },
+          {
+            "label": "110 BPM",
+            "prompt": "110 BPM groove"
+          },
+          {
+            "label": "120 BPM",
+            "prompt": "120 BPM feel"
+          },
+          {
+            "label": "130 BPM",
+            "prompt": "130 BPM groove"
+          },
+          {
+            "label": "140 BPM",
+            "prompt": "140 BPM feel"
+          }
+        ]
+      },
+      "댄스 표정": {
+        "label": "댄스 표정",
+        "options": [
+          {
+            "label": "밝은 미소",
+            "prompt": "confident smile"
+          },
+          {
+            "label": "시크함",
+            "prompt": "cool composed expression"
+          },
+          {
+            "label": "강렬한 눈빛",
+            "prompt": "intense stage gaze"
+          },
+          {
+            "label": "윙크",
+            "prompt": "playful wink"
+          },
+          {
+            "label": "매력적인 눈빛",
+            "prompt": "alluring gaze"
+          },
+          {
+            "label": "집중",
+            "prompt": "focused stage expression"
+          }
+        ]
+      },
+      "댄스 카메라": {
+        "label": "댄스 카메라",
+        "options": [
+          {
+            "label": "전신 고정",
+            "prompt": "static full-body camera"
+          },
+          {
+            "label": "와이드",
+            "prompt": "wide full-body framing"
+          },
+          {
+            "label": "줌인",
+            "prompt": "slow push-in"
+          },
+          {
+            "label": "좌우 트래킹",
+            "prompt": "lateral tracking"
+          },
+          {
+            "label": "로우앵글",
+            "prompt": "low-angle full-body shot"
+          },
+          {
+            "label": "측면 45°",
+            "prompt": "three-quarter dance angle"
+          },
+          {
+            "label": "오비트",
+            "prompt": "orbit around dancer"
+          },
+          {
+            "label": "세로형",
+            "prompt": "vertical full-body framing"
+          }
+        ]
+      },
+      "마무리": {
+        "label": "마무리",
+        "options": [
+          {
+            "label": "정면 미소",
+            "prompt": "finishes smiling at camera"
+          },
+          {
+            "label": "손가락 하트",
+            "prompt": "finger-heart pose"
+          },
+          {
+            "label": "브이",
+            "prompt": "peace sign"
+          },
+          {
+            "label": "한 손 위로",
+            "prompt": "one arm raised"
+          },
+          {
+            "label": "힙 포즈",
+            "prompt": "hand-on-hip pose"
+          },
+          {
+            "label": "정지 포즈",
+            "prompt": "confident still pose"
+          }
+        ]
+      }
+    },
+    "exercise": {
+      "운동 동작": {
+        "label": "운동 동작",
+        "options": [
+          {
+            "label": "목 옆면 늘리기",
+            "prompt": "slowly performs a gentle side neck stretch with relaxed shoulders",
+            "group": "스트레칭"
+          },
+          {
+            "label": "어깨 가로 늘리기",
+            "prompt": "holds one arm across the chest for a gentle cross-body shoulder stretch",
+            "group": "스트레칭"
+          },
+          {
+            "label": "팔 위로 옆구리 늘리기",
+            "prompt": "reaches one arm overhead into a gentle standing side-body stretch",
+            "group": "스트레칭"
+          },
+          {
+            "label": "깍지 끼고 가슴 열기",
+            "prompt": "clasps the hands behind the back and gently opens the chest",
+            "group": "스트레칭"
+          },
+          {
+            "label": "서서 허벅지 앞면 늘리기",
+            "prompt": "performs a balanced standing quadriceps stretch while holding one ankle",
+            "group": "스트레칭"
+          },
+          {
+            "label": "앉아서 허벅지 뒤 늘리기",
+            "prompt": "sits with one leg extended and gently hinges forward for a hamstring stretch",
+            "group": "스트레칭"
+          },
+          {
+            "label": "벽 짚고 종아리 늘리기",
+            "prompt": "places both hands on a wall and gently stretches the rear calf with the heel grounded",
+            "group": "스트레칭"
+          },
+          {
+            "label": "나비 자세 스트레칭",
+            "prompt": "sits tall with the soles of the feet together in a relaxed butterfly stretch",
+            "group": "스트레칭"
+          },
+          {
+            "label": "무릎 대고 고관절 늘리기",
+            "prompt": "holds a controlled half-kneeling hip-flexor stretch with an upright torso",
+            "group": "스트레칭"
+          },
+          {
+            "label": "누워서 무릎 가슴으로",
+            "prompt": "lies on the back and gently draws one knee toward the chest",
+            "group": "스트레칭"
+          },
+          {
+            "label": "산 자세",
+            "prompt": "holds a steady upright mountain pose with arms relaxed at the sides",
+            "group": "요가"
+          },
+          {
+            "label": "아기 자세",
+            "prompt": "moves gently into a resting child pose with the arms extended forward",
+            "group": "요가"
+          },
+          {
+            "label": "고양이·소 자세",
+            "prompt": "alternates slowly between cat and cow poses from a hands-and-knees position",
+            "group": "요가"
+          },
+          {
+            "label": "다운독 자세",
+            "prompt": "moves into downward-facing dog with a long neutral back and grounded hands",
+            "group": "요가"
+          },
+          {
+            "label": "코브라 자세",
+            "prompt": "performs a low cobra pose with a gentle chest lift and relaxed shoulders",
+            "group": "요가"
+          },
+          {
+            "label": "전사 1 자세",
+            "prompt": "holds warrior one with the front knee bent and the arms reaching upward",
+            "group": "요가"
+          },
+          {
+            "label": "전사 2 자세",
+            "prompt": "holds warrior two with the arms extended horizontally and a steady forward gaze",
+            "group": "요가"
+          },
+          {
+            "label": "나무 자세",
+            "prompt": "balances in tree pose with the lifted foot resting against the calf or inner thigh away from the knee",
+            "group": "요가"
+          },
+          {
+            "label": "삼각 자세",
+            "prompt": "moves into an extended triangle pose with a controlled side reach",
+            "group": "요가"
+          },
+          {
+            "label": "브리지 자세",
+            "prompt": "lies on the back and gently lifts the hips into a stable yoga bridge pose",
+            "group": "요가"
+          },
+          {
+            "label": "헌드레드",
+            "prompt": "performs a controlled Pilates hundred with small arm pumps and bent knees in tabletop",
+            "group": "필라테스"
+          },
+          {
+            "label": "롤업",
+            "prompt": "performs a slow Pilates roll-up with a smooth controlled spinal articulation",
+            "group": "필라테스"
+          },
+          {
+            "label": "싱글 레그 스트레치",
+            "prompt": "alternates the legs in a controlled Pilates single-leg stretch",
+            "group": "필라테스"
+          },
+          {
+            "label": "더블 레그 스트레치",
+            "prompt": "performs a controlled Pilates double-leg stretch with coordinated arm and leg extension",
+            "group": "필라테스"
+          },
+          {
+            "label": "싱글 레그 서클",
+            "prompt": "lies on the back and draws small controlled circles with one extended leg",
+            "group": "필라테스"
+          },
+          {
+            "label": "숄더 브리지",
+            "prompt": "performs a Pilates shoulder bridge with a gradual controlled lift and lowering of the spine",
+            "group": "필라테스"
+          },
+          {
+            "label": "스파인 스트레치 포워드",
+            "prompt": "sits tall with the legs apart and rounds forward in a controlled Pilates spine stretch",
+            "group": "필라테스"
+          },
+          {
+            "label": "스위밍",
+            "prompt": "lies face down and performs small alternating arm and leg lifts for Pilates swimming",
+            "group": "필라테스"
+          },
+          {
+            "label": "사이드 킥",
+            "prompt": "lies on one side and moves the top leg forward and back in a controlled Pilates side kick",
+            "group": "필라테스"
+          },
+          {
+            "label": "하프 롤백",
+            "prompt": "sits with bent knees and rolls halfway back with a controlled return to an upright position",
+            "group": "필라테스"
+          }
+        ]
+      },
+      "운동 속도": {
+        "label": "운동 속도",
+        "options": [
+          {
+            "label": "아주 천천히",
+            "prompt": "uses a very slow deliberate exercise tempo"
+          },
+          {
+            "label": "천천히",
+            "prompt": "uses a slow smooth exercise tempo"
+          },
+          {
+            "label": "일정한 속도",
+            "prompt": "maintains an even measured movement tempo"
+          },
+          {
+            "label": "전환을 부드럽게",
+            "prompt": "makes each exercise transition fluid and unhurried"
+          },
+          {
+            "label": "자세 짧게 유지",
+            "prompt": "briefly holds each exercise position before moving on"
+          }
+        ]
+      },
+      "운동 호흡": {
+        "label": "운동 호흡",
+        "options": [
+          {
+            "label": "자연스러운 호흡",
+            "prompt": "maintains easy natural breathing throughout the exercise"
+          },
+          {
+            "label": "동작과 호흡 맞추기",
+            "prompt": "coordinates gentle breathing with the rhythm of the movement"
+          },
+          {
+            "label": "힘쓰며 천천히 내쉬기",
+            "prompt": "exhales smoothly during the effort phase of the movement"
+          },
+          {
+            "label": "일정하게 들이쉬고 내쉬기",
+            "prompt": "shows a steady relaxed inhalation and exhalation rhythm"
+          }
+        ]
+      },
+      "동작 범위": {
+        "label": "동작 범위",
+        "options": [
+          {
+            "label": "작고 섬세하게",
+            "prompt": "keeps the exercise range small and controlled"
+          },
+          {
+            "label": "편안한 범위",
+            "prompt": "moves within a comfortable natural range without forcing the joints"
+          },
+          {
+            "label": "부드럽게 길게",
+            "prompt": "lengthens the movement gradually without sudden jerks"
+          },
+          {
+            "label": "좌우 균형 있게",
+            "prompt": "keeps both sides of the movement balanced and symmetrical"
+          }
+        ]
+      },
+      "운동 소도구": {
+        "label": "운동 소도구",
+        "options": [
+          {
+            "label": "운동 매트",
+            "prompt": "performs the exercise on a plain nonslip exercise mat"
+          },
+          {
+            "label": "요가 블록",
+            "prompt": "uses a yoga block as a stable exercise support"
+          },
+          {
+            "label": "스트레칭 스트랩",
+            "prompt": "uses a stretching strap with a relaxed controlled grip"
+          },
+          {
+            "label": "필라테스 소프트 볼",
+            "prompt": "uses a small soft Pilates ball for the selected movement"
+          },
+          {
+            "label": "필라테스 링",
+            "prompt": "uses a Pilates ring with a light controlled grip"
+          }
+        ]
+      },
+      "표정": {
+        "label": "표정",
+        "options": [
+          {
+            "label": "차분하게 집중",
+            "prompt": "maintains a calm focused exercise expression"
+          },
+          {
+            "label": "편안한 미소",
+            "prompt": "shows a relaxed gentle smile during the exercise demonstration"
+          },
+          {
+            "label": "정면에 집중",
+            "prompt": "keeps a composed focused gaze toward the front"
+          },
+          {
+            "label": "설명하며 자연스럽게",
+            "prompt": "maintains a natural approachable instructor expression"
+          }
+        ]
+      },
+      "마무리": {
+        "label": "마무리",
+        "options": [
+          {
+            "label": "기본 자세로 돌아오기",
+            "prompt": "finishes by returning smoothly to a stable starting posture"
+          },
+          {
+            "label": "자세 유지하며 호흡",
+            "prompt": "finishes in a balanced still pose with relaxed breathing"
+          },
+          {
+            "label": "힘 빼고 편안히",
+            "prompt": "ends the movement by releasing tension and settling comfortably"
+          }
+        ]
+      },
+      "촬영 각도": {
+        "label": "촬영 각도",
+        "options": [
+          {
+            "label": "정면 전신",
+            "prompt": "films the exercise from an eye-level frontal full-body view"
+          },
+          {
+            "label": "측면 전신",
+            "prompt": "films the exercise from a clear full-body side view"
+          },
+          {
+            "label": "사선 45도",
+            "prompt": "films the exercise from a three-quarter 45-degree full-body angle"
+          },
+          {
+            "label": "조금 높은 위치",
+            "prompt": "films from a slightly elevated angle that keeps the whole exercise posture visible"
+          },
+          {
+            "label": "매트 높이 측면",
+            "prompt": "films a floor exercise from a low side angle near mat height"
+          }
+        ]
+      },
+      "프레이밍": {
+        "label": "프레이밍",
+        "options": [
+          {
+            "label": "전신 여유 있게",
+            "prompt": "frames the full body with ample space around hands and feet"
+          },
+          {
+            "label": "매트 전체",
+            "prompt": "keeps the entire mat and all moving limbs inside the frame"
+          },
+          {
+            "label": "상체 자세 중심",
+            "prompt": "frames the upper body clearly to show shoulder and torso alignment"
+          },
+          {
+            "label": "움직임 따라 여백",
+            "prompt": "leaves enough frame space for the full range of the selected movement"
+          }
+        ]
+      },
+      "카메라 이동": {
+        "label": "카메라 이동",
+        "options": [
+          {
+            "label": "고정 촬영",
+            "prompt": "keeps a locked-off camera throughout the exercise demonstration"
+          },
+          {
+            "label": "느리게 옆으로",
+            "prompt": "moves the camera slowly sideways while keeping the full posture visible"
+          },
+          {
+            "label": "천천히 뒤로",
+            "prompt": "gradually pulls the camera back to reveal the full exercise movement"
+          },
+          {
+            "label": "자세 따라 부드럽게",
+            "prompt": "gently follows the exercise posture without abrupt camera movement"
+          }
+        ]
+      },
+      "조명": {
+        "label": "조명",
+        "options": [
+          {
+            "label": "부드러운 자연광",
+            "prompt": "lights the exercise scene with soft even daylight"
+          },
+          {
+            "label": "밝은 스튜디오",
+            "prompt": "uses bright diffused studio lighting with clear body contours"
+          },
+          {
+            "label": "차분한 실내",
+            "prompt": "uses calm neutral indoor exercise lighting"
+          },
+          {
+            "label": "균일한 운동 공간",
+            "prompt": "uses even gym lighting without harsh distracting shadows"
+          }
+        ]
+      }
+    }
+  },
+  "settings": {
+    "duration_seconds": [
+      5,
+      8,
+      10,
+      12,
+      15
+    ],
+    "language": [
+      "Korean",
+      "English",
+      "Japanese",
+      "Chinese",
+      "Spanish"
+    ],
+    "audio_mode": [
+      "speech",
+      "ambient",
+      "silent"
+    ],
+    "timing": [
+      "sequential",
+      "simultaneous",
+      "natural"
+    ],
+    "apply": [
+      "append",
+      "replace"
+    ]
+  },
+  "negative_prompt": "identity drift, distorted anatomy, extra fingers, malformed hands, flicker, unnatural lip sync, sudden scene cuts, warped background, foot sliding",
+  "requirements": [
+    "Accordion collapsed by default",
+    "Four tabs General Sensual Dance Exercise with independent persistent selections",
+    "Dialogue and custom directions input",
+    "Positive and negative prompt preview and copy",
+    "Append or replace into existing LLM prompt input; confirm replacement",
+    "Responsive mobile UI and accessible controls",
+    "Preserve existing ComfyUI and n8n integration",
+    "Test existing app and new builder",
+    "Do not imply exact control of camera angles, voice, timing or BPM"
+  ]
+}

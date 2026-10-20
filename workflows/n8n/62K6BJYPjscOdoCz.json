@@ -1,0 +1,1084 @@
+{
+  "updatedAt": "2026-10-16T04:14:03.351Z",
+  "createdAt": "2026-10-16T02:35:13.711Z",
+  "id": "62K6BJYPjscOdoCz",
+  "name": "AI Creator - A 순차 영상 자동 수집",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "manual",
+      "name": "Manual controlled test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "schedule",
+      "name": "Poll Input every 2 minutes",
+      "disabled": false,
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gate",
+      "name": "Validation lock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{automatic:true,collectorExecutionId:$execution.id}}];"
+      }
+    },
+    {
+      "id": "list",
+      "name": "Find one Input image",
+      "notes": "Connected Google Drive credential verified. Up to 1000 supported images; recorded IDs are excluded before selecting one.",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "alwaysOutputData": true,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "fileFolder",
+        "operation": "search",
+        "searchMethod": "query",
+        "queryString": "'PRIVATE_RESOURCE_594e44099a3c' in parents and trashed = false and (mimeType = 'image/jpeg' or mimeType = 'image/png' or mimeType = 'image/webp')",
+        "returnAll": true,
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "prepare",
+      "name": "Prepare durable job key",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return $input.all().filter(i=>i.json.id && /^image\\/(jpeg|png|webp)$/.test(i.json.mimeType) && Number(i.json.size)<=20971520 && Number(i.json.imageMediaMetadata?.width)>0 && Number(i.json.imageMediaMetadata?.height)>0).map(i=>({json:{...i.json,jobKey:i.json.id,collectorExecutionId:$execution.id,status:'queued'}}));"
+      }
+    },
+    {
+      "id": "call",
+      "name": "Run B and wait",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ezWnajluvcVbz7PM"
+        },
+        "mode": "each",
+        "workflowInputs": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    },
+    {
+      "id": "notes",
+      "name": "Deployment blockers",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -420
+      ],
+      "parameters": {
+        "content": "Input 업로드 createdTime 기준 5분 무업로드 시 배치 접수 마감. Batch_001부터 폴더·파일명 표기. 사진별 영구 ledger 및 GPU 잠금 유지. 모든 멤버 cleanup_verified 및 Drive 배치 폴더 확인 후 완료 표시. 이메일 발송은 Codex 알림 감시가 수행.",
+        "width": 620,
+        "height": 340
+      }
+    },
+    {
+      "id": "Exclude_recorded_files",
+      "name": "Exclude recorded files",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        900
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "rowNotExists",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dsEKf75WMtcuHO2i"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "fileId",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Select_one_unprocessed_photo",
+      "name": "Select one unprocessed photo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        900
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return $input.all().slice(0,1);"
+      }
+    },
+    {
+      "id": "Acquire_batch_coordinator",
+      "name": "Acquire batch coordinator",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        700
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "zPxDCawvq8ewC3GO"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "busy",
+              "condition": "eq",
+              "keyValue": false
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": true,
+            "owner": "={{ $execution.id }}",
+            "claimedAt": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Verify_batch_coordinator",
+      "name": "Verify batch coordinator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        700
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;if(r.owner!==$execution.id||r.busy!==true)throw new Error('Batch coordinator not owned');return $input.all();"
+      }
+    },
+    {
+      "id": "Read_batch_jobs",
+      "name": "Read job ledger for batches",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "alwaysOutputData": true,
+      "position": [
+        840,
+        700
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dsEKf75WMtcuHO2i"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true
+      }
+    },
+    {
+      "id": "Read_batch_registry",
+      "name": "Read batch registry",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1160,
+        700
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "zPxDCawvq8ewC3GO"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            }
+          ]
+        },
+        "returnAll": true
+      }
+    },
+    {
+      "id": "Read_batch_folders",
+      "name": "Read batch folders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1480,
+        700
+      ],
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "'PRIVATE_RESOURCE_4f5dd7e4c7ae' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'"
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name,mimeType,parents,trashed),nextPageToken"
+            },
+            {
+              "name": "pageSize",
+              "value": "1000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Plan_batch_discovery",
+      "name": "Plan batch discovery",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        700
+      ],
+      "parameters": {
+        "jsCode": "const state=JSON.parse($('Read batch registry').first().json.stateJson);\nif(state.schemaVersion!==1)throw new Error('Unsupported batch registry');\nconst files=$('Find one Input image').all().map(i=>i.json).filter(f=>f.id&&/^image\\/(jpeg|png|webp)$/.test(f.mimeType)&&Number(f.size)<=20971520&&Number(f.imageMediaMetadata?.width)>0&&Number(f.imageMediaMetadata?.height)>0);\nconst jobs=$('Read job ledger for batches').all().map(i=>i.json).filter(j=>j.fileId);\nconst listing=$input.first().json;if(listing.nextPageToken)throw new Error('Batch folder listing exceeds 1000; retain coordinator');\nconst folders=listing.files||[];const now=Date.now();const gap=300000;\nconst crossed=state.files['PRIVATE_RESOURCE_a14bf54dd8cb'];if(crossed&&crossed.batchNo===1){const target=state.batches.find(b=>b.number===2);if(!target||Math.abs(Date.parse(target.lastUploadAt)-Date.parse('2026-10-16T03:58:10.541Z'))>300000)throw new Error('Cannot reconcile deployment-crossing upload');crossed.batchNo=2;crossed.uploadedAt='2026-10-16T03:58:10.541Z';crossed.relocated=false;const original=state.batches.find(b=>b.number===1);original.completedAt=null;}\n\nconst iso=t=>new Date(t).toISOString();\nfor(const f of files.sort((a,b)=>Date.parse(a.createdTime)-Date.parse(b.createdTime)||a.id.localeCompare(b.id))){\n if(state.files[f.id])continue;\n const t=Date.parse(f.createdTime);if(!Number.isFinite(t))throw new Error('Missing Drive upload time');\n let batch;\n if(state.bootstrap&&t>=Date.parse(state.bootstrapCutoff)&&t<=Date.parse('2026-10-16T03:09:00Z')){batch=state.batches.find(b=>b.number===1);}\n else {\n   batch=state.batches.find(b=>!b.completedAt&&t>=Date.parse(b.lastUploadAt)-gap&&t<Date.parse(b.lastUploadAt)+gap);\n   const latest=state.batches.at(-1);\n   if(!batch&&latest&&!latest.completedAt&&!latest.closedAt&&t-Date.parse(latest.lastUploadAt)<gap)batch=latest;\n   if(!batch){const number=Math.max(0,...state.batches.map(b=>b.number))+1;batch={number,label:'Batch_'+String(number).padStart(3,'0'),lastUploadAt:iso(t),closedAt:null,completedAt:null,folderId:null};state.batches.push(batch);}\n }\n if(t>Date.parse(batch.lastUploadAt)){batch.lastUploadAt=iso(t);batch.closedAt=null;}\n state.files[f.id]={batchNo:batch.number,uploadedAt:iso(t),outputFileId:null,relocated:false};\n}\nif(state.bootstrap){for(const j of jobs.filter(j=>[\"PRIVATE_RESOURCE_1b53766cd0a0\",\"PRIVATE_RESOURCE_56944ac30656\",\"PRIVATE_RESOURCE_12407eacd669\",\"PRIVATE_RESOURCE_f9e9fc6a493e\",\"PRIVATE_RESOURCE_09e21e4acea2\",\"PRIVATE_RESOURCE_a6bda22aa3b0\",\"PRIVATE_RESOURCE_a58af9943ee0\",\"PRIVATE_RESOURCE_59e670142dfd\",\"PRIVATE_RESOURCE_cbc84480a3bd\",\"PRIVATE_RESOURCE_e9b216df18ab\",\"PRIVATE_RESOURCE_0a61c8790a14\"].includes(j.fileId))){if(!state.files[j.fileId])state.files[j.fileId]={batchNo:1,uploadedAt:'2026-10-16T03:08:48.407Z',outputFileId:j.outputFileId||null,relocated:false};}state.bootstrap=false;}\nfor(const [fileId,f]of Object.entries(state.files)){const j=jobs.find(j=>j.fileId===fileId);if(j?.outputFileId)f.outputFileId=j.outputFileId;}\nfor(const b of state.batches){\n if(now-Date.parse(b.lastUploadAt)>=gap&&!b.closedAt)b.closedAt=iso(Date.parse(b.lastUploadAt)+gap);\n const found=folders.filter(f=>f.name===b.label&&f.mimeType==='application/vnd.google-apps.folder'&&!f.trashed);\n if(found.length>1)throw new Error('Duplicate batch folders: '+b.label);\n if(found.length===1){if(b.folderId&&b.folderId!==found[0].id)throw new Error('Batch folder changed');b.folderId=found[0].id;}\n if(b.folderId&&!found.length)throw new Error('Persisted batch folder missing from Output');\n}\nif(JSON.stringify(state).length>1000000)throw new Error('Batch registry requires archival; retain coordinator');\nreturn [{json:{state,files,jobs,missingFolders:state.batches.filter(b=>!b.folderId).map(b=>({number:b.number,label:b.label}))}}];"
+      }
+    },
+    {
+      "id": "Prepare_batch_folders",
+      "name": "Prepare missing batch folders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        960
+      ],
+      "parameters": {
+        "jsCode": "const m=$input.first().json.missingFolders;return m.length?m.map(json=>({json})):[{json:{skipFolder:true}}];"
+      }
+    },
+    {
+      "id": "Need_batch_folder",
+      "name": "Batch folder needed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        520,
+        960
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "boolean-test",
+              "leftValue": "={{ !$json.skipFolder }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Create_batch_folder",
+      "name": "Create batch output folder",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        840,
+        960
+      ],
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "method": "POST",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,mimeType,parents"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({name:$json.label,mimeType:'application/vnd.google-apps.folder',parents:['PRIVATE_RESOURCE_4f5dd7e4c7ae']}) }}"
+      }
+    },
+    {
+      "id": "Finalize_batch_folders",
+      "name": "Finalize batch folders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        960
+      ],
+      "parameters": {
+        "jsCode": "const p=$('Plan batch discovery').first().json;const state=JSON.parse(JSON.stringify(p.state));\nfor(const r of $input.all().map(i=>i.json).filter(x=>!x.skipFolder)){\n const b=state.batches.find(b=>b.label===r.name);\n if(!b||!r.id||r.mimeType!=='application/vnd.google-apps.folder'||!r.parents?.includes('PRIVATE_RESOURCE_4f5dd7e4c7ae'))throw new Error('Batch folder creation not verified');\n b.folderId=r.id;\n}\nif(state.batches.some(b=>!b.folderId))throw new Error('Batch folder unresolved');\nreturn [{json:{...p,state}}];"
+      }
+    },
+    {
+      "id": "Plan_output_migrations",
+      "name": "Plan completed output organization",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        960
+      ],
+      "parameters": {
+        "jsCode": "const p=$input.first().json;const a=[];\nfor(const [sourceId,f] of Object.entries(p.state.files)){const j=p.jobs.find(j=>j.fileId===sourceId);if(f.relocated||j?.status!=='cleanup_verified'||!j.outputFileId)continue;\n const b=p.state.batches.find(b=>b.number===f.batchNo);a.push({sourceId,outputFileId:j.outputFileId,folderId:b.folderId,desiredName:b.label+'_'+sourceId+'.mp4'});}\nreturn a.length?a.map(json=>({json})):[{json:{skipMigration:true}}];"
+      }
+    },
+    {
+      "id": "Need_output_migration",
+      "name": "Completed output needs organization",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1800,
+        960
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "boolean-test",
+              "leftValue": "={{ !$json.skipMigration }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Read_output_before_move",
+      "name": "Read completed output before organization",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        200,
+        1220
+      ],
+      "parameters": {
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/'+encodeURIComponent($json.outputFileId) }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,mimeType,parents,trashed,size"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Verify_output_before_move",
+      "name": "Verify completed output ownership",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        1220
+      ],
+      "parameters": {
+        "jsCode": "const plans=$('Plan completed output organization').all();const managed=$('Finalize batch folders').first().json.state.batches.map(b=>b.folderId);return $input.all().map((item,i)=>{const f=item.json,p=plans[i]?.json;if(!p||f.id!==p.outputFileId||f.trashed||Number(f.size)<1024||!f.parents?.some(x=>x==='PRIVATE_RESOURCE_4f5dd7e4c7ae'||managed.includes(x)))throw new Error('Output ownership/parent verification failed');return {json:{...p,removeParents:f.parents.filter(x=>x!==p.folderId&&(x==='PRIVATE_RESOURCE_4f5dd7e4c7ae'||managed.includes(x))).join(',')},pairedItem:{item:i}};});"
+      }
+    },
+    {
+      "id": "Organize_completed_output",
+      "name": "Label and organize completed output",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        840,
+        1220
+      ],
+      "parameters": {
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/'+encodeURIComponent($json.outputFileId) }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "method": "PATCH",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "addParents",
+              "value": "={{ $json.folderId }}"
+            },
+            {
+              "name": "removeParents",
+              "value": "={{ $json.removeParents }}"
+            },
+            {
+              "name": "fields",
+              "value": "id,name,mimeType,parents,size"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({name:$json.desiredName}) }}"
+      }
+    },
+    {
+      "id": "Finish_batch_reconciliation",
+      "name": "Verify batch completion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        1220
+      ],
+      "parameters": {
+        "jsCode": "const p=$('Finalize batch folders').first().json;const state=JSON.parse(JSON.stringify(p.state));const plans=$('Plan completed output organization').all();\nfor(const [i,r]of $input.all().entries()){const f=r.json;if(f.skipMigration)continue;const job=plans[i]?.json;\n if(!job||f.id!==job.outputFileId||f.name!==job.desiredName||!f.parents?.includes(job.folderId)||Number(f.size)<1024)throw new Error('Organized output verification failed');\n state.files[job.sourceId].relocated=true;state.files[job.sourceId].outputFileId=f.id;\n}\nconst now=new Date().toISOString();\nfor(const b of state.batches){const members=Object.entries(state.files).filter(([,f])=>f.batchNo===b.number);const ok=members.length>0&&members.every(([id,f])=>{const j=p.jobs.find(j=>j.fileId===id);return j?.status==='cleanup_verified'&&j.outputFileId&&f.relocated&&f.outputFileId===j.outputFileId;});b.photoCount=members.length;b.completedCount=members.filter(([id,f])=>p.jobs.some(j=>j.fileId===id&&j.status==='cleanup_verified')&&f.relocated).length;if(b.closedAt&&ok&&!b.completedAt)b.completedAt=now;}\nreturn [{json:{stateJson:JSON.stringify(state),state,files:p.files,jobs:p.jobs}}];"
+      }
+    },
+    {
+      "id": "Persist_batch_registry",
+      "name": "Persist batch registry",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1480,
+        1220
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "zPxDCawvq8ewC3GO"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "busy",
+              "condition": "eq",
+              "keyValue": true
+            },
+            {
+              "keyName": "owner",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "stateJson": "={{ $json.stateJson }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Verify_batch_persisted",
+      "name": "Verify batch state persisted",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        1220
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json,p=$('Verify batch completion').first().json;if(r.owner!==$execution.id||r.stateJson!==p.stateJson)throw new Error('Batch state save not verified');return $input.all();"
+      }
+    },
+    {
+      "id": "Release_batch_coordinator",
+      "name": "Release batch coordinator",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        1480
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "zPxDCawvq8ewC3GO"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "busy",
+              "condition": "eq",
+              "keyValue": true
+            },
+            {
+              "keyName": "owner",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": false,
+            "owner": ""
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Materialize_batch_jobs",
+      "name": "Materialize queued batch photos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        1480
+      ],
+      "parameters": {
+        "jsCode": "const p=$('Verify batch completion').first().json;return p.files.filter(f=>!p.jobs.some(j=>j.fileId===f.id)).map(f=>{const m=p.state.files[f.id],b=p.state.batches.find(b=>b.number===m?.batchNo);if(!b?.folderId||b.completedAt)throw new Error('Missing/closed batch assignment');return {json:{...f,batchNo:b.number,batchLabel:b.label,outputFolderId:b.folderId}};});"
+      }
+    },
+    {
+      "id": "Snapshot_batch_inputs",
+      "name": "Snapshot batch inputs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        1480
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{inputCount:$input.all().filter(i=>i.json.id).length}}];"
+      }
+    },
+    {
+      "id": "Snapshot_batch_ledger",
+      "name": "Snapshot batch ledger",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        1480
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{ledgerCount:$input.all().filter(i=>i.json.fileId).length}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Manual controlled test": {
+      "main": [
+        [
+          {
+            "node": "Validation lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll Input every 2 minutes": {
+      "main": [
+        [
+          {
+            "node": "Validation lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare durable job key": {
+      "main": [
+        [
+          {
+            "node": "Exclude recorded files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exclude recorded files": {
+      "main": [
+        [
+          {
+            "node": "Select one unprocessed photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select one unprocessed photo": {
+      "main": [
+        [
+          {
+            "node": "Run B and wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation lock": {
+      "main": [
+        [
+          {
+            "node": "Acquire batch coordinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find one Input image": {
+      "main": [
+        [
+          {
+            "node": "Snapshot batch inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acquire batch coordinator": {
+      "main": [
+        [
+          {
+            "node": "Verify batch coordinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify batch coordinator": {
+      "main": [
+        [
+          {
+            "node": "Find one Input image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read job ledger for batches": {
+      "main": [
+        [
+          {
+            "node": "Snapshot batch ledger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read batch registry": {
+      "main": [
+        [
+          {
+            "node": "Read batch folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read batch folders": {
+      "main": [
+        [
+          {
+            "node": "Plan batch discovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan batch discovery": {
+      "main": [
+        [
+          {
+            "node": "Prepare missing batch folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare missing batch folders": {
+      "main": [
+        [
+          {
+            "node": "Batch folder needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch folder needed": {
+      "main": [
+        [
+          {
+            "node": "Create batch output folder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finalize batch folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create batch output folder": {
+      "main": [
+        [
+          {
+            "node": "Finalize batch folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize batch folders": {
+      "main": [
+        [
+          {
+            "node": "Plan completed output organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan completed output organization": {
+      "main": [
+        [
+          {
+            "node": "Completed output needs organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Completed output needs organization": {
+      "main": [
+        [
+          {
+            "node": "Read completed output before organization",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verify batch completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read completed output before organization": {
+      "main": [
+        [
+          {
+            "node": "Verify completed output ownership",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify completed output ownership": {
+      "main": [
+        [
+          {
+            "node": "Label and organize completed output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Label and organize completed output": {
+      "main": [
+        [
+          {
+            "node": "Verify batch completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify batch completion": {
+      "main": [
+        [
+          {
+            "node": "Persist batch registry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist batch registry": {
+      "main": [
+        [
+          {
+            "node": "Verify batch state persisted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify batch state persisted": {
+      "main": [
+        [
+          {
+            "node": "Release batch coordinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Release batch coordinator": {
+      "main": [
+        [
+          {
+            "node": "Materialize queued batch photos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Materialize queued batch photos": {
+      "main": [
+        [
+          {
+            "node": "Prepare durable job key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Snapshot batch inputs": {
+      "main": [
+        [
+          {
+            "node": "Read job ledger for batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Snapshot batch ledger": {
+      "main": [
+        [
+          {
+            "node": "Read batch registry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 15100,
+    "timezone": "America/New_York",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "ac406831-4b8f-41e5-a6cb-02c819ffae69",
+  "versionCounter": 4,
+  "sourceWorkflowId": null,
+  "tags": []
+}

@@ -1,0 +1,70 @@
+{
+  "updatedAt": "2026-10-16T01:08:18.337Z",
+  "createdAt": "2026-10-16T01:07:59.787Z",
+  "id": "pU2BbyefB9L09iu0",
+  "name": "AI Creator Studio - GPU VRAM live read-only",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Check",
+      "webhookId": "02b2036b-0a46-4932-b7fb-28d340fef697",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "gpu-vram-read-20261015",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "g",
+      "name": "Read GPU",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 12000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Check": {
+      "main": [
+        [
+          {
+            "node": "Read GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "16c1f04d-1db2-4e09-9da2-954f1d3b8acb",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

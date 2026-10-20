@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792291135401,
+      "tag": "0000_sudden_mesmero",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792296368474,
+      "tag": "0001_salty_dormammu",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792344166302,
+      "tag": "0002_red_shape",
+      "breakpoints": true
+    }
+  ]
+}

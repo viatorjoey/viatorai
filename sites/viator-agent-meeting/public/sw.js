@@ -1,0 +1,5 @@
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+// Private conversations and API responses are never cached.
+self.addEventListener('push',event=>event.waitUntil((async()=>{let n={};try{n=event.data.json();}catch{}await self.registration.showNotification(n.title||'VIATOR DIRECTING ROOM',{body:n.body||'확인할 알림이 있습니다.',icon:'/icons/icon-192.png',badge:'/icons/icon-192.png',tag:n.tag||'viator',data:{url:n.url||'/'}});if(self.navigator.setAppBadge)await self.navigator.setAppBadge(n.badge||0).catch(()=>{});})()));
+self.addEventListener('notificationclick',event=>{event.notification.close();event.waitUntil((async()=>{const url=new URL(event.notification.data?.url||'/',self.location.origin);if(url.origin!==self.location.origin)return;const clients=await self.clients.matchAll({type:'window',includeUncontrolled:true});if(clients.length){await clients[0].navigate(url.href);await clients[0].focus();}else await self.clients.openWindow(url.href);})());});

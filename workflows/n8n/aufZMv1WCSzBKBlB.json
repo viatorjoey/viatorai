@@ -1,0 +1,1891 @@
+{
+  "updatedAt": "2026-10-16T07:47:30.144Z",
+  "createdAt": "2026-10-16T06:05:47.517Z",
+  "id": "aufZMv1WCSzBKBlB",
+  "name": "AI Creator - D 원본 인물 만원 버스 1장",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "Manual_pose_request",
+      "name": "Manual pose request",
+      "webhookId": "5778e23a-3de2-4834-95ce-766227d125d9",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "image-bus-single-20261016",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "Fixed_approved_request",
+      "name": "Fixed approved request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const c={\"taskKey\":\"bus-20261016-reference-153220-v1\",\"sourceFileId\":\"PRIVATE_RESOURCE_b7c680020a33\",\"outputFolderId\":\"PRIVATE_RESOURCE_a6850f3ee615\",\"saveIds\":[\"p1save\"]};if($json.body?.taskKey!==c.taskKey)throw new Error('Unexpected task key; fixed one-time task only');return [{json:{...c,executionId:String($execution.id),startedAt:Date.now()}}];"
+      }
+    },
+    {
+      "id": "Read_existing_pose_job",
+      "name": "Read existing pose job",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "alwaysOutputData": true,
+      "position": [
+        560,
+        0
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "taskKey",
+              "condition": "eq",
+              "keyValue": "bus-20261016-reference-153220-v1"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      }
+    },
+    {
+      "id": "Prevent_repeat_submission",
+      "name": "Prevent repeat submission",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if($input.all().some(x=>x.json.id))throw new Error('Task already recorded; reconcile existing prompt instead of resubmitting');return $('Fixed approved request').all();"
+      }
+    },
+    {
+      "id": "Download_reference",
+      "name": "Download reference",
+      "notes": "Credential reference bound. Google account OAuth sign-in is pending; keep validation lock and workflow inactive.",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": false,
+      "position": [
+        1120,
+        0
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PRIVATE_RESOURCE_b7c680020a33"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      }
+    },
+    {
+      "id": "Verify_original_JPEG",
+      "name": "Verify original JPEG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const b=await this.helpers.getBinaryDataBuffer(0,'data');if(b.length!==2049877||b[0]!==255||b[1]!==216||b[2]!==255)throw new Error('Source photo bytes do not match approved original');return $input.all();"
+      }
+    },
+    {
+      "id": "Upload_reference",
+      "name": "Upload reference",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1680,
+        0
+      ],
+      "parameters": {
+        "options": {
+          "timeout": 30000
+        },
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/upload/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "type",
+              "value": "input"
+            },
+            {
+              "name": "overwrite",
+              "value": "false"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Record_input_image",
+      "name": "Record input image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1960,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const u=$input.first().json;if(!u.name||u.type!=='input')throw new Error('ComfyUI input upload not verified');return [{json:{...$('Fixed approved request').first().json,imageName:(u.subfolder?u.subfolder+'/':'')+u.name}}];"
+      }
+    },
+    {
+      "id": "Acquire_shared_GPU",
+      "name": "Acquire shared GPU",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "alwaysOutputData": true,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "busy",
+              "condition": "eq",
+              "keyValue": false
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": true,
+            "owner": "={{ $execution.id }}",
+            "claimedAt": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Verify_shared_GPU_owner",
+      "name": "Verify shared GPU owner",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if($input.all().length!==1||$json.busy!==true||String($json.owner)!==String($execution.id))throw new Error('Shared GPU is owned by another job; no generation submitted');return $('Record input image').all();"
+      }
+    },
+    {
+      "id": "Record_submission_intent",
+      "name": "Record submission intent",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "taskKey": "bus-20261016-reference-153220-v1",
+            "status": "intent",
+            "sourceFileId": "PRIVATE_RESOURCE_b7c680020a33",
+            "promptId": "",
+            "executionId": "={{ $execution.id }}",
+            "outputs": "",
+            "updatedAtText": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Build_five_reference_poses",
+      "name": "Build bus reference image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const j=$('Record input image').first().json,g={\"src\":{\"class_type\":\"LoadImage\",\"inputs\":{\"image\":\"__SOURCE__\"}},\"unet\":{\"class_type\":\"UNETLoader\",\"inputs\":{\"unet_name\":\"flux-2-klein-4b.safetensors\",\"weight_dtype\":\"default\"}},\"clip\":{\"class_type\":\"CLIPLoader\",\"inputs\":{\"clip_name\":\"qwen_3_4b.safetensors\",\"type\":\"flux2\",\"device\":\"default\"}},\"vae\":{\"class_type\":\"VAELoader\",\"inputs\":{\"vae_name\":\"flux2-vae.safetensors\"}},\"scale\":{\"class_type\":\"ImageScaleToTotalPixels\",\"inputs\":{\"image\":[\"src\",0],\"upscale_method\":\"lanczos\",\"megapixels\":1,\"resolution_steps\":16}},\"size\":{\"class_type\":\"GetImageSize\",\"inputs\":{\"image\":[\"scale\",0]}},\"ref\":{\"class_type\":\"VAEEncode\",\"inputs\":{\"pixels\":[\"scale\",0],\"vae\":[\"vae\",0]}},\"sampler\":{\"class_type\":\"KSamplerSelect\",\"inputs\":{\"sampler_name\":\"euler\"}},\"sigmas\":{\"class_type\":\"Flux2Scheduler\",\"inputs\":{\"steps\":4,\"width\":[\"size\",0],\"height\":[\"size\",1]}},\"empty\":{\"class_type\":\"EmptyFlux2LatentImage\",\"inputs\":{\"width\":[\"size\",0],\"height\":[\"size\",1],\"batch_size\":1}},\"p1text\":{\"class_type\":\"CLIPTextEncode\",\"inputs\":{\"clip\":[\"clip\",0],\"text\":\"Edit the reference photo into a photorealistic candid photograph of the same adult woman, standing in the aisle of a very crowded Korean city bus during the commute. Preserve her recognizable facial features, skin tone, natural body proportions, dark hair tied in a bun with the black hair clip. Her face is clearly visible. Replace the pool and pink outfit completely. She wears an opaque white short-sleeved cropped button-up uniform blouse, fully buttoned, a small navy necktie, and a navy pleated short skirt with secure opaque coverage. This is an adult woman's school-uniform-inspired fashion outfit. She stands upright holding an overhead bus hand strap with one hand, the other arm relaxed near her side, calm neutral expression, looking toward the camera. Many adult commuters in ordinary clothing fill the aisle and seats around her, with normal respectful commuting posture. Visible bus poles, hanging hand straps, windows and seats, daytime city visible outside. Eye-level three-quarter view framed from head to knees, the woman is the main subject. Natural realistic light, accurate hands and anatomy, documentary smartphone photography, vertical portrait, no text or logos.\"}},\"p1zero\":{\"class_type\":\"ConditioningZeroOut\",\"inputs\":{\"conditioning\":[\"p1text\",0]}},\"p1pos\":{\"class_type\":\"ReferenceLatent\",\"inputs\":{\"conditioning\":[\"p1text\",0],\"latent\":[\"ref\",0]}},\"p1neg\":{\"class_type\":\"ReferenceLatent\",\"inputs\":{\"conditioning\":[\"p1zero\",0],\"latent\":[\"ref\",0]}},\"p1guide\":{\"class_type\":\"CFGGuider\",\"inputs\":{\"model\":[\"unet\",0],\"positive\":[\"p1pos\",0],\"negative\":[\"p1neg\",0],\"cfg\":1}},\"p1noise\":{\"class_type\":\"RandomNoise\",\"inputs\":{\"noise_seed\":2026101611}},\"p1sample\":{\"class_type\":\"SamplerCustomAdvanced\",\"inputs\":{\"noise\":[\"p1noise\",0],\"guider\":[\"p1guide\",0],\"sampler\":[\"sampler\",0],\"sigmas\":[\"sigmas\",0],\"latent_image\":[\"empty\",0]}},\"p1decode\":{\"class_type\":\"VAEDecode\",\"inputs\":{\"samples\":[\"p1sample\",0],\"vae\":[\"vae\",0]}},\"p1save\":{\"class_type\":\"SaveImage\",\"inputs\":{\"images\":[\"p1decode\",0],\"filename_prefix\":\"__PREFIX__1\"}}};g.src.inputs.image=j.imageName;g.p1save.inputs.filename_prefix='image/Bus_Scene_20261016/bus_scene_01_'+j.executionId;return [{json:{...j,prompt:g,client_id:'aistudio-bus-'+j.executionId}}];"
+      }
+    },
+    {
+      "id": "Read_queue_before_submit",
+      "name": "Read queue before submit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1120,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Evaluate_idle_queue",
+      "name": "Evaluate idle queue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const q=$json,j=$('Record input image').first().json;if(Date.now()-j.startedAt>1800000)throw new Error('Idle wait timed out; retain owned lock for reconciliation');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending))throw new Error('Invalid queue telemetry');return [{json:{...$('Build bus reference image').first().json,idle:q.queue_running.length===0&&q.queue_pending.length===0}}];"
+      }
+    },
+    {
+      "id": "Queue_idle",
+      "name": "Queue idle",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition",
+              "leftValue": "={{ $json.idle }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Wait_for_other_work",
+      "name": "Wait for other work",
+      "webhookId": "e0d46512-f9b0-4934-a7d3-c87bd5710b0e",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1960,
+        300
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 10,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "Submit_five_once",
+      "name": "Submit bus image once",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        0,
+        600
+      ],
+      "parameters": {
+        "options": {
+          "timeout": 30000
+        },
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/prompt",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({prompt:$json.prompt,client_id:$json.client_id}) }}"
+      }
+    },
+    {
+      "id": "Record_image_prompt_ID",
+      "name": "Record image prompt ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        600
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const p=$json;if(!p.prompt_id||Object.keys(p.node_errors||{}).length)throw new Error('Submission rejected or uncertain; inspect ComfyUI history before any retry');return [{json:{...$('Record input image').first().json,promptId:p.prompt_id,submittedAt:Date.now()}}];"
+      }
+    },
+    {
+      "id": "Persist_image_prompt_ID",
+      "name": "Persist image prompt ID",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        600
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "taskKey",
+              "condition": "eq",
+              "keyValue": "bus-20261016-reference-153220-v1"
+            },
+            {
+              "keyName": "executionId",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "submitted",
+            "promptId": "={{ $('Record image prompt ID').first().json.promptId }}",
+            "updatedAtText": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Wait_for_image_terminal",
+      "name": "Wait for image terminal",
+      "webhookId": "39c58cb8-47f9-46d9-97ce-fca991d852b6",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        600
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 10,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "Read_exact_image_history",
+      "name": "Read exact image history",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1120,
+        600
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'http://host.docker.internal:8188/history/' + $('Record image prompt ID').first().json.promptId }}",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Evaluate_image_terminal",
+      "name": "Evaluate image terminal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        600
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const j=$('Record image prompt ID').first().json,h=$json[j.promptId],timed=Date.now()-j.submittedAt>1800000;if(!h||h.status?.completed!==true){if(h?.status?.status_str==='error')return [{json:{...j,status:'failed',reason:'ComfyUI terminal error'}}];return [{json:{...j,status:timed?'timed_out':'waiting',reason:timed?'No terminal proof within 30 minutes':''}}];}if(h.status.status_str!=='success')return [{json:{...j,status:'failed',reason:'Non-success terminal state'}}];const images=[];for(let i=1;i<=1;i++){const a=h.outputs?.['p'+i+'save']?.images;if(!Array.isArray(a)||a.length!==1||a[0].type!=='output'||!a[0].filename.startsWith('bus_scene_0'+i+'_'+j.executionId+'_')||!a[0].filename.endsWith('.png'))return [{json:{...j,status:'failed',reason:'Expected one exact saved PNG outputs'}}];images.push({pose:i,...a[0]});}return [{json:{...j,status:'success',images}}];"
+      }
+    },
+    {
+      "id": "Images_still_waiting",
+      "name": "Images still waiting",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1680,
+        600
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition",
+              "leftValue": "={{ $json.status === 'waiting' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "All_five_succeeded",
+      "name": "Image succeeded",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1960,
+        600
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition",
+              "leftValue": "={{ $json.status === 'success' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Persist_image_terminal_failure",
+      "name": "Persist image terminal failure",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        900
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "taskKey",
+              "condition": "eq",
+              "keyValue": "bus-20261016-reference-153220-v1"
+            },
+            {
+              "keyName": "executionId",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $('Evaluate image terminal').first().json.status }}",
+            "outputs": "={{ JSON.stringify({reason:$('Evaluate image terminal').first().json.reason}) }}",
+            "updatedAtText": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Stop_for_reconciliation",
+      "name": "Stop for reconciliation",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 2,
+      "position": [
+        280,
+        900
+      ],
+      "parameters": {
+        "errorMessage": "Image task needs reconciliation. Keep owned GPU lock; do not resubmit, cancel, clear queue, or unload."
+      }
+    },
+    {
+      "id": "Extract_five_image_outputs",
+      "name": "Extract image output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        900
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const j=$('Evaluate image terminal').first().json;return j.images.map(v=>({json:{...v,promptId:j.promptId,taskKey:j.taskKey}}));"
+      }
+    },
+    {
+      "id": "Download_saved_PNGs",
+      "name": "Download saved PNGs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        840,
+        900
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'http://host.docker.internal:8188/view?filename=' + encodeURIComponent($json.filename) + '&subfolder=' + encodeURIComponent($json.subfolder || '') + '&type=output' }}",
+        "options": {
+          "timeout": 60000,
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "Verify_five_PNG_byte_streams",
+      "name": "Verify PNG byte stream",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        900
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const a=$input.all(),m=$('Extract image output').all();if(a.length!==1||m.length!==1)throw new Error('Expected one downloads');const out=[];for(let i=0;i<1;i++){const b=await this.helpers.getBinaryDataBuffer(i,'data');if(b.length<1000||b.subarray(0,8).toString('hex')!=='89504e470d0a1a0a'||b.toString('ascii',12,16)!=='IHDR')throw new Error('Invalid PNG');const w=b.readUInt32BE(16),h=b.readUInt32BE(20);if(w<512||h<512||w>2048||h>2048||w>=h)throw new Error('Unexpected portrait dimensions');out.push({json:{...m[i].json,bytes:b.length,width:w,height:h},binary:a[i].binary,pairedItem:{item:i}});}return out;"
+      }
+    },
+    {
+      "id": "Save_five_to_Drive",
+      "name": "Save bus image to Drive",
+      "notes": "Credential reference bound. Google account OAuth sign-in is pending; keep validation lock and workflow inactive.",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": false,
+      "position": [
+        1400,
+        900
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "upload",
+        "inputDataFieldName": "data",
+        "name": "={{ 'bus_scene_0' + $json.pose + '.png' }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PRIVATE_RESOURCE_a6850f3ee615"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Verify_Drive_files",
+      "name": "Verify Drive files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "position": [
+        1680,
+        900
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent($json.id) }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,size,mimeType,parents,trashed,md5Checksum"
+            },
+            {
+              "name": "supportsAllDrives",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Confirm_five_persisted_results",
+      "name": "Confirm persisted result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1960,
+        900
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const a=$input.all(),v=$('Verify PNG byte stream').all();if(a.length!==1||v.length!==1)throw new Error('Expected one persisted outputs');const outputs=a.map((x,i)=>{const d=x.json,p=v[i].json;if(!d.id||d.trashed||d.mimeType!=='image/png'||Number(d.size)!==p.bytes||!d.parents?.includes('PRIVATE_RESOURCE_a6850f3ee615')||d.name!=='bus_scene_0'+p.pose+'.png')throw new Error('Drive output verification failed');return {pose:p.pose,driveFileId:d.id,filename:p.filename,subfolder:p.subfolder,width:p.width,height:p.height,bytes:p.bytes};});return [{json:{...$('Record image prompt ID').first().json,outputs}}];"
+      }
+    },
+    {
+      "id": "Persist_saved_outputs",
+      "name": "Persist saved outputs",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        1200
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "taskKey",
+              "condition": "eq",
+              "keyValue": "bus-20261016-reference-153220-v1"
+            },
+            {
+              "keyName": "executionId",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "saved",
+            "outputs": "={{ JSON.stringify($('Confirm persisted result').first().json.outputs) }}",
+            "updatedAtText": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Read_owned_GPU_lock",
+      "name": "Read owned GPU lock",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "alwaysOutputData": true,
+      "position": [
+        280,
+        1200
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      }
+    },
+    {
+      "id": "Require_own_lock_and_saved_files",
+      "name": "Require own lock and saved files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        1200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if($input.all().length!==1||$json.busy!==true||String($json.owner)!==String($execution.id))throw new Error('GPU ownership changed; no unload');return $('Confirm persisted result').all();"
+      }
+    },
+    {
+      "id": "Queue_immediately_before_release",
+      "name": "Queue immediately before release",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        840,
+        1200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Guard_idle_before_unload",
+      "name": "Guard idle before unload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const q=$json;if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Other queued work present; no unload or lock release');return [{json:{...$('Confirm persisted result').first().json,cleanupStartedAt:Date.now()}}];"
+      }
+    },
+    {
+      "id": "VRAM_before_image_unload",
+      "name": "VRAM before image unload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1400,
+        1200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Unload_own_image_models",
+      "name": "Unload own image models",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1680,
+        1200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/free",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"unload_models\":true,\"free_memory\":true}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "Wait_for_image_unload",
+      "name": "Wait for image unload",
+      "webhookId": "c479d4e9-098c-46b8-8e85-81a9b2ee6896",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1960,
+        1200
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 3,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "Read_image_release_VRAM",
+      "name": "Read image release VRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        0,
+        1500
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Read_image_release_queue",
+      "name": "Read image release queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        280,
+        1500
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Evaluate_image_memory_release",
+      "name": "Evaluate image memory release",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        1500
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const q=$json,j=$('Guard idle before unload').first().json,s=$('Read image release VRAM').first().json;const ds=s.devices?.filter(d=>d.type==='cuda');if(Date.now()-j.cleanupStartedAt>180000)throw new Error('Cleanup not verified within 180 seconds; keep lock');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length)throw new Error('Queue changed during cleanup; keep lock');const ready=ds?.length>0&&ds.every(d=>Number.isFinite(d.torch_vram_total)&&Number.isFinite(d.vram_free)&&d.torch_vram_total<=134217728&&d.vram_free>=12884901888);return [{json:{...j,ready,before:$('VRAM before image unload').first().json.devices,after:s.devices}}];"
+      }
+    },
+    {
+      "id": "Image_memory_released",
+      "name": "Image memory released",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        840,
+        1500
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition",
+              "leftValue": "={{ $json.ready }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Wait_to_observe_release",
+      "name": "Wait to observe release",
+      "webhookId": "42137d63-d80d-4ec6-839f-b27d74d71821",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        1500
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 3,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "Confirm_stable_image_release",
+      "name": "Confirm stable image release",
+      "webhookId": "c66562df-d051-4b58-947b-a0846453c63d",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        1500
+      ],
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 3,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "Read_stable_image_VRAM",
+      "name": "Read stable image VRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1680,
+        1500
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/system_stats",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Read_stable_image_queue",
+      "name": "Read stable image queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "retryOnFail": false,
+      "position": [
+        1960,
+        1500
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/queue",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "Verify_stable_image_cleanup",
+      "name": "Verify stable image cleanup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1800
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const q=$json,j=$('Evaluate image memory release').first().json,s=$('Read stable image VRAM').first().json;const d=s.devices?.filter(x=>x.type==='cuda');if(!Array.isArray(q.queue_running)||!Array.isArray(q.queue_pending)||q.queue_running.length||q.queue_pending.length||!d?.length||!d.every(x=>x.torch_vram_total<=134217728&&x.vram_free>=12884901888))throw new Error('Stable cleanup not proven; retain owned lock');return [{json:{...j,after:s.devices,cleanupVerified:true}}];"
+      }
+    },
+    {
+      "id": "Persist_image_cleanup",
+      "name": "Persist image cleanup",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        1800
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "taskKey",
+              "condition": "eq",
+              "keyValue": "bus-20261016-reference-153220-v1"
+            },
+            {
+              "keyName": "executionId",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "cleanup_verified",
+            "outputs": "={{ JSON.stringify({outputs:$('Verify stable image cleanup').first().json.outputs,before:$('Verify stable image cleanup').first().json.before,after:$('Verify stable image cleanup').first().json.after,cleanupVerified:true}) }}",
+            "updatedAtText": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Release_owned_GPU",
+      "name": "Release owned GPU",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        1800
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gd2WF5s9jDTeftKt"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": 1
+            },
+            {
+              "keyName": "owner",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "busy": false,
+            "owner": ""
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Return_completed_pose_batch",
+      "name": "Return completed pose batch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        1800
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if($input.all().length!==1||$json.status!=='complete'||String($json.executionId)!==String($execution.id))throw new Error('Completion record not verified');return [{json:{...$('Verify stable image cleanup').first().json,status:'complete',gpuLockReleased:true}}];"
+      }
+    },
+    {
+      "id": "Verify_owned_GPU_release",
+      "name": "Verify owned GPU release",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        2100
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if($input.all().length!==1||$json.busy!==false||String($json.owner||'')!=='')throw new Error('GPU lock release not verified');return $('Verify stable image cleanup').all();"
+      }
+    },
+    {
+      "id": "Persist_image_completion",
+      "name": "Persist image completion",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        2100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "6ikiuSvVjiappDOb"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "taskKey",
+              "condition": "eq",
+              "keyValue": "bus-20261016-reference-153220-v1"
+            },
+            {
+              "keyName": "executionId",
+              "condition": "eq",
+              "keyValue": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "complete",
+            "outputs": "={{ JSON.stringify({outputs:$('Verify stable image cleanup').first().json.outputs,before:$('Verify stable image cleanup').first().json.before,after:$('Verify stable image cleanup').first().json.after,cleanupVerified:true}) }}",
+            "updatedAtText": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Manual pose request": {
+      "main": [
+        [
+          {
+            "node": "Fixed approved request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fixed approved request": {
+      "main": [
+        [
+          {
+            "node": "Read existing pose job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read existing pose job": {
+      "main": [
+        [
+          {
+            "node": "Prevent repeat submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prevent repeat submission": {
+      "main": [
+        [
+          {
+            "node": "Download reference",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download reference": {
+      "main": [
+        [
+          {
+            "node": "Verify original JPEG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify original JPEG": {
+      "main": [
+        [
+          {
+            "node": "Upload reference",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload reference": {
+      "main": [
+        [
+          {
+            "node": "Record input image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record input image": {
+      "main": [
+        [
+          {
+            "node": "Acquire shared GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acquire shared GPU": {
+      "main": [
+        [
+          {
+            "node": "Verify shared GPU owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify shared GPU owner": {
+      "main": [
+        [
+          {
+            "node": "Record submission intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record submission intent": {
+      "main": [
+        [
+          {
+            "node": "Build bus reference image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build bus reference image": {
+      "main": [
+        [
+          {
+            "node": "Read queue before submit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read queue before submit": {
+      "main": [
+        [
+          {
+            "node": "Evaluate idle queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate idle queue": {
+      "main": [
+        [
+          {
+            "node": "Queue idle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue idle": {
+      "main": [
+        [
+          {
+            "node": "Submit bus image once",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for other work",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for other work": {
+      "main": [
+        [
+          {
+            "node": "Read queue before submit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit bus image once": {
+      "main": [
+        [
+          {
+            "node": "Record image prompt ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record image prompt ID": {
+      "main": [
+        [
+          {
+            "node": "Persist image prompt ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist image prompt ID": {
+      "main": [
+        [
+          {
+            "node": "Wait for image terminal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for image terminal": {
+      "main": [
+        [
+          {
+            "node": "Read exact image history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read exact image history": {
+      "main": [
+        [
+          {
+            "node": "Evaluate image terminal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate image terminal": {
+      "main": [
+        [
+          {
+            "node": "Images still waiting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Images still waiting": {
+      "main": [
+        [
+          {
+            "node": "Wait for image terminal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image succeeded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image succeeded": {
+      "main": [
+        [
+          {
+            "node": "Extract image output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Persist image terminal failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist image terminal failure": {
+      "main": [
+        [
+          {
+            "node": "Stop for reconciliation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract image output": {
+      "main": [
+        [
+          {
+            "node": "Download saved PNGs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download saved PNGs": {
+      "main": [
+        [
+          {
+            "node": "Verify PNG byte stream",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify PNG byte stream": {
+      "main": [
+        [
+          {
+            "node": "Save bus image to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save bus image to Drive": {
+      "main": [
+        [
+          {
+            "node": "Verify Drive files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Drive files": {
+      "main": [
+        [
+          {
+            "node": "Confirm persisted result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm persisted result": {
+      "main": [
+        [
+          {
+            "node": "Persist saved outputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist saved outputs": {
+      "main": [
+        [
+          {
+            "node": "Read owned GPU lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read owned GPU lock": {
+      "main": [
+        [
+          {
+            "node": "Require own lock and saved files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Require own lock and saved files": {
+      "main": [
+        [
+          {
+            "node": "VRAM before image unload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue immediately before release": {
+      "main": [
+        [
+          {
+            "node": "Guard idle before unload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guard idle before unload": {
+      "main": [
+        [
+          {
+            "node": "Unload own image models",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VRAM before image unload": {
+      "main": [
+        [
+          {
+            "node": "Queue immediately before release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unload own image models": {
+      "main": [
+        [
+          {
+            "node": "Wait for image unload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for image unload": {
+      "main": [
+        [
+          {
+            "node": "Read image release VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read image release VRAM": {
+      "main": [
+        [
+          {
+            "node": "Read image release queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read image release queue": {
+      "main": [
+        [
+          {
+            "node": "Evaluate image memory release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate image memory release": {
+      "main": [
+        [
+          {
+            "node": "Image memory released",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image memory released": {
+      "main": [
+        [
+          {
+            "node": "Confirm stable image release",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait to observe release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait to observe release": {
+      "main": [
+        [
+          {
+            "node": "Read image release VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm stable image release": {
+      "main": [
+        [
+          {
+            "node": "Read stable image VRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stable image VRAM": {
+      "main": [
+        [
+          {
+            "node": "Read stable image queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read stable image queue": {
+      "main": [
+        [
+          {
+            "node": "Verify stable image cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify stable image cleanup": {
+      "main": [
+        [
+          {
+            "node": "Persist image cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Release owned GPU": {
+      "main": [
+        [
+          {
+            "node": "Verify owned GPU release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist image cleanup": {
+      "main": [
+        [
+          {
+            "node": "Release owned GPU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify owned GPU release": {
+      "main": [
+        [
+          {
+            "node": "Persist image completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist image completion": {
+      "main": [
+        [
+          {
+            "node": "Return completed pose batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 2400,
+    "timezone": "America/New_York",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "b2db8c9f-eab9-4d75-92a1-99972a291e3c",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}

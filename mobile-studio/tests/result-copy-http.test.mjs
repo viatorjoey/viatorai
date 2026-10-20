@@ -1,0 +1,41 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {mkdtempSync,rmSync,copyFileSync} from 'node:fs';
+import os from 'node:os';import path from 'node:path';
+import {spawn} from 'node:child_process';import {once} from 'node:events';
+test('copy reads the completed snapshot and saves an independent editable draft without generating a job',async t=>{
+ const data=mkdtempSync(path.join(os.tmpdir(),'studio-copy-http-')),base='http://127.0.0.1:31993';
+ copyFileSync(new URL('../data/model-catalog-cache.json',import.meta.url),path.join(data,'model-catalog-cache.json'));
+ const child=spawn(process.execPath,['server.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,STUDIO_DATA_DIR:data,STUDIO_PORT:'31993',STUDIO_INTERNAL_PORT:'31994',STUDIO_TEST_MODE:'1',STUDIO_API_ONLY:'1'},stdio:['ignore','ignore','pipe'],windowsHide:true});
+ let errors='';child.stderr.on('data',b=>errors+=b.toString());let db;
+ t.after(async()=>{db?.close();if(child.exitCode===null){child.kill();await once(child,'exit').catch(()=>{});}rmSync(data,{recursive:true,force:true});});
+ let ready=false;for(let i=0;i<50;i++){try{if((await fetch(base+'/')).ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,100));}assert(ready,errors);
+ db=new DatabaseSync(path.join(data,'studio.sqlite'));db.exec('PRAGMA busy_timeout=5000');
+ const id=crypto.randomUUID(),cardId=crypto.randomUUID(),sourceId=crypto.randomUUID();
+ const content={tool:'document',title:'Rendered title',body:'Exact completed body',brief:'Original brief',documentType:'minutes',revision:1};
+ const card={title:'Rendered cards',brand:'Brand',aspect:'4:5',theme:'orange',slides:[{title:'First slide',body:'Exact text',uploadId:null}]};
+ for(const j of [{id,state:'complete',mode:'document',contentProjectId:sourceId,contentSnapshot:content},{id:cardId,state:'complete',mode:'card-news',cardSnapshot:card}])db.prepare('INSERT INTO jobs VALUES(?,?,?,?)').run(j.id,Date.now(),j.state,JSON.stringify(j));
+ assert.equal((await fetch(base+'/api/gallery/draft/'+id)).status,401);
+ const session=await fetch(base+'/api/local-session',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:'{}'}),headers={Cookie:session.headers.get('set-cookie').split(';')[0],Origin:base,'Content-Type':'application/json'};
+ const call=(p,body)=>fetch(base+p,{method:body?'PUT':'GET',headers,body:body?JSON.stringify(body):undefined});
+ assert.equal((await call('/api/content-tools/'+sourceId,{...content,title:'Later edit',body:'Different body'})).status,200);
+ const response=await call('/api/gallery/draft/'+id);assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');const copied=await response.json();assert.deepEqual(copied,content);
+ const cloneId=crypto.randomUUID();const clone=await call('/api/content-tools/'+cloneId,{...copied,id:cloneId,revision:undefined});assert.equal(clone.status,200);assert.equal((await clone.json()).body,content.body);
+ assert.equal((await(await call('/api/content-tools/'+sourceId)).json()).body,'Different body');
+ assert.deepEqual(await(await call('/api/gallery/draft/'+cardId)).json(),card);
+ assert.equal(db.prepare('SELECT count(*) n FROM jobs').get().n,2);
+ assert.equal((await call('/api/gallery/draft/'+crypto.randomUUID())).status,404);
+ // Round-trip editor settings and actual source photos through the job API, without dispatching work.
+ const image=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64');
+ const upload=await fetch(base+'/api/uploads',{method:'POST',headers:{...headers,'Content-Type':'image/png'},body:image});assert.equal(upload.status,201);const uploadId=(await upload.json()).id;
+ const generationEditor={version:1,promptChoice:'original',refinementModel:'gemini:text',refinedPrompt:'Other polished draft',refinedNegative:'blur',builder:{category:'general',subject:'A quiet room',duration:'6',audio:'speech',timing:'natural',direction:'Slow movement',selections:{'손과 팔':'0'},speakers:[{name:'A',dialogue:'안녕',language:'Korean',voice:'1',emotion:'4',ttsVoice:'gemini:Kore'}],positive:'A quiet room',negative:'blur'}};
+ const payload={mode:'image-video',model:'ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors',uploadId,prompt:'A quiet room',negative:'blur',duration:6,aspect:'16:9',resolution:'1280x720',seed:42,guidance:1,quality:'high',generationEditor};
+ const key=crypto.randomUUID(),responseJob=await fetch(base+'/api/jobs',{method:'POST',headers:{...headers,'Idempotency-Key':key},body:JSON.stringify(payload)});assert.equal(responseJob.status,202);const job=await responseJob.json();assert.deepEqual(job.generationEditor,generationEditor);assert.equal(job.uploadId,uploadId);
+ const body=JSON.parse(db.prepare('SELECT body FROM jobs WHERE id=?').get(key).body);body.state='complete';db.prepare('UPDATE jobs SET state=?,body=? WHERE id=?').run('complete',JSON.stringify(body),key);
+ const list=await(await call('/api/jobs')).json();assert.deepEqual(list.find(j=>j.id===key).generationEditor,generationEditor);const original=await call('/api/job-inputs/'+uploadId+'?original=1');assert.equal(original.status,200);assert.deepEqual(Buffer.from(await original.arrayBuffer()),image);
+ const preset=await fetch(base+'/api/presets',{method:'POST',headers:{...headers,'Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({...payload,uploadIds:[uploadId]})});assert.equal(preset.status,201);assert.deepEqual((await preset.json()).generationEditor,generationEditor);
+
+ db.prepare('UPDATE jobs SET body=? WHERE id=?').run(JSON.stringify({id,state:'complete',deletedAt:Date.now(),contentSnapshot:content}),id);
+ assert.equal((await call('/api/gallery/draft/'+id)).status,404);
+});

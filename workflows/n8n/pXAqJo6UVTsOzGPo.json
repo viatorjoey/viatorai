@@ -1,0 +1,68 @@
+{
+  "updatedAt": "2026-10-16T00:07:33.678Z",
+  "createdAt": "2026-10-16T00:07:20.179Z",
+  "id": "pXAqJo6UVTsOzGPo",
+  "name": "AI Creator Studio - ComfyUI 모델 읽기 전용 진단",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "wh",
+      "name": "Read-only diagnostic trigger",
+      "webhookId": "fdf3554f-efee-40cb-9266-c2fe739262ca",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "ai-creator-comfy-model-check-20261015",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "models",
+      "name": "List installed checkpoints",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8188/models/checkpoints",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Read-only diagnostic trigger": {
+      "main": [
+        [
+          {
+            "node": "List installed checkpoints",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "nodeGroups": [],
+  "versionId": "f177f2ec-94fc-4611-8822-2f3793b38ce6",
+  "versionCounter": 1,
+  "sourceWorkflowId": null,
+  "tags": []
+}
